@@ -33,18 +33,44 @@ function Download({simulation=false}:{simulation?:boolean}){
  const [manifest,setManifest]=useState<Manifest|null>(null)
  const [retry,setRetry]=useState(0)
  const [scenario,setScenario]=useState<'available'|'none'|'loading'|'error'>('available')
- useEffect(()=>{if(simulation){setManifest(previewManifest);setState(scenario);return}
-const controller=new AbortController();setState('loading');fetch('/updates/preview.json',{cache:'no-store',signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Unavailable');return r.json() as Promise<Manifest>}).then(m=>{setManifest(m);const valid=m.available===true&&typeof m.version==='string'&&m.version.trim().length>0&&Number.isInteger(m.versionCode)&&Number(m.versionCode)>0&&m.packageName==='com.smokeless.app.preview'&&typeof m.sha256==='string'&&/^[a-f0-9]{64}$/i.test(m.sha256)&&typeof m.downloadUrl==='string'&&/^https:\/\/github\.com\/Wolfyslayer\/Smoke-less-app\/releases\/download\/[^/?#]+\/[^/?#]+\.apk$/i.test(m.downloadUrl);setState(valid?'available':'none')}).catch(e=>{if(e.name!=='AbortError')setState('error')});return()=>controller.abort()},[retry,simulation,scenario])
+ useEffect(()=>{
+  if(simulation){setManifest(previewManifest);setState(scenario);return}
+  const controller=new AbortController()
+  setState('loading')
+  fetch('/updates/preview.json',{cache:'no-store',signal:controller.signal})
+   .then(r=>{if(!r.ok)throw Error('Unavailable');return r.json() as Promise<Manifest>})
+   .then(m=>{
+    setManifest(m)
+    const valid=m.available===true&&typeof m.version==='string'&&m.version.trim().length>0&&Number.isInteger(m.versionCode)&&Number(m.versionCode)>0&&m.packageName==='com.smokeless.app.preview'&&typeof m.sha256==='string'&&/^[a-f0-9]{64}$/i.test(m.sha256)&&typeof m.downloadUrl==='string'&&/^https:\/\/github\.com\/Wolfyslayer\/Smoke-less-app\/releases\/download\/[^/?#]+\/[^/?#]+\.apk$/i.test(m.downloadUrl)
+    setState(valid?'available':'none')
+   })
+   .catch(e=>{if(e.name!=='AbortError')setState('error')})
+  return()=>controller.abort()
+ },[retry,simulation,scenario])
  const date=manifest?.publishedAt&&Number.isFinite(Date.parse(manifest.publishedAt))?new Date(manifest.publishedAt).toLocaleDateString('sv-SE',{year:'numeric',month:'long',day:'numeric'}):null
- return <Page eyebrow={simulation?"PRIVAT DESIGNFÖRHANDSVISNING":"ANDROID PREVIEW"} title="Ladda ner Smoke Less">
-  {simulation&&<div className="panel" role="note"><strong>SIMULERING – inte en riktig release</strong><p>Den här sidan visar testdata. Ingen APK kan hämtas här.</p><div className="preview-scenario" role="group" aria-label="Simulera nedladdningsstatus">{(["available","none","loading","error"] as const).map(value=><button key={value} type="button" aria-pressed={scenario===value} onClick={()=>setScenario(value)}>{({available:"Tillgänglig",none:"Ingen release",loading:"Laddar",error:"Fel"} as const)[value]}</button>)}</div></div>}
+ const labels={available:'Tillgänglig',none:'Ingen release',loading:'Laddar',error:'Fel'} as const
+ return <Page eyebrow={simulation?'PRIVAT DESIGNFÖRHANDSVISNING':'ANDROID PREVIEW'} title="Ladda ner Smoke Less">
+  {simulation&&<section className="panel preview-control-panel" aria-label="Förhandsvisningens kontroller">
+   <div className="preview-control-heading"><div><span className="preview-kicker">ENDAST FÖRHANDSVISNING</span><h2>Testa nedladdningssidan</h2><p>Välj ett läge för att se hur sidan visas inför release. All information är simulerad.</p></div><span className="preview-demo-label">DEMO · INGEN APK</span></div>
+   <div className="preview-scenario" role="group" aria-label="Simulera nedladdningsstatus">{(['available','none','loading','error'] as const).map(value=><button key={value} type="button" aria-pressed={scenario===value} onClick={()=>setScenario(value)}>{labels[value]}</button>)}</div>
+   <p className="preview-safety-note">Förhandsvisningen ansluter inte till någon nedladdning. Den publika releasen är fortfarande avstängd.</p>
+  </section>}
   <p className="lead">Här hittar du verifierade Preview-versioner för Android. Appen utvecklas fortfarande och är inte en färdig produktionsrelease.</p>
   <div className="panel download-panel">
-   <div className="download-panel-heading"><h2>Senaste Preview-versionen</h2><span className="download-status" role="status" aria-live="polite">{state==='loading'?'Kontrollerar…':state==='available'?'Tillgänglig':state==='none'?'Inte publicerad':'Kunde inte kontrolleras'}</span></div>
-   <p>{state==='loading'?'Hämtar publiceringsstatus…':state==='none'?'Ingen verifierad Preview-APK är publicerad via webbplatsen ännu.':state==='error'?'Versionsinformationen kunde inte hämtas. Kontrollera anslutningen och försök igen.':`Smoke Less Preview ${manifest?.version} är tillgänglig för Android.`}</p>
-   {state==='error'&&<button className="button outline" type="button" onClick={()=>setRetry(v=>v+1)}>Försök igen</button>}
-   {state==='available'&&manifest&&(simulation||manifest.downloadUrl)&&<><dl className="download-facts"><div><dt>Version</dt><dd>{manifest.version}</dd></div><div><dt>Versionskod</dt><dd>{manifest.versionCode}</dd></div>{manifest.runtimeVersion&&<div><dt>Runtime</dt><dd>{manifest.runtimeVersion}</dd></div>}{date&&<div><dt>Publicerad</dt><dd>{date}</dd></div>}<div><dt>Android-paket</dt><dd>{manifest.packageName}</dd></div></dl>{simulation?<button className="button primary" type="button" disabled aria-disabled="true">Ladda ner Preview-APK (demo)</button>:<a className="button primary" href={manifest?.downloadUrl??undefined} rel="noopener noreferrer" target="_blank">Ladda ner Preview-APK ↗</a>}<details className="download-checksum"><summary>Verifiera APK-filens SHA-256</summary><code>{manifest.sha256}</code><p className="fineprint">Jämför kontrollsumman med den nedladdade filen innan installation.</p></details>{manifest.releaseNotes&&<div className="download-notes"><h3>Om versionen</h3><p>{manifest.releaseNotes}</p></div>}</>}
-   <p className="fineprint">Nedladdningslänken visas endast när webbplatsens publiceringsmanifest innehåller en giltig Preview-version och GitHub Releases-länk. Android kan be dig godkänna installation.</p>
+   <div className="download-panel-heading"><h2>Senaste Preview-versionen</h2><span className={`download-status status-${state}`} role="status" aria-live="polite">{state==='loading'?'Kontrollerar…':state==='available'?'Tillgänglig':state==='none'?'Inte publicerad':'Kunde inte kontrolleras'}</span></div>
+   <div className="download-state-content">
+    <p>{state==='loading'?'Hämtar publiceringsstatus…':state==='none'?'Ingen verifierad Preview-APK är publicerad via webbplatsen ännu.':state==='error'?'Versionsinformationen kunde inte hämtas. Kontrollera anslutningen och försök igen.':`Smoke Less Preview ${manifest?.version} är tillgänglig för Android.`}</p>
+    {state==='loading'&&simulation&&<div className="preview-loading-placeholder" aria-hidden="true"><span/><span/><span/></div>}
+    {state==='none'&&simulation&&<p className="preview-explanation">När den första verifierade versionen är publicerad visas nedladdningsknappen och versionsinformationen här.</p>}
+    {state==='error'&&(simulation?<button className="button outline" type="button" onClick={()=>setScenario('loading')}>Försök igen (demo)</button>:<button className="button outline" type="button" onClick={()=>setRetry(v=>v+1)}>Försök igen</button>)}
+    {state==='available'&&manifest&&(simulation||manifest.downloadUrl)&&<>
+     <dl className="download-facts"><div><dt>Version</dt><dd>{manifest.version}</dd></div><div><dt>Versionskod</dt><dd>{manifest.versionCode}</dd></div>{manifest.runtimeVersion&&<div><dt>Runtime</dt><dd>{manifest.runtimeVersion}</dd></div>}{date&&<div><dt>Publicerad</dt><dd>{date}</dd></div>}<div><dt>Android-paket</dt><dd>{manifest.packageName}</dd></div></dl>
+     {simulation?<div className="preview-download-action"><button className="button primary" type="button" disabled aria-disabled="true">Ladda ner Preview-APK</button><span>Demoknapp – ingen fil kan laddas ner</span></div>:<a className="button primary" href={manifest.downloadUrl??undefined} rel="noopener noreferrer" target="_blank">Ladda ner Preview-APK ↗</a>}
+     <details className="download-checksum"><summary>Verifiera APK-filens SHA-256</summary><code>{manifest.sha256}</code><p className="fineprint">Jämför kontrollsumman med den nedladdade filen innan installation.</p></details>
+     {manifest.releaseNotes&&<div className="download-notes"><h3>Om versionen</h3><p>{manifest.releaseNotes}</p></div>}
+    </>}
+   </div>
+   <p className="fineprint">{simulation?'Detta är endast en visuell simulering. Publicering och APK-nedladdning är inte aktiverade.':'Nedladdningslänken visas endast när webbplatsens publiceringsmanifest innehåller en giltig Preview-version och GitHub Releases-länk. Android kan be dig godkänna installation.'}</p>
   </div>
   <div className="download-help"><section className="panel"><h2>Så installerar du</h2><ol><li>Ladda ner den verifierade APK-filen när den finns tillgänglig.</li><li>Öppna filen på din Android-telefon.</li><li>Följ Androids installationsanvisningar. Godkänn endast en källa du litar på.</li></ol></section><section className="panel"><h2>Innan du testar</h2><p>Preview kan innehålla fel. Gästhistorik finns lokalt på enheten och kan gå förlorad vid ominstallation eller byte av telefon. Ett konto ger möjlighet till synkronisering.</p><p>Den separata Preview-appen använder paketnamnet <code>com.smokeless.app.preview</code>.</p></section></div>
   <Link className="text-link" to="/changelog">Visa versionshistorik →</Link>
