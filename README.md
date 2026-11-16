@@ -1,24 +1,28 @@
-# Smoke Less – officiell webbplats
+# Smoke Less – React-webbplats
 
-Statisk, responsiv webbplats för **https://wolfyslayer.online**. Hostas kostnadsfritt på GitHub Pages.
+Officiell webbplats för https://wolfyslayer.online.
 
-## Publicera
+## Teknik
+React 19, TypeScript, Vite, Motion for React, React Router och CSS. Publiceras gratis via GitHub Pages.
 
-1. Gå till **Settings → Pages** i detta repo och välj **GitHub Actions** som källa.
-2. Kontrollera att Pages-workflowen blir grön och att den temporära github.io-adressen fungerar.
-3. Kontrollera gamla DNS-poster hos Namecheap innan du ändrar något. Apex-domänen kan peka på GitHub Pages A-poster (se aktuell GitHub-dokumentation); rör inte MX/TXT-poster för e-post.
-4. Ange `wolfyslayer.online` som custom domain i Pages. Filen `CNAME` finns redan.
-5. Vänta på domänverifiering och certifikat och aktivera **Enforce HTTPS**.
+## Lokal utveckling
+```sh
+npm install
+npm run dev
+npm run build
+```
 
-## Viktigt före offentlig lansering
+## Navigering
+HashRouter används för att GitHub Pages saknar SPA-rewrites. Länkarna är `/#/download`, `/#/support`, `/#/privacy` och `/#/changelog`. Vi kan senare välja förgenererade sidor för rena URL:er och bättre SEO.
 
-- Integritetssidan är **inte** en färdig juridisk policy. Färdigställ och granska den innan publikt släpp.
-- Support och kontoradering behöver en verifierad kontaktväg och ett fungerande raderingsflöde.
-- `updates/preview.json` har `available: false` tills en signerad APK verifierats.
-- Länkar till APK ska endast komma från verifierade GitHub Releases. Lägg aldrig hemligheter i statiska filer.
-- Webbplatsens telefonillustration är en mockup, inte en riktig skärmbild.
-- EAS Update hanterar OTA separat; denna webbplats är endast för native-versionsinformation och publik webb.
+## Publicering
+GitHub Actions bygger React till `dist/` och publicerar enbart byggresultatet på main. PR:er bygger men publicerar inte. `public/CNAME` bevarar domänen. Ingen ändring av Namecheap-DNS behövs för migreringen.
 
-## Lokal förhandsvisning
+## APK och integritet
+`public/updates/preview.json` kopieras till `/updates/preview.json`. `available: false` tills en signerad Preview APK verifierats. Integritetspolicyn är ett utkast; support och kontoradering behöver färdigställas före offentlig lansering.
 
-`python -m http.server 8000` och öppna `http://localhost:8000`.
+## Kvar att göra
+- Lägg till låst package-lock.json och byt till npm ci.
+- Granska mobil/desktop, tangentbord och reduced motion.
+- Byt illustrerad telefon mot verifierade appskärmbilder.
+- SEO/prerendering och rena URL:er.
