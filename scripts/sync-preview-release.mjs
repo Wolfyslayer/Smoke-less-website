@@ -4,7 +4,9 @@
 import {createHash} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
 
-const [tag,expectedHash]=process.argv.slice(2);
+const [tag,expectedHash,versionCodeArg]=process.argv.slice(2);
+const versionCode=Number(versionCodeArg);
+if(!Number.isSafeInteger(versionCode)||versionCode<=0)throw Error('A verified positive Android versionCode is required');
 if(!/^[-\w.]+$/.test(tag||'')||!/^[a-f0-9]{64}$/i.test(expectedHash||''))throw Error('A release tag and a 64-character SHA-256 are required');
 const headers={'Accept':'application/vnd.github+json','User-Agent':'smoke-less-website-preview-sync','X-GitHub-Api-Version':'2022-11-28'};
 const api=await fetch('https://api.github.com/repos/Wolfyslayer/Smoke-less-app/releases/tags/'+encodeURIComponent(tag),{headers});
@@ -26,7 +28,7 @@ if(actual.toLowerCase()!==expectedHash.toLowerCase())throw Error('SHA-256 mismat
 const manifest={
  available:true,
  version:tag,
- versionCode:1,
+ versionCode,
  runtimeVersion:null,
  packageName:'com.smokeless.app.preview',
  downloadUrl:asset.browser_download_url,
