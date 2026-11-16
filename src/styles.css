@@ -122,3 +122,21 @@
 .modern-breath-steps span{background:var(--p-surface);border-radius:9px;padding:7px 3px}
 .modern-breathe-button{border:0;border-radius:12px;background:var(--p-accent);color:var(--p-on-accent);font:inherit;font-size:12px;font-weight:800;width:100%;padding:12px;cursor:pointer}
 @media(prefers-reduced-motion:reduce){.modern-preview{transform:none!important}}
+
+
+/* Phase 3.4: verified download page */
+.download-panel-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.download-panel-heading h2{margin:0}
+.download-status{border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}
+.download-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px 0}
+.download-facts>div{padding:13px;border:1px solid var(--line);border-radius:12px;min-width:0}
+.download-facts dt{font-size:12px;opacity:.75;margin-bottom:7px}
+.download-facts dd{font-size:14px;font-weight:700;margin:0;overflow-wrap:anywhere}
+.download-checksum{margin:20px 0}
+.download-checksum code{display:block;overflow-wrap:anywhere;padding:14px;margin-top:10px;border:1px solid var(--line);border-radius:10px;font-size:12px}
+.download-notes{margin-top:20px}
+.download-help{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:24px 0}
+.download-help ol{padding-left:20px}
+.download-help li{margin:0 0 12px}
+.download-help code{overflow-wrap:anywhere}
+@media(max-width:700px){.download-help{grid-template-columns:1fr}}
