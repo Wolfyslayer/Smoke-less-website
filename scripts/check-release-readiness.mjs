@@ -17,6 +17,17 @@ assert(html.includes('name="description"'), 'Missing SEO description')
 assert(robots.includes('Sitemap: https://wolfyslayer.online/sitemap.xml'), 'Missing sitemap discovery')
 assert(sitemap.includes('<loc>https://wolfyslayer.online/</loc>'), 'Missing homepage in sitemap')
 assert(existsSync(join(root, 'dist/icon.svg')), 'Missing favicon')
+assert(existsSync(join(root, 'dist/nordic-landscape.svg')), 'Missing Nordic landscape asset')
+assert(html.includes('name="viewport"'), 'Missing mobile viewport')
+assert(html.includes('property="og:title"'), 'Missing social sharing title')
+assert(html.includes('name="twitter:card"'), 'Missing Twitter card metadata')
+assert(html.includes('name="theme-color"'), 'Missing Android browser theme color')
+const appSource = read('src/App.tsx')
+assert(appSource.includes('pageTitles[location.pathname]'), 'Missing route-specific document titles')
+assert(appSource.includes('main.focus({preventScroll:true})'), 'Missing keyboard focus on route navigation')
+assert(appSource.includes('aria-label="Huvudmeny"'), 'Missing navigation landmark label')
+assert(appSource.includes('aria-label="Välj appskärm"'), 'Missing preview control label')
+assert(appSource.includes('Denna sida är ännu inte en fullständig integritetspolicy.'), 'Missing explicit privacy launch caveat')
 assert(manifest.packageName === 'com.smokeless.app.preview', 'Unexpected Preview package name')
 
 if (manifest.available === true) {
@@ -33,5 +44,5 @@ if (errors.length) {
   for (const error of errors) console.error('FAIL:', error)
   process.exitCode = 1
 } else {
-  console.log('PASS: built website SEO, crawler assets and Preview manifest release gates')
+  console.log('PASS: SEO, accessibility smoke checks, mobile assets and Preview release gates')
 }
