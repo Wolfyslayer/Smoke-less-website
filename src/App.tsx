@@ -8,10 +8,12 @@ function Reveal({children,delay=0}:{children:React.ReactNode;delay?:number}){con
 function ProgressPreview(){
  const reduced=useReducedMotion()
  const [screen,setScreen]=useState<'home'|'plan'|'sos'>('home')
+ const [breathing,setBreathing]=useState(false)
+ useEffect(()=>{if(screen!=='sos')setBreathing(false)},[screen])
  const screens=[{id:'home' as const,label:'Hem'},{id:'plan' as const,label:'Plan'},{id:'sos' as const,label:'SOS'}]
  return <div className="preview-showcase">
   <div className="preview-switcher" role="group" aria-label="Välj skärm från Smoke Less">{screens.map(item=><button key={item.id} type="button" className={screen===item.id?'selected':''} aria-pressed={screen===item.id} onClick={()=>setScreen(item.id)}>{item.label}</button>)}</div>
-  <div className="phone app-phone" aria-label="Kodbaserad rekonstruktion av Smoke Less-appens gränssnitt">
+  <motion.div className="phone app-phone" aria-label="Kodbaserad rekonstruktion av Smoke Less-appens gränssnitt" whileHover={reduced?undefined:{y:-5}} transition={{duration:.3}}>
    <div className="phone-top"><span>Smoke Less</span><span aria-hidden="true">●</span></div>
    <AnimatePresence mode="wait" initial={false}>
     <motion.div key={screen} initial={reduced?false:{opacity:0,x:12}} animate={{opacity:1,x:0}} exit={reduced?undefined:{opacity:0,x:-12}} transition={{duration:.24}}>
@@ -24,12 +26,12 @@ function ProgressPreview(){
      <div className="app-panel"><p className="app-label">DIN TAKT</p><strong>Balanserad</strong><p className="app-caption">Anpassa takten eller välj ett eget stoppdatum.</p></div>
      <div className="app-panel"><p className="app-label">NÄSTA STEG</p><strong>Fortsätt i din takt</strong><p className="app-caption">Dina tidigare registreringar finns kvar.</p></div>
     </>:<>
-     <p className="app-label centered">TA ETT ANDETAG I TAGET</p><div className="app-breathe" aria-hidden="true"><span>≈</span><strong>Hitta ditt lugn</strong><small>4 in · 2 håll · 6 ut</small></div><p className="app-caption centered">Du behöver inte bestämma något just nu.</p><div className="app-breathe-button">Starta andningsövning</div><div className="app-panel"><p className="app-label">DIN PLAN JUST NU</p><strong>Tre små steg</strong><p className="app-caption">Stanna upp. Andas lugnt. Välj ett konkret tips.</p></div>
+     <p className="app-label centered">TA ETT ANDETAG I TAGET</p><motion.div className="app-breathe" aria-hidden="true" animate={breathing&&!reduced?{scale:[1,1.09,1.09,1]}:{scale:1}} transition={breathing&&!reduced?{duration:12,times:[0,4/12,6/12,1],repeat:Infinity,ease:"easeInOut"}:{duration:.2}}><span>≈</span><strong>{breathing?"Andas lugnt":"Hitta ditt lugn"}</strong><small>4 in · 2 håll · 6 ut</small></motion.div><p className="app-caption centered">Du behöver inte bestämma något just nu.</p><button type="button" className="app-breathe-button" aria-pressed={breathing} onClick={()=>setBreathing(v=>!v)}>{breathing?"Avsluta övning":"Starta andningsövning"}</button><div className="app-panel"><p className="app-label">DIN PLAN JUST NU</p><strong>Tre små steg</strong><p className="app-caption">Stanna upp. Andas lugnt. Välj ett konkret tips.</p></div>
     </>}
     </motion.div>
    </AnimatePresence>
    <p className="mock-note">Återskapat från appens gränssnittskod · exempeldata</p>
-  </div>
+  </motion.div>
  </div>
 }
 const features=[{icon:'◎',title:'Din egen plan',description:'Välj en takt som passar dig och följ dina mål över tid.'},{icon:'◷',title:'Se dina framsteg',description:'Följ registreringar, statistik och utveckling i en tydlig översikt.'},{icon:'♡',title:'Stöd när det behövs',description:'Andningsövningar och SOS-stöd när röksuget kommer.'},{icon:'↗',title:'Synk mellan enheter',description:'Med konto kan du synkronisera dina framsteg mellan enheter.'}]
