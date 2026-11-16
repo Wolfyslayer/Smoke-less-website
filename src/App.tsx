@@ -8,30 +8,27 @@ function Reveal({children,delay=0}:{children:React.ReactNode;delay?:number}){con
 function ProgressPreview(){
  const reduced=useReducedMotion()
  const [screen,setScreen]=useState<'home'|'plan'|'sos'>('home')
- const screens=[{id:'home' as const,label:'Översikt'},{id:'plan' as const,label:'Plan'},{id:'sos' as const,label:'SOS'}]
+ const screens=[{id:'home' as const,label:'Hem'},{id:'plan' as const,label:'Plan'},{id:'sos' as const,label:'SOS'}]
  return <div className="preview-showcase">
-  <div className="preview-switcher" role="group" aria-label="Välj appförhandsvisning">{screens.map(item=><button key={item.id} type="button" className={screen===item.id?'selected':''} aria-pressed={screen===item.id} onClick={()=>setScreen(item.id)}>{item.label}</button>)}</div>
-  <div className="phone" aria-label="Interaktiv, illustrativ förhandsvisning av Smoke Less">
-   <div className="phone-top"><span>Smoke Less</span><span aria-hidden="true">✦</span></div>
+  <div className="preview-switcher" role="group" aria-label="Välj skärm från Smoke Less">{screens.map(item=><button key={item.id} type="button" className={screen===item.id?'selected':''} aria-pressed={screen===item.id} onClick={()=>setScreen(item.id)}>{item.label}</button>)}</div>
+  <div className="phone app-phone" aria-label="Kodbaserad rekonstruktion av Smoke Less-appens gränssnitt">
+   <div className="phone-top"><span>Smoke Less</span><span aria-hidden="true">●</span></div>
    <AnimatePresence mode="wait" initial={false}>
     <motion.div key={screen} initial={reduced?false:{opacity:0,x:12}} animate={{opacity:1,x:0}} exit={reduced?undefined:{opacity:0,x:-12}} transition={{duration:.24}}>
     {screen==='home'?<>
-     <p className="eyebrow small">DIN RESA IDAG</p>
-     <div className="progress" role="img" aria-label="Illustrativ framstegscirkel: 72 procent">
-      <svg viewBox="0 0 220 220" aria-hidden="true"><circle cx="110" cy="110" r="92" className="track"/><motion.circle cx="110" cy="110" r="92" className="progress-stroke" initial={reduced?{pathLength:.72}:{pathLength:0}} whileInView={{pathLength:.72}} viewport={{once:true}} transition={{duration:1.7,ease:'easeOut'}} transform="rotate(-90 110 110)"/></svg>
-      <div className="progress-label"><strong>72%</strong><span>av dagens mål</span></div>
-     </div><div className="preview-card"><small>Du gör framsteg</small><strong>En dag i taget</strong></div><div className="preview-actions"><span>◷ <small>Din plan</small></span><span>♡ <small>Stöd & SOS</small></span></div>
+     <div className="app-goal-card"><p className="app-label">DAGENS FRAMSTEG</p><div className="app-goal-row"><div><strong className="app-number">6 / 10</strong><p className="app-caption">Kvar av dagsmålet</p></div><div className="app-mini-progress" role="img" aria-label="Exempel: 40 procent av dagsmålet använt"><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="43" className="track"/><motion.circle cx="55" cy="55" r="43" className="progress-stroke" initial={reduced?{pathLength:.4}:{pathLength:0}} whileInView={{pathLength:.4}} viewport={{once:true}} transition={{duration:1.4}} transform="rotate(-90 55 55)"/></svg><b>40%</b></div></div><p className="app-caption">Varje registrering hjälper dig framåt.</p></div>
+     <div className="app-quick-actions"><div className="app-action featured"><span aria-hidden="true">⊕</span><strong>Registrera</strong></div><div className="app-action"><span aria-hidden="true">♡</span><strong>SOS · Jag är röksugen</strong></div></div>
+     <p className="app-support-link">Stöd och fördjupning ↓</p>
     </>:screen==='plan'?<>
-     <p className="eyebrow small">DIN PERSONLIGA PLAN</p><h3 className="preview-title">En dag i taget</h3><p className="preview-subtitle">Följ din egen takt och dina delmål.</p>
-     <div className="plan-step"><span>01</span><div><strong>Välj din takt</strong><small>Snabb, balanserad eller lugn</small></div><b>✓</b></div>
-     <div className="plan-step"><span>02</span><div><strong>Följ dagens mål</strong><small>Små framsteg räknas</small></div><b>✓</b></div>
-     <div className="plan-step"><span>03</span><div><strong>Fortsätt framåt</strong><small>Din resa, dina val</small></div><b>→</b></div>
+     <p className="app-label">MIN PLAN</p><h3 className="app-heading">Din nedtrappning</h3><div className="app-panel"><p className="app-label">DAGENS MÅL</p><strong className="app-number">10</strong><p className="app-caption">cigaretter per dag · exempel</p></div>
+     <div className="app-panel"><p className="app-label">DIN TAKT</p><strong>Balanserad</strong><p className="app-caption">Anpassa takten eller välj ett eget stoppdatum.</p></div>
+     <div className="app-panel"><p className="app-label">NÄSTA STEG</p><strong>Fortsätt i din takt</strong><p className="app-caption">Dina tidigare registreringar finns kvar.</p></div>
     </>:<>
-     <p className="eyebrow small">STÖD NÄR DET BEHÖVS</p><div className="breathe-circle" aria-hidden="true">♡</div><h3 className="preview-title centered">Ta ett lugnt andetag</h3><p className="preview-subtitle centered">En kort paus kan hjälpa dig att hantera röksuget.</p><div className="preview-card"><small>Andningsövning</small><strong>Andas in · Pausa · Andas ut</strong></div>
+     <p className="app-label centered">TA ETT ANDETAG I TAGET</p><div className="app-breathe" aria-hidden="true"><span>≈</span><strong>Hitta ditt lugn</strong><small>4 in · 2 håll · 6 ut</small></div><p className="app-caption centered">Du behöver inte bestämma något just nu.</p><div className="app-breathe-button">Starta andningsövning</div><div className="app-panel"><p className="app-label">DIN PLAN JUST NU</p><strong>Tre små steg</strong><p className="app-caption">Stanna upp. Andas lugnt. Välj ett konkret tips.</p></div>
     </>}
     </motion.div>
    </AnimatePresence>
-   <p className="mock-note">Interaktiv designillustration · inga riktiga användardata</p>
+   <p className="mock-note">Återskapat från appens gränssnittskod · exempeldata</p>
   </div>
  </div>
 }
