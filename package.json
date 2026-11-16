@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:release": "node scripts/check-release-readiness.mjs",
+    "verify": "npm run build && npm run check:release"
   },
   "dependencies": {
     "react": "^19.2.0",
