@@ -19,7 +19,8 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-audit --no-fund
-      - run: npm run build
+      # Build and validate the output before it can be uploaded to GitHub Pages.
+      - run: npm run verify
       - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
