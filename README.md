@@ -26,3 +26,15 @@ GitHub Actions bygger React till `dist/` och publicerar enbart byggresultatet p�
 - Granska mobil/desktop, tangentbord och reduced motion.
 - Byt illustrerad telefon mot verifierade appskärmbilder.
 - SEO/prerendering och rena URL:er.
+
+## Verifierad koppling till appens APK-release
+
+Appens fas 29 publicerar preview.json och website-preview.json tillsammans med APK och SHA-256-fil. Webbplatsens manuella flöde kräver ett redan publicerat Preview-prerelease-taggnamn preview-build-N, oberoende verifierad APK-SHA-256 och faktisk Android-versionCode N.
+
+Synkskriptet läser det publicerade appmanifestet, kontrollerar paket/projekt/kanal/runtime/version/certifikatformat, matchande tagg/filnamn, GitHubs asset-digest och den nedladdade APK-filens SHA-256. Därefter måste website-preview.json överensstämma i samtliga fält. Först då skrivs public/updates/preview.json. Äldre eller lika versionCode ersätts inte. Hämtning har tids-/storleksgränser; saknad, felaktig eller ofullständig release avbryter före filskrivning.
+
+Detta startar inget appbygge och skickar inga tokens till appen. Inga manifest/länkar aktiveras av denna PR. Befintligt available:false behålls. Merge till main kan driftsätta webbplatskod via dess befintliga Pages-workflow och ska därför invänta uttryckligt beslut. Draft-PR:s CI bygger/testar utan deploy.
+
+Tester: npm test och npm run verify. Verklig publicerad APK, nedladdning/uppgradering på Android, färdig integritetspolicy och bevakad support-/raderingsväg är fortsatt lanseringsgrindar. Simon är bekräftad ansvarig och contact@wolfyslayer.online är bekräftad aktiv/bevakad. Avslutade supportärenden ska gallras efter 30 dagar. Full policy, faktisk gallringsrutin och säker kontoraderingsacceptans återstår. Den här ändringen påstår inte att kontoradering eller policy redan är slutgodkänd.
+
+Isolerade integrationstester kör det faktiska synkskriptet med simulerade GitHub-svar, verifierar APK-bytes och provar att manipulerad nedladdning inte skriver över det spärrade webbmanifestet. CI använder syntetiska bytes. För lokal verifiering kan SMOKELESS_TEST_APK sättas till en redan signerad/verifierad APK före npm run verify. Detta publicerar inget och är inte ett verkligt GitHub-/Android-nedladdningstest.
