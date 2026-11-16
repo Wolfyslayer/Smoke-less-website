@@ -1,40 +1,29 @@
 #!/usr/bin/env node
-// Preview publication gate: only an explicitly approved release tag + SHA-256 is published.
-// Called by GitHub Actions workflow_dispatch with reviewer-supplied values.
 import {createHash} from 'node:crypto';
-import {writeFile} from 'node:fs/promises';
-
-const [tag,expectedHash,versionCodeArg]=process.argv.slice(2);
-const versionCode=Number(versionCodeArg);
-if(!Number.isSafeInteger(versionCode)||versionCode<=0)throw Error('A verified positive Android versionCode is required');
-if(!/^[-\w.]+$/.test(tag||'')||!/^[a-f0-9]{64}$/i.test(expectedHash||''))throw Error('A release tag and a 64-character SHA-256 are required');
-const headers={'Accept':'application/vnd.github+json','User-Agent':'smoke-less-website-preview-sync','X-GitHub-Api-Version':'2022-11-28'};
-const api=await fetch('https://api.github.com/repos/Wolfyslayer/Smoke-less-app/releases/tags/'+encodeURIComponent(tag),{headers});
-if(!api.ok)throw Error('Release unavailable: HTTP '+api.status);
-const release=await api.json();
-if(release.draft||!release.prerelease||release.tag_name!==tag)throw Error('Release must be a published Preview prerelease');
-const apks=(release.assets||[]).filter(a=>typeof a.name==='string'&&a.name.endsWith('.apk')&&a.state==='uploaded');
-if(apks.length!==1)throw Error('Exactly one uploaded APK is required for safe selection');
-const asset=apks[0];
-if(!/^https:\/\/github\.com\/Wolfyslayer\/Smoke-less-app\/releases\/download\/[^/?#]+\/[^/?#]+\.apk$/i.test(asset.browser_download_url))throw Error('Unexpected download host/path');
-const download=await fetch(asset.browser_download_url,{redirect:'follow'});
-if(!download.ok)throw Error('APK download failed: '+download.status);
-const contentType=download.headers.get('content-type')||'';
-if(contentType.includes('text/html'))throw Error('Unexpected HTML download');
-const buffer=Buffer.from(await download.arrayBuffer());
-if(buffer.length<1000||buffer.length>250*1024*1024)throw Error('Unexpected APK size');
-const actual=createHash('sha256').update(buffer).digest('hex');
-if(actual.toLowerCase()!==expectedHash.toLowerCase())throw Error('SHA-256 mismatch');
-const manifest={
- available:true,
- version:tag,
- versionCode,
- runtimeVersion:null,
- packageName:'com.smokeless.app.preview',
- downloadUrl:asset.browser_download_url,
- sha256:actual,
- publishedAt:release.published_at||null,
- releaseNotes:'Verifierad Preview-APK från GitHub Releases.'
-};
+import {writeFile,readFile} from 'node:fs/promises';
+import {verifiedWebsiteManifest} from './preview-release-contract.mjs';
+const [tag,hash,build]=process.argv.slice(2),versionCode=Number(build),expectedHash=String(hash||'').toLowerCase();
+if(!Number.isSafeInteger(versionCode)||versionCode<1||tag!==`preview-build-${versionCode}`||!/^[a-f0-9]{64}$/.test(expectedHash))throw Error('An approved Preview build tag, versionCode and SHA-256 are required');
+async function download(url,limit){
+ const response=await fetch(url,{headers:{Accept:'application/vnd.github+json','User-Agent':'smoke-less-website-preview-sync'},signal:AbortSignal.timeout(120000)});
+ if(!response.ok)throw Error('Published release download unavailable');
+ const final=new URL(response.url);if(final.protocol!=='https:'||!['api.github.com','github.com','release-assets.githubusercontent.com','objects.githubusercontent.com'].includes(final.hostname))throw Error('Unexpected release download destination');
+ if(Number(response.headers.get('content-length'))>limit)throw Error('Release asset too large');
+ let size=0;const chunks=[];for await(const chunk of response.body){size+=chunk.length;if(size>limit)throw Error('Release asset too large');chunks.push(chunk)}return Buffer.concat(chunks);
+}
+const release=JSON.parse(await download(`https://api.github.com/repos/Wolfyslayer/Smoke-less-app/releases/tags/${tag}`,1048576));
+const base=`https://github.com/Wolfyslayer/Smoke-less-app/releases/download/${tag}/`;
+const asset=(release.assets||[]).find(a=>a.name==='preview.json'&&a.state==='uploaded'&&a.browser_download_url===`${base}preview.json`);
+if(!asset)throw Error('Verified app release manifest missing');
+const candidate=JSON.parse(await download(asset.browser_download_url,16384));
+const manifest=verifiedWebsiteManifest(candidate,release,expectedHash,versionCode);
+const apk=await download(manifest.downloadUrl,250*1024*1024);
+if(apk.length<1000||createHash('sha256').update(apk).digest('hex')!==expectedHash)throw Error('APK checksum mismatch');
+const webAsset=(release.assets||[]).find(a=>a.name==='website-preview.json'&&a.state==='uploaded'&&a.browser_download_url===`${base}website-preview.json`);
+if(!webAsset)throw Error('Verified website release manifest missing');
+const exported=JSON.parse(await download(webAsset.browser_download_url,16384));
+for(const [key,value] of Object.entries(manifest))if(exported[key]!==value)throw Error('Website/app release metadata disagreement');
+const previous=JSON.parse(await readFile('public/updates/preview.json','utf8'));
+if(previous.available===true&&(!Number.isSafeInteger(previous.versionCode)||previous.versionCode>=versionCode))throw Error('Do not replace an equal/newer website release');
 await writeFile('public/updates/preview.json',JSON.stringify(manifest,null,2)+'\n');
-console.log('Verified release',tag,'sha256',actual);
+console.log('Verified published Preview APK and app/website manifest agreement');
