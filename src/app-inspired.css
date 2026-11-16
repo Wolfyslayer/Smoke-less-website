@@ -285,3 +285,14 @@ body:before{
 }
 @media(max-width:360px){.hero::before{left:-14px;right:-14px}}
 @media(prefers-contrast:more){.hero::before{opacity:.12}}
+
+/* Phase 4: keyboard and small-screen launch polish. */
+#main-content:focus{outline:none}
+.skip-link:focus-visible{position:fixed;z-index:9999;top:12px;left:12px;padding:12px 18px;border-radius:12px;background:#b4ffe0;color:#00151b;outline:3px solid #ffffff}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #80ffce;outline-offset:4px}
+.site-header nav a{min-height:44px;display:inline-flex;align-items:center}
+.preview-switcher button,.preview-theme{min-height:44px}
+.download-checksum code{overflow-wrap:anywhere;word-break:break-word}
+.content p,.feature-card p{overflow-wrap:break-word}
+@media(max-width:540px){.download-panel-heading{flex-wrap:wrap}.download-status{max-width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
