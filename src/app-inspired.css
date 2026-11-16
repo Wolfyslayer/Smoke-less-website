@@ -206,3 +206,35 @@ body:before{
 }
 @media(max-width:360px){.content::before{left:-14px;right:-14px}.content .panel{padding:18px}}
 @media(prefers-contrast:more){.content::before{opacity:.12}.content .panel{border-color:#8bd4c5}}
+
+/* Phase 3.9.4: bring the homepage landscape up to the same visibility as inner pages.
+   Earlier mobile rules stacked dark gradients with opacity .48, hiding the illustration. */
+.hero::before{
+  background:
+    linear-gradient(180deg,#00151b28 0%,#00151b08 44%,#00151b 100%),
+    linear-gradient(90deg,#00151b9c 0%,#00151b26 66%,transparent 100%),
+    url('/nordic-landscape.svg') center 52% / cover no-repeat;
+  opacity:1;
+}
+@media(max-width:850px){
+ .hero::before{
+   opacity:1;
+   background-position:center,center,68% 50%;
+ }
+ .hero-copy{
+   background:linear-gradient(90deg,#00151b9c 0%,#00151b66 55%,transparent);
+ }
+}
+@media(max-width:540px){
+ .hero::before{
+   opacity:1;
+   background:
+     linear-gradient(180deg,#00151b30 0%,#00151b12 38%,#00151b00 67%,#00151b 100%),
+     linear-gradient(90deg,#00151b99 0%,#00151b40 55%,transparent 100%),
+     url('/nordic-landscape.svg') 67% 50% / cover no-repeat;
+ }
+ .hero-copy{
+   background:linear-gradient(180deg,#00151b99 0%,#00151b59 52%,transparent 100%);
+ }
+}
+@media(prefers-contrast:more){.hero::before{opacity:.3}}
