@@ -55,3 +55,13 @@
 .preview-switcher button.selected{background:#d7ff23;color:#090a0c}
 .preview-switcher button:hover{color:#d7ff23}
 .preview-switcher button.selected:hover{color:#090a0c}
+
+
+/* Phase 3.3: subtle, accessible interaction feedback */
+.app-breathe-button{display:block;width:100%;border:0;font-family:inherit;cursor:pointer;transition:filter .2s,transform .2s}
+.app-breathe-button:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.app-breathe-button:active{transform:translateY(0)}
+.app-breathe-button[aria-pressed="true"]{background:#b9df1d}
+.app-phone{will-change:auto}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.app-quick-actions .app-action{transition:background .2s,border-color .2s}.app-quick-actions .app-action:hover{border-color:#6b7f27;background:#303b16}}
+@media(prefers-reduced-motion:reduce){.app-breathe-button:hover{transform:none}.app-phone{transform:none!important}}
