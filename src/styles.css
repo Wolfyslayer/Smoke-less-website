@@ -18,3 +18,40 @@
 .plan-step b{color:var(--accent)}
 .breathe-circle{height:188px;width:188px;border-radius:50%;border:2px solid #75cfa2;background:radial-gradient(circle,#2d7053,#15382e);display:grid;place-items:center;color:var(--accent);font-size:76px;margin:40px auto 24px;box-shadow:0 0 0 13px #244c3c77,0 0 50px #6edca52b}
 @media(max-width:540px){.preview-switcher button{padding:9px 13px}.preview-showcase .phone{min-height:555px}}
+
+
+/* Source-aligned preview: src/theme.ts, HomeScreen, DailyProgressShareArtwork, PlanScreen, SOSScreen */
+.app-phone{background:#090a0c;border-color:#303336;color:#f5f6f4;min-height:570px;transform:none}
+.app-phone:before{background:#4b4e52}
+.app-phone .phone-top{color:#f5f6f4;font-size:15px}
+.app-phone .phone-top span:last-child{color:#d7ff23}
+.app-phone .mock-note{color:#a0a3a7;font-size:10px;margin-top:15px}
+.app-phone .track{stroke:#272a2d;stroke-width:10}
+.app-phone .progress-stroke{stroke:#d7ff23;stroke-width:10}
+.app-label{color:#d7ff23;font-size:10px;font-weight:800;letter-spacing:1.2px;margin:0 0 10px}
+.app-label.centered{text-align:center;margin-top:25px}
+.app-goal-card,.app-panel{background:#202225;border:1px solid #425c29;border-radius:17px;padding:16px;margin-top:22px}
+.app-goal-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.app-number{font-size:29px;font-weight:900;letter-spacing:-1px;white-space:nowrap}
+.app-caption{font-size:11px;color:#a0a3a7;line-height:1.55;margin:6px 0}
+.app-caption.centered{text-align:center}
+.app-mini-progress{position:relative;flex:0 0 105px;height:105px}
+.app-mini-progress svg{width:100%;height:100%}
+.app-mini-progress b{position:absolute;inset:0;display:grid;place-items:center;font-size:19px}
+.app-quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.app-action{position:relative;display:flex;flex-direction:column;justify-content:center;gap:8px;min-height:92px;padding:13px;background:#202225;border:1px solid #303336;border-radius:16px;font-size:12px;line-height:1.35}
+.app-action span{font-size:23px;color:#d7ff23}
+.app-action.featured{background:#303b16;border-color:#5c6b24}
+.app-support-link{font-size:11px;color:#d7ff23;margin-top:17px;text-align:center}
+.app-heading{font-size:19px;margin:16px 0}
+.app-panel{margin-top:12px;border-color:#303336}
+.app-panel strong{font-size:15px}
+.app-panel .app-number{font-size:30px}
+.app-breathe{height:185px;width:185px;margin:24px auto 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;border-radius:50%;background:#303b16;border:2px solid #5c6b24;color:#f5f6f4}
+.app-breathe span{font-size:35px;color:#d7ff23;line-height:1}
+.app-breathe strong{font-size:14px}
+.app-breathe small{font-size:11px;color:#a0a3a7}
+.app-breathe-button{background:#d7ff23;color:#090a0c;border-radius:11px;text-align:center;font-size:12px;font-weight:800;padding:12px}
+.preview-switcher button.selected{background:#d7ff23;color:#090a0c}
+.preview-switcher button:hover{color:#d7ff23}
+.preview-switcher button.selected:hover{color:#090a0c}
