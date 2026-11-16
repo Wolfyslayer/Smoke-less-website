@@ -1,0 +1,50 @@
+name: Publish verified Preview APK metadata
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Published Preview prerelease tag in Smoke-less-app'
+        required: true
+        type: string
+      sha256:
+        description: 'Independently verified SHA-256 of the Preview APK'
+        required: true
+        type: string
+      version_code:
+        description: 'Verified Android versionCode from the APK'
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: preview-release-manifest
+  cancel-in-progress: false
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    environment: preview-publication
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify APK checksum and prepare manifest
+        env:
+          TAG: ${{ inputs.release_tag }}
+          SHA256: ${{ inputs.sha256 }}
+          VERSION_CODE: ${{ inputs.version_code }}
+        run: node scripts/sync-preview-release.mjs "$TAG" "$SHA256" "$VERSION_CODE"
+      - name: Commit verified manifest
+        run: |
+          if git diff --quiet -- public/updates/preview.json; then
+            echo "Manifest already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/updates/preview.json
+          git commit -m "chore(web): publish verified Preview manifest"
+          git push origin HEAD:main
