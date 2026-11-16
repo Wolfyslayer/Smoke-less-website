@@ -140,3 +140,12 @@
 .download-help li{margin:0 0 12px}
 .download-help code{overflow-wrap:anywhere}
 @media(max-width:700px){.download-help{grid-template-columns:1fr}}
+
+
+/* Accessibility: touch target size, keyboard focus and responsive reading */
+.preview-switcher button,.preview-theme,.modern-breathe-button{min-height:44px;touch-action:manipulation}
+.preview-switcher button:focus-visible,.preview-theme:focus-visible,.modern-breathe-button:focus-visible{outline:3px solid #fff;outline-offset:3px;box-shadow:0 0 0 5px #007d62}
+.modern-preview.light .preview-switcher button:focus-visible,.modern-preview.light .modern-breathe-button:focus-visible{outline-color:#082b32}
+.download-checksum code{overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:380px){.preview-toolbar{gap:8px}.preview-switcher button{padding-inline:10px}.preview-theme{padding-inline:10px}.download-facts{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.phone,.button,.feature-card{transform:none!important}.button:hover,.feature-card:hover{transform:none!important}}
