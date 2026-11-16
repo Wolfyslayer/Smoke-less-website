@@ -1,0 +1,115 @@
+/* Phase 3.9: visual language inspired by the supplied Smoke Less app screens.
+   Keep all decoration in CSS so the website stays lightweight and responsive. */
+:root{
+  color-scheme:dark;
+  --bg:#00151b;
+  --surface:#06272d;
+  --line:#205259;
+  --accent:#35edac;
+  --muted:#b4d0d1;
+  color:#f2fcf9;
+  background:var(--bg);
+}
+body{
+  background:
+    radial-gradient(ellipse 52% 34% at 81% 17%,#227e6b50,transparent 78%),
+    radial-gradient(ellipse 46% 25% at 78% 26%,#f9a97524,transparent 72%),
+    radial-gradient(ellipse 45% 33% at 8% 65%,#126b6650,transparent 85%),
+    linear-gradient(180deg,#001117 0%,#001c22 43%,#00151b 100%);
+  color:#f2fcf9;
+}
+body:before{
+  content:"";position:absolute;top:110px;right:0;width:min(76vw,1050px);
+  height:650px;pointer-events:none;opacity:.5;
+  background:
+    radial-gradient(ellipse 44% 13% at 72% 37%,#ffbf9170,transparent 80%),
+    radial-gradient(ellipse 38% 25% at 65% 33%,#39c7a03a,transparent 80%);
+  filter:blur(48px);z-index:-1;
+}
+::selection{background:#35edac;color:#00291e}
+:focus-visible{outline-color:#7dffcf}
+.wrap{max-width:1280px}
+.site-header{min-height:88px;border-bottom:1px solid #3681763a}
+.brand{color:#f2fcf9;letter-spacing:-.8px}
+.brand-mark{display:inline-grid;place-items:center;width:39px;height:39px;
+  margin-right:8px;border-radius:13px;color:#00291e;font-size:27px;
+  background:linear-gradient(135deg,#8effce,#23dba0);
+  box-shadow:0 0 32px #35edac30}
+.site-header nav a{font-weight:700;color:#b4d0d1}
+.site-header nav a.active{color:#35edac}
+.hero{grid-template-columns:minmax(0,1.1fr) minmax(310px,.9fr);gap:clamp(32px,6vw,96px);
+  min-height:740px;position:relative}
+.hero-copy{position:relative;z-index:1}
+.eyebrow{color:#35edac;letter-spacing:2px}
+.hero h1{font-size:clamp(50px,6.4vw,88px);letter-spacing:-3.5px}
+.hero h1 em{background:linear-gradient(95deg,#a5ffda 0%,#35edac 65%,#24bfc4 100%);background-clip:text}
+.lead{color:#c2dbdc!important;line-height:1.75}
+.button{border-radius:16px;box-shadow:none}
+.button.primary{color:#00291e;background:linear-gradient(180deg,#79ffca,#27d99d);
+  box-shadow:0 12px 35px #13dca331}
+.button.primary:hover{box-shadow:0 17px 40px #13dca34b}
+.button.outline{background:#0a34394d;border-color:#3c817c;color:#e7fbf5}
+.fineprint{color:#b4d0d1!important}
+.preview-toolbar{gap:12px}
+.preview-switcher{background:#082c32;border-color:#27646a;box-shadow:0 12px 36px #0004}
+.preview-switcher button{color:#c7e0df}
+.preview-switcher button.selected{background:linear-gradient(180deg,#7effc7,#35edac);color:#00291e;
+  box-shadow:0 3px 13px #35edac3a}
+.preview-switcher button:hover{color:#35edac}
+.preview-switcher button.selected:hover{color:#00291e}
+.preview-theme{background:#082c32;color:#d9f7f0;border-color:#27646a}
+.modern-preview{
+  border:6px solid #526568!important;
+  outline:2px solid #98ada9;
+  outline-offset:1px;
+  border-radius:42px!important;
+  box-shadow:0 30px 85px #000b,0 0 65px #35edac20,inset 0 0 0 1px #a6d3c74d!important;
+}
+.modern-preview:before{width:70px;height:7px;top:8px;background:#07171a;z-index:5}
+.modern-scene{height:160px;background:
+  radial-gradient(circle at 77% 55%,#f7b98b8c,transparent 20%),
+  radial-gradient(ellipse at 70% 40%,#2fa99a88,transparent 62%),
+  linear-gradient(180deg,#001a21,#164c4b 70%,#06282d)}
+.scene-sun{top:45px;right:32px;width:62px;height:62px;opacity:.85;background:#ffbb8c;box-shadow:0 0 40px #ffc79d}
+.scene-hill{background:#124b4c;bottom:-40px}
+.scene-hill.two{background:#082b34}
+.scene-leaf{opacity:.95;color:#35edac}
+.modern-content{padding-top:23px}
+.modern-brand{margin-bottom:46px;text-shadow:0 1px 8px #00151b}
+.modern-heading{font-size:23px;letter-spacing:-.7px}
+.modern-card{box-shadow:inset 0 1px #ffffff0b,0 8px 26px #0002}
+.modern-preview .modern-card{border-color:var(--p-border)}
+.modern-ring .ring-fill{filter:drop-shadow(0 0 4px #35edac60)}
+.modern-metrics div{border:1px solid var(--p-border);background:linear-gradient(155deg,var(--p-elevated),var(--p-surface))}
+.modern-actions div{background:linear-gradient(180deg,#7effc7,#27d99d)}
+.modern-breathe{box-shadow:0 0 0 9px #35edac12,0 0 35px #35edac1f}
+.modern-breathe-button{background:linear-gradient(180deg,#79ffca,#27d99d)}
+.modern-preview.light .modern-actions div:first-child,.modern-preview.light .modern-breathe-button{background:var(--p-accent)}
+.section{position:relative}
+.section h2,.content h2{color:#f2fcf9}
+.feature-grid{gap:18px}
+.feature-card,.panel{
+  background:linear-gradient(150deg,#0b373d 0%,#06272d 52%,#041e25 100%);
+  border:1px solid #286268;
+  box-shadow:inset 0 1px #ffffff0b,0 15px 40px #0002;
+}
+.feature-card{border-radius:22px;padding:28px}
+.feature-card:hover{border-color:#35edac88;box-shadow:0 18px 45px #0004,0 0 22px #35edac16}
+.feature-icon{display:inline-grid;place-items:center;width:54px;height:54px;border-radius:16px;
+  background:#35edac14;border:1px solid #35edac45;color:#35edac}
+.feature-card h3{color:#f2fcf9}
+.feature-card p,.content p,.section p{color:#b4d0d1}
+.cta{border:1px solid #31706e;border-radius:26px;padding:44px;
+  background:radial-gradient(ellipse at 90% 0%,#35edac24,transparent 50%),
+    linear-gradient(115deg,#0d4342,#06272d 70%);
+  box-shadow:0 25px 60px #0004}
+.content{max-width:900px}
+.content h1{letter-spacing:-2px}
+.panel{border-radius:22px}
+.panel details{border-color:#286268}
+.download-status{border-color:#35edac55;color:#a5ffda;background:#35edac12}
+.download-facts>div,.download-checksum code{background:#001b23;border-color:#286268}
+.site-footer{border-color:#286268}
+@media(max-width:850px){.hero{grid-template-columns:1fr;min-height:0;gap:42px}.hero-copy{max-width:740px}.modern-preview{margin-inline:auto}}
+@media(max-width:540px){body:before{width:100vw;height:480px;top:180px}.hero{padding-block:45px}.hero h1{font-size:clamp(46px,11vw,64px);letter-spacing:-2.2px}.cta{padding:26px}.feature-card{padding:24px}.modern-preview{max-width:min(100%,320px)}}
+@media(prefers-reduced-motion:reduce){.feature-card:hover,.button:hover{transform:none}}
