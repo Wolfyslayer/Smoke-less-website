@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "check:release": "node scripts/check-release-readiness.mjs",
-    "test": "node --test scripts/preview-release-contract.test.mjs",
+    "test": "node --test scripts/preview-release-contract.test.mjs scripts/sync-preview-release.integration.test.mjs",
     "verify": "npm test && npm run build && npm run check:release"
   },
   "dependencies": {
