@@ -24,7 +24,7 @@ create table public.beta_artifacts (
   storage_path text not null unique check (length(storage_path) between 1 and 500),
   version text not null check (length(version) between 1 and 100),
   version_code integer not null check (version_code > 0),
-  package_name text not null check (package_name ~ '^com\\.smokeless\\.app(\\.preview)?$'),
+  package_name text not null check (package_name ~ '^com\.smokeless\.app(\.preview)?$'),
   sha256 text not null check (sha256 ~ '^[a-f0-9]{64}$'),
   signing_certificate_sha256 text not null check (signing_certificate_sha256 ~ '^[a-f0-9]{64}$'),
   release_notes text not null default '',
