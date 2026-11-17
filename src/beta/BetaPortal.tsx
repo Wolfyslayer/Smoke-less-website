@@ -74,9 +74,12 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [])
 
+  const strongPassword = password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)
+
   async function submitCredentials(event: React.FormEvent) {
     event.preventDefault()
     if (busy) return
+    if (authAction === 'signup' && !strongPassword) { setMessage('Lösenordet måste innehålla minst 8 tecken, stora och små bokstäver, siffror och specialtecken.'); return }
     setBusy(true); setMessage('')
     try {
       if (authAction === 'signup' && !adminOnly && mode === 'beta') {
@@ -137,7 +140,7 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
         <p>{adminOnly ? 'Logga in med ditt administratörskonto.' : 'Använd e-post och lösenord för att hantera din ansökan.'}</p>
         <form className="beta-form" onSubmit={submitCredentials}>
           <div className="beta-field"><label htmlFor="beta-email">E-postadress</label><input id="beta-email" type="email" required autoComplete="email" placeholder="namn@exempel.se" value={email} onChange={e => setEmail(e.target.value)} /></div>
-          <div className="beta-field"><label htmlFor="beta-password">Lösenord</label><input id="beta-password" type="password" required minLength={6} autoComplete={authAction === 'signup' ? 'new-password' : 'current-password'} placeholder="Ange ditt lösenord" value={password} onChange={e => setPassword(e.target.value)} /></div>
+          <div className="beta-field"><label htmlFor="beta-password">Lösenord</label><input id="beta-password" type="password" required minLength={authAction === 'signup' ? 8 : undefined} aria-describedby={authAction === 'signup' ? 'beta-password-rules' : undefined} autoComplete={authAction === 'signup' ? 'new-password' : 'current-password'} placeholder="Ange ditt lösenord" value={password} onChange={e => setPassword(e.target.value)} />{authAction === 'signup' && <p id="beta-password-rules" className="fineprint">Minst 8 tecken, en stor bokstav, en liten bokstav, en siffra och ett specialtecken.</p>}</div>
           <button className="button primary" type="submit" disabled={busy}>{busy ? 'Vänta…' : authAction === 'signup' && !adminOnly ? 'Skapa konto' : 'Logga in'}</button>
         </form>
         {!adminOnly && mode === 'beta' && <button className="beta-text-button" type="button" onClick={() => { setAuthAction(v => v === 'login' ? 'signup' : 'login'); setMessage('') }}>{authAction === 'login' ? 'Ny testare? Skapa konto' : 'Har du redan ett konto? Logga in'}</button>}
