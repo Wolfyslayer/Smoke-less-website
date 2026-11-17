@@ -14,8 +14,8 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
   const [mode, setMode] = useState<Mode>('closed')
   const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState('')
-  const [token, setToken] = useState('')
-  const [sent, setSent] = useState(false)
+  const [password, setPassword] = useState('')
+  const [authAction, setAuthAction] = useState<'login' | 'signup'>('login')
   const [message, setMessage] = useState('')
   const [application, setApplication] = useState<Application | null>(null)
   const [admin, setAdmin] = useState(false)
@@ -74,21 +74,25 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [])
 
-  async function sendCode(event: React.FormEvent) {
+  async function submitCredentials(event: React.FormEvent) {
     event.preventDefault()
+    if (busy) return
     setBusy(true); setMessage('')
-    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true } })
-    setBusy(false)
-    if (error) setMessage(safeError)
-    else { setSent(true); setMessage('Kontrollera din e-post och ange engångskoden. Om du får en inloggningslänk kan du öppna den istället.') }
-  }
-
-  async function verifyCode(event: React.FormEvent) {
-    event.preventDefault()
-    setBusy(true); setMessage('')
-    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: token.trim(), type: 'email' })
-    setBusy(false)
-    if (error) setMessage('Koden kunde inte verifieras. Kontrollera den eller begär en ny.')
+    try {
+      if (authAction === 'signup' && !adminOnly && mode === 'beta') {
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(), password,
+          options: { emailRedirectTo: window.location.origin + '/#/beta' },
+        })
+        if (error) throw error
+        setMessage(data.session ? 'Kontot är skapat. Du kan nu ansöka.' : 'Kontrollera din e-post och bekräfta kontot innan du loggar in.')
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+        if (error) throw error
+      }
+    } catch {
+      setMessage(authAction === 'signup' ? 'Kontot kunde inte skapas. Kontrollera uppgifterna och försök igen.' : 'Inloggningen misslyckades. Kontrollera e-post och lösenord.')
+    } finally { setBusy(false) }
   }
 
   async function apply() {
@@ -128,13 +132,15 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
     <p className="lead">Betatestning är endast tillgänglig efter godkännande. En ansökan ger inte automatiskt tillgång till appen.</p>
     {loading ? <p role="status">Hämtar status…</p> : <>
       {!adminOnly && <div className="panel"><h2>Aktuellt läge</h2><p role="status">{mode === 'beta' ? 'Ansökningar till betatestning' : mode === 'release' ? 'Offentlig release' : 'Stängt för nedladdning'}</p></div>}
-      {!user ? <section className="panel">
-        <h2>Logga in med e-post</h2>
-        <p>Du behöver verifiera din e-postadress för att ansöka eller se din ansökan.</p>
-        <form onSubmit={sendCode}><label htmlFor="beta-email">E-postadress</label><input id="beta-email" type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} />
-          <button className="button primary" type="submit" disabled={busy}>Skicka inloggningskod</button></form>
-        {sent && <form onSubmit={verifyCode}><label htmlFor="beta-code">Engångskod från e-post</label><input id="beta-code" required inputMode="numeric" autoComplete="one-time-code" value={token} onChange={e => setToken(e.target.value)} />
-          <button className="button outline" type="submit" disabled={busy}>Verifiera kod</button></form>}
+      {!user ? <section className="panel beta-auth-card">
+        <h2>{authAction === 'signup' && !adminOnly ? 'Skapa testkonto' : 'Logga in'}</h2>
+        <p>{adminOnly ? 'Logga in med ditt administratörskonto.' : 'Använd e-post och lösenord för att hantera din ansökan.'}</p>
+        <form className="beta-form" onSubmit={submitCredentials}>
+          <div className="beta-field"><label htmlFor="beta-email">E-postadress</label><input id="beta-email" type="email" required autoComplete="email" placeholder="namn@exempel.se" value={email} onChange={e => setEmail(e.target.value)} /></div>
+          <div className="beta-field"><label htmlFor="beta-password">Lösenord</label><input id="beta-password" type="password" required minLength={6} autoComplete={authAction === 'signup' ? 'new-password' : 'current-password'} placeholder="Ange ditt lösenord" value={password} onChange={e => setPassword(e.target.value)} /></div>
+          <button className="button primary" type="submit" disabled={busy}>{busy ? 'Vänta…' : authAction === 'signup' && !adminOnly ? 'Skapa konto' : 'Logga in'}</button>
+        </form>
+        {!adminOnly && mode === 'beta' && <button className="beta-text-button" type="button" onClick={() => { setAuthAction(v => v === 'login' ? 'signup' : 'login'); setMessage('') }}>{authAction === 'login' ? 'Ny testare? Skapa konto' : 'Har du redan ett konto? Logga in'}</button>}
       </section> : <>
         <div className="panel"><p>Inloggad som <strong>{user.email}</strong></p><button className="button outline" type="button" onClick={() => void supabase.auth.signOut()}>Logga ut</button></div>
         {!adminOnly && mode === 'beta' && <section className="panel"><h2>Din betaansökan</h2>
