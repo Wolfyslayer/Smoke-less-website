@@ -198,3 +198,29 @@ img,svg{max-width:100%}
  .hero{min-height:0;padding-block:30px}
  .content{padding-block:36px 55px}
 }
+
+/* Beta portal: same surface language as the public Smoke Less site */
+.beta-auth-card { max-width: 540px; margin-inline: auto; }
+.beta-form { display: grid; gap: 1.15rem; margin-top: 1.5rem; }
+.beta-field { display: grid; gap: .5rem; }
+.beta-field label { font-size: .94rem; font-weight: 650; }
+.beta-field input {
+  width: 100%; min-height: 52px; box-sizing: border-box;
+  padding: .85rem 1rem; border-radius: 14px;
+  border: 1px solid rgba(140,160,175,.38);
+  background: rgba(127,147,165,.08);
+  color: inherit; font: inherit; transition: border-color .2s, box-shadow .2s;
+}
+.beta-field input::placeholder { opacity: .65; }
+.beta-field input:focus-visible {
+  outline: 2px solid #60c8ae; outline-offset: 2px;
+  border-color: #60c8ae; box-shadow: 0 0 0 4px rgba(96,200,174,.12);
+}
+.beta-form .button { justify-self: start; margin-top: .3rem; }
+.beta-text-button {
+  margin-top: 1rem; padding: .5rem 0; background: transparent; border: 0;
+  color: inherit; text-decoration: underline; text-underline-offset: 4px;
+  font: inherit; cursor: pointer;
+}
+.beta-text-button:focus-visible { outline: 2px solid #60c8ae; outline-offset: 4px; }
+@media(max-width: 600px) { .beta-auth-card { max-width: 100%; } .beta-form .button { width: 100%; } }
