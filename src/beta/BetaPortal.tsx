@@ -15,7 +15,7 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
   const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [authAction, setAuthAction] = useState<'login' | 'signup'>('login')
+  const [authAction, setAuthAction] = useState<'login' | 'signup' | 'forgot' | 'reset'>('login')
   const [message, setMessage] = useState('')
   const [application, setApplication] = useState<Application | null>(null)
   const [admin, setAdmin] = useState(false)
@@ -67,7 +67,8 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
   useEffect(() => {
     let active = true
     void supabase.auth.getUser().then(({ data }) => { if (active) void load(data.user) })
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') { setAuthAction('reset'); setMessage('Ange ditt nya lösenord.') }
       // Schedule a refresh outside the auth callback to avoid Supabase auth-lock deadlocks.
       if (active) window.setTimeout(() => { if (active) void load(session?.user ?? null) }, 0)
     })
@@ -79,10 +80,22 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
   async function submitCredentials(event: React.FormEvent) {
     event.preventDefault()
     if (busy) return
-    if (authAction === 'signup' && !strongPassword) { setMessage('Lösenordet måste innehålla minst 8 tecken, stora och små bokstäver, siffror och specialtecken.'); return }
+    if ((authAction === 'signup' || authAction === 'reset') && !strongPassword) { setMessage('Lösenordet måste innehålla minst 8 tecken, stora och små bokstäver, siffror och specialtecken.'); return }
     setBusy(true); setMessage('')
     try {
-      if (authAction === 'signup' && !adminOnly && mode === 'beta') {
+      if (authAction === 'forgot') {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: window.location.origin + window.location.pathname + '?auth=reset#' + (adminOnly ? '/admin' : '/beta'),
+        })
+        if (error) throw error
+        setMessage('Om adressen finns registrerad skickas ett mejl med instruktioner.')
+      } else if (authAction === 'reset') {
+        const { error } = await supabase.auth.updateUser({ password })
+        if (error) throw error
+        setPassword('')
+        setAuthAction('login')
+        setMessage('Lösenordet har uppdaterats.')
+      } else if (authAction === 'signup' && !adminOnly && mode === 'beta') {
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(), password,
           options: { emailRedirectTo: window.location.origin + '/#/beta' },
@@ -94,7 +107,7 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
         if (error) throw error
       }
     } catch {
-      setMessage(authAction === 'signup' ? 'Kontot kunde inte skapas. Kontrollera uppgifterna och försök igen.' : 'Inloggningen misslyckades. Kontrollera e-post och lösenord.')
+      setMessage(authAction === 'forgot' ? 'Kunde inte skicka återställningsmejl.' : authAction === 'reset' ? 'Lösenordet kunde inte uppdateras. Begär en ny återställningslänk.' : authAction === 'signup' ? 'Kontot kunde inte skapas. Kontrollera uppgifterna och försök igen.' : 'Inloggningen misslyckades. Kontrollera e-post och lösenord.')
     } finally { setBusy(false) }
   }
 
@@ -136,14 +149,16 @@ export default function BetaPortal({ adminOnly = false }: { adminOnly?: boolean 
     {loading ? <p role="status">Hämtar status…</p> : <>
       {!adminOnly && <div className="panel"><h2>Aktuellt läge</h2><p role="status">{mode === 'beta' ? 'Ansökningar till betatestning' : mode === 'release' ? 'Offentlig release' : 'Stängt för nedladdning'}</p></div>}
       {!user ? <section className="panel beta-auth-card">
-        <h2>{authAction === 'signup' && !adminOnly ? 'Skapa testkonto' : 'Logga in'}</h2>
+        <h2>{authAction === 'reset' ? 'Nytt lösenord' : authAction === 'forgot' ? 'Återställ lösenord' : authAction === 'signup' && !adminOnly ? 'Skapa testkonto' : 'Logga in'}</h2>
         <p>{adminOnly ? 'Logga in med ditt administratörskonto.' : 'Använd e-post och lösenord för att hantera din ansökan.'}</p>
         <form className="beta-form" onSubmit={submitCredentials}>
-          <div className="beta-field"><label htmlFor="beta-email">E-postadress</label><input id="beta-email" type="email" required autoComplete="email" placeholder="namn@exempel.se" value={email} onChange={e => setEmail(e.target.value)} /></div>
-          <div className="beta-field"><label htmlFor="beta-password">Lösenord</label><input id="beta-password" type="password" required minLength={authAction === 'signup' ? 8 : undefined} aria-describedby={authAction === 'signup' ? 'beta-password-rules' : undefined} autoComplete={authAction === 'signup' ? 'new-password' : 'current-password'} placeholder="Ange ditt lösenord" value={password} onChange={e => setPassword(e.target.value)} />{authAction === 'signup' && <p id="beta-password-rules" className="fineprint">Minst 8 tecken, en stor bokstav, en liten bokstav, en siffra och ett specialtecken.</p>}</div>
-          <button className="button primary" type="submit" disabled={busy}>{busy ? 'Vänta…' : authAction === 'signup' && !adminOnly ? 'Skapa konto' : 'Logga in'}</button>
+          {authAction !== 'reset' && <div className="beta-field"><label htmlFor="beta-email">E-postadress</label><input id="beta-email" type="email" required autoComplete="email" placeholder="namn@exempel.se" value={email} onChange={e => setEmail(e.target.value)} /></div>}
+          {authAction !== 'forgot' && <div className="beta-field"><label htmlFor="beta-password">Lösenord</label><input id="beta-password" type="password" required minLength={authAction === 'signup' || authAction === 'reset' ? 8 : undefined} aria-describedby={authAction === 'signup' || authAction === 'reset' ? 'beta-password-rules' : undefined} autoComplete={authAction === 'signup' || authAction === 'reset' ? 'new-password' : 'current-password'} placeholder="Ange ditt lösenord" value={password} onChange={e => setPassword(e.target.value)} />{(authAction === 'signup' || authAction === 'reset') && <p id="beta-password-rules" className="fineprint">Minst 8 tecken, en stor bokstav, en liten bokstav, en siffra och ett specialtecken.</p>}</div>}
+          <button className="button primary" type="submit" disabled={busy}>{busy ? 'Vänta…' : authAction === 'forgot' ? 'Skicka återställningsmejl' : authAction === 'reset' ? 'Spara nytt lösenord' : authAction === 'signup' && !adminOnly ? 'Skapa konto' : 'Logga in'}</button>
         </form>
-        {!adminOnly && mode === 'beta' && <button className="beta-text-button" type="button" onClick={() => { setAuthAction(v => v === 'login' ? 'signup' : 'login'); setMessage('') }}>{authAction === 'login' ? 'Ny testare? Skapa konto' : 'Har du redan ett konto? Logga in'}</button>}
+        {authAction === 'login' && <button className="beta-text-button" type="button" onClick={() => { setAuthAction('forgot'); setMessage('') }}>Glömt lösenord?</button>}
+        {authAction === 'forgot' && <button className="beta-text-button" type="button" onClick={() => { setAuthAction('login'); setMessage('') }}>Tillbaka till inloggning</button>}
+        {!adminOnly && mode === 'beta' && (authAction === 'login' || authAction === 'signup') && <button className="beta-text-button" type="button" onClick={() => { setAuthAction(v => v === 'login' ? 'signup' : 'login'); setMessage('') }}>{authAction === 'login' ? 'Ny testare? Skapa konto' : 'Har du redan ett konto? Logga in'}</button>}
       </section> : <>
         <div className="panel"><p>Inloggad som <strong>{user.email}</strong></p><button className="button outline" type="button" onClick={() => void supabase.auth.signOut()}>Logga ut</button></div>
         {!adminOnly && mode === 'beta' && <section className="panel"><h2>Din betaansökan</h2>
