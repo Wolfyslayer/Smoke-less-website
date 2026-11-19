@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import { SiteNavigation } from '../SiteNavigation'
 import { useSiteLocale } from '../SiteLocale'
 import { supabase } from './client'
@@ -9,27 +10,28 @@ export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}
   const [status,setStatus]=useState<'checking'|'success'|'failure'>('checking')
   const [password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[busy,setBusy]=useState(false)
   const [message,setMessage]=useState('')
-  const once=useRef(false)
+  const verification=useRef<Promise<boolean>|null>(null)
   const [verified,setVerified]=useState(false)
   useEffect(()=>{document.title=tr('Verifiera konto – Wolfyslayer','Verify account – Wolfyslayer');document.documentElement.lang=language},[language,tr])
   useEffect(()=>{
-    if(once.current)return
-    once.current=true
-    const params=new URLSearchParams(window.location.search)
-    const token_hash=params.get('token_hash')
-    const type=params.get('type')
-    // Remove the one-time credential from the URL immediately, before network calls.
-    window.history.replaceState(window.history.state,'',window.location.pathname)
-    if(!token_hash||type!==purpose){setStatus('failure');return}
-    let alive=true
-    void supabase.auth.verifyOtp({token_hash,type:purpose}).then(({error})=>{
-      if(!alive)return
-      setStatus(error?'failure':'success')
-      setVerified(!error)
-    }).catch(()=>{if(alive)setStatus('failure')})
-    return()=>{alive=false}
+    // Run verification exactly once even when React StrictMode remounts effects.
+    // Later effect passes subscribe to the same pending promise.
+    if (!verification.current) {
+      const params=new URLSearchParams(window.location.search)
+      const token_hash=params.get('token_hash')
+      const type=params.get('type')
+      window.history.replaceState(window.history.state,'',window.location.pathname)
+      verification.current=token_hash && type===purpose
+        ? supabase.auth.verifyOtp({token_hash,type:purpose}).then(({error})=>!error).catch(()=>false)
+        : Promise.resolve(false)
+    }
+    let active=true
+    void verification.current.then(ok=>{
+      if(active){setStatus(ok?'success':'failure');setVerified(ok)}
+    })
+    return()=>{active=false}
   },[purpose])
-  async function updatePassword(e:React.FormEvent<HTMLFormElement>){
+  async function updatePassword(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
     if(!verified||busy)return
     if(password.length<8||!/[a-z]/.test(password)||!/[A-Z]/.test(password)||!/\d/.test(password)||!/[^A-Za-z0-9]/.test(password)||password!==confirm){
