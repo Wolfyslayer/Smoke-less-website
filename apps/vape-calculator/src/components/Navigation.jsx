@@ -65,6 +65,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
   const menuRef = useRef(null);
   const triggerRef = useRef(null);
   const { t } = useI18n();
+  const accountHref = '/account/?returnTo=' + encodeURIComponent(window.location.pathname + window.location.hash);
   const choose = (id) => {
     setMenuOpen(false);
     navigate(id);
@@ -101,7 +102,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
         </button>
       </div>
       <div className="topbar-controls">
-        <a className="vape-account-link" href="/account/" aria-label={user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}><UserRound size={18}/><span>{checkingAuth?"…":user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</span></a>
+        <a className="vape-account-link" href={accountHref} aria-label={user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}><UserRound size={18}/><span>{checkingAuth?"…":user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</span></a>
         <LanguageSwitcher lang={lang} onChange={changeLang} theme={theme} />
         <button type="button" className="icon-button" onClick={changeTheme} aria-label={t("theme") + ": " + t(theme === "dark" ? "light" : "dark")} title={t(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun size={20}/> : <Moon size={20}/>}</button>
       </div>
@@ -117,7 +118,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
       </nav>
       <div className="drawer-bottom">
         <a className="drawer-back" href="/"><ArrowLeft size={16}/>{t("backHub")}</a>
-        <a className="drawer-back" href="/account/"><UserRound size={16}/>{user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</a>
+        <a className="drawer-back" href={accountHref}><UserRound size={16}/>{user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</a>
         <p>{t("savedLocally")} · {t("noAccount")}</p>
       </div>
     </aside>
