@@ -36,9 +36,11 @@ export default function App() {
   const [guestCount,setGuestCount] = useState(()=>getRecipes().length);
   const userIdRef=useRef(null);
   const [recipes, setRecipes] = useState([]);
+  const [recipeOwner,setRecipeOwner] = useState(undefined);
   const [draft, setDraft] = useState(emptyDraft);
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState("");
+  const displayedRecipes = !checkingAuth && cloudReady && recipeOwner === (user?.id ?? null) ? recipes : [];
   const t = useMemo(() => makeTranslator(lang),[lang]);
   const language = useMemo(() => ({lang,t}),[lang,t]);
 
@@ -68,12 +70,13 @@ export default function App() {
     const userId=user?.id??null;
     userIdRef.current=userId;
     setRecipes(userId?[]:getRecipes());
+    setRecipeOwner(userId?undefined:null);
     setCloudError("");
     setCloudReady(!userId);
     setGuestCount(getRecipes().length);
     if(userId){
       void loadCloudRecipes(userId).then(data=>{
-        if(active){setRecipes(data);setCloudReady(true);}
+        if(active){setRecipes(data);setRecipeOwner(userId);setCloudReady(true);}
       }).catch(()=>{
         if(active){setCloudError(lang==="sv"?"Kunde inte läsa dina privata molnrecept. Kontrollera Supabase-konfigurationen eller anslutningen.":"Could not load your private cloud recipes. Check Supabase configuration or connection.");setCloudReady(false);}
       });
@@ -87,7 +90,7 @@ export default function App() {
     setSyncBusy(true);
     try{
       const data=await loadCloudRecipes(owner);
-      if(userIdRef.current===owner){setRecipes(data);setCloudReady(true);setCloudError("");}
+      if(userIdRef.current===owner){setRecipes(data);setRecipeOwner(owner);setCloudReady(true);setCloudError("");}
     }catch{
       if(userIdRef.current===owner){setCloudReady(false);setCloudError(lang==="sv"?"Molnlagringen kunde inte nås.":"Cloud storage could not be reached.");}
     }finally{setSyncBusy(false);}
@@ -98,6 +101,7 @@ export default function App() {
     else{persistRecipes(next);}
     if(owner===userIdRef.current){
       setRecipes(next);
+      setRecipeOwner(owner);
       if(!owner)setGuestCount(getRecipes().length);
     }
   };
@@ -117,7 +121,7 @@ export default function App() {
     window.scrollTo({top:0,behavior:"instant"});
   };
   const onSave = async value => {
-    if(syncBusy||checkingAuth||!cloudReady)return;
+    if(syncBusy||checkingAuth||!cloudReady||recipeOwner!==(user?.id??null))return;
     setSyncBusy(true);setMessage("");
     try{
       const item=sanitizeRecipe({id:"draft",data:value});
@@ -137,14 +141,14 @@ export default function App() {
   };
   const cancelEdit=()=>{setDraft(emptyDraft());setEditing(null);setMessage("");};
   const onDelete=async id=>{
-    if(syncBusy||!cloudReady)return;
+    if(syncBusy||!cloudReady||recipeOwner!==(user?.id??null))return;
     const owner=user?.id??null;
     setSyncBusy(true);setCloudError("");
     try{
       const next=recipes.filter(recipe=>recipe.id!==id);
       if(owner)await deleteCloudRecipe(owner,id);
       else persistRecipes(next);
-      if(userIdRef.current===owner){setRecipes(next);if(!owner)setGuestCount(getRecipes().length);}
+      if(userIdRef.current===owner){setRecipes(next);setRecipeOwner(owner);if(!owner)setGuestCount(getRecipes().length);}
     }catch{setCloudError(errorMessage());}
     finally{setSyncBusy(false);}
   };
@@ -161,7 +165,7 @@ export default function App() {
     finally{setSyncBusy(false);}
   };
   const onImport=async payload=>{
-    if(syncBusy||!cloudReady)throw Error("Storage not ready");
+    if(syncBusy||!cloudReady||recipeOwner!==(user?.id??null))throw Error("Storage not ready");
     const owner=user?.id??null;
     const {next,count}=importRecipes(payload,recipes);
     setSyncBusy(true);setCloudError("");
@@ -179,12 +183,12 @@ export default function App() {
   const reloadAfterFailure=async owner=>{
     try{
       const updated=await loadCloudRecipes(owner);
-      if(userIdRef.current===owner)setRecipes(updated);
+      if(userIdRef.current===owner){setRecipes(updated);setRecipeOwner(owner);}
     }catch{setCloudReady(false);setCloudError(errorMessage());}
   };
   const importGuest=async()=>{
     const owner=user?.id;
-    if(!owner||syncBusy||!cloudReady)return;
+    if(!owner||syncBusy||!cloudReady||recipeOwner!==owner)return;
     const guest=getRecipes();
     const existing=new Set(recipes.map(item=>JSON.stringify(item.data)));
     const missing=guest.filter(item=>!existing.has(JSON.stringify(item.data)));
@@ -195,7 +199,7 @@ export default function App() {
       const newItems=missing.map(item=>sanitizeRecipe({id:"draft",data:item.data}));
       for(const item of newItems)await saveCloudRecipe(owner,item);
       const updated=await loadCloudRecipes(owner);
-      if(userIdRef.current===owner){setRecipes(updated);setGuestCount(getRecipes().length);}
+      if(userIdRef.current===owner){setRecipes(updated);setRecipeOwner(owner);setGuestCount(getRecipes().length);}
     }catch{await reloadAfterFailure(owner);setCloudError(errorMessage());}
     finally{setSyncBusy(false);}
   };
@@ -207,11 +211,11 @@ export default function App() {
         {cloudError&&<div className="cloud-feedback error" role="alert">{cloudError}{user&&<button type="button" onClick={()=>void reloadCloud()}>{lang==="sv"?"Försök igen":"Retry"}</button>}</div>}
         {checkingAuth&&<div className="cloud-feedback" role="status">{lang==="sv"?"Kontrollerar konto…":"Checking account…"}</div>}
         {user&&!cloudReady&&!cloudError&&<div className="cloud-feedback" role="status">{lang==="sv"?"Hämtar privata recept från Supabase…":"Loading private recipes from Supabase…"}</div>}
-        {page === "home" && <Home navigate={navigate} count={recipes.length}/>}
+        {page === "home" && <Home navigate={navigate} count={displayedRecipes.length}/>}
         {page === "strength" && <Strength/>}
         {page === "shots" && <Shots/>}
-        {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} message={message} busy={syncBusy||!cloudReady||checkingAuth}/>}
-        {page === "recipes" && <Recipes recipes={recipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
+        {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} message={message} busy={syncBusy||!cloudReady||checkingAuth||recipeOwner!==(user?.id??null)}/>}
+        {page === "recipes" && <Recipes recipes={displayedRecipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
         {page === "guide" && <Guide/>}
       </main>
       <footer className="site-footer">

@@ -16,26 +16,26 @@ create policy "vape_recipes_user_select" on storage.objects
   using (bucket_id='vape-recipes'
     and (storage.foldername(name))[1]=(select auth.uid())::text
     and cardinality(storage.foldername(name))=1
-    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\.json$');
+    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}[.]json$');
 create policy "vape_recipes_user_insert" on storage.objects
   for insert to authenticated
   with check (bucket_id='vape-recipes'
     and (storage.foldername(name))[1]=(select auth.uid())::text
     and cardinality(storage.foldername(name))=1
-    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\.json$');
+    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}[.]json$');
 create policy "vape_recipes_user_update" on storage.objects
   for update to authenticated
   using (bucket_id='vape-recipes'
     and (storage.foldername(name))[1]=(select auth.uid())::text
     and cardinality(storage.foldername(name))=1
-    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\.json$')
+    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}[.]json$')
   with check (bucket_id='vape-recipes'
     and (storage.foldername(name))[1]=(select auth.uid())::text
     and cardinality(storage.foldername(name))=1
-    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\.json$');
+    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}[.]json$');
 create policy "vape_recipes_user_delete" on storage.objects
   for delete to authenticated
   using (bucket_id='vape-recipes'
     and (storage.foldername(name))[1]=(select auth.uid())::text
     and cardinality(storage.foldername(name))=1
-    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\.json$');
+    and storage.filename(name) ~* '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}[.]json$');
