@@ -1,0 +1,29 @@
+/* Dedicated Smoke Less beta and administration surfaces, never global hub UI. */
+.wolf-beta{min-height:100vh;background:#071914;color:#eafaf3;font-family:'DM Sans',system-ui,sans-serif}
+.wolf-beta-main{max-width:870px;margin:0 auto;padding:45px 20px 85px}
+.wolf-beta-back{display:inline-block;color:#80edc2;text-decoration:none;margin-bottom:32px;font-size:14px}
+.wolf-beta-kicker{display:block;color:#71dfb0;font-size:11px;font-weight:850;letter-spacing:2px;margin-bottom:12px}
+.wolf-beta-main h1{font-size:clamp(32px,5vw,53px);letter-spacing:-1px;line-height:1.15;margin:0 0 15px}
+.wolf-beta-lead{color:#b5cfc2;line-height:1.7;max-width:640px;margin:0 0 30px}
+.wolf-beta-panel,.wolf-beta-account{background:#12251e;border:1px solid #2f5141;border-radius:20px;padding:26px;margin:20px 0;color:#eafaf3}
+.wolf-beta-panel h2,.wolf-beta-account h2{font-size:23px;margin:4px 0 15px;color:#f2fff8}
+.wolf-beta-panel h3{margin:30px 0 12px}
+.wolf-beta-panel p,.wolf-beta-account p{line-height:1.65;color:#ccdfd3}
+.wolf-beta-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px}
+.wolf-beta-actions button,.wolf-beta-button{display:inline-flex;justify-content:center;align-items:center;min-height:44px;background:#62e6ae;color:#082217;border:1px solid #62e6ae;padding:10px 15px;font-weight:780;border-radius:10px;text-decoration:none;cursor:pointer}
+.wolf-beta-actions button:disabled,.wolf-beta-button:disabled{opacity:.5;cursor:not-allowed}
+.wolf-beta-entry{background:#0a1b15;border-radius:13px;padding:17px;margin:13px 0;overflow-wrap:anywhere}
+.wolf-beta-entry strong{font-size:12px}
+.wolf-beta-note{color:#b5cfc2;font-size:13px;line-height:1.65;margin:20px 0}
+.wolf-beta-inline{color:#8cf5cb;display:inline-block;margin-top:15px}
+.wolf-beta-error{color:#ffe8df;background:#522b27;border:1px solid #a85e52;border-radius:11px;padding:16px}
+.wolf-account--smoke{background:#071914}
+.wolf-account--smoke .wolf-auth-eyebrow,.wolf-account--smoke .wolf-auth-back,.wolf-account--smoke .wolf-auth-link{color:#80edc2}
+.wolf-account--smoke .wolf-auth-card{background:#12251e;border-color:#2f5141}
+.wolf-account--smoke .wolf-auth-tabs,.wolf-account--smoke .wolf-auth-identity{background:#081b15;border-color:#2f5141}
+.wolf-account--smoke .wolf-auth-tabs button.selected,.wolf-account--smoke .wolf-auth-submit:not(.secondary){background:#62e6ae;color:#082217;border-color:#62e6ae}
+.wolf-account--smoke .wolf-auth-form input{background:#0a1c15;border-color:#3c6a53}
+.wolf-account--smoke .wolf-beta-account{margin-top:28px}
+.wolf-beta-account .wolf-auth-link{margin:0;color:#93f6ce}
+.wolf-beta :focus-visible,.wolf-account--smoke :focus-visible{outline:3px solid #62e6ae;outline-offset:3px}
+@media(max-width:540px){.wolf-beta-main{padding:32px 15px 60px}.wolf-beta-panel,.wolf-beta-account{padding:20px}.wolf-beta-actions{align-items:stretch}.wolf-beta-actions button{flex:1}}
