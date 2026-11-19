@@ -221,7 +221,7 @@ export default function App() {
       <footer className="site-footer">
         <span>© {new Date().getFullYear()} · {t("footer")}</span>
         <span>{t("notMedical")}</span>
-        <a href="/">{t("backHub")}</a><a href={"/account/?returnTo="+encodeURIComponent(window.location.pathname + window.location.hash)}>{user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</a>
+        <a href="/">{t("backHub")}</a><a href={"/vape-calculator/account/?returnTo="+encodeURIComponent(window.location.pathname + window.location.hash)}>{user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</a>
       </footer>
     </div>
   </LanguageContext.Provider>;

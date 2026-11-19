@@ -65,7 +65,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
   const menuRef = useRef(null);
   const triggerRef = useRef(null);
   const { t } = useI18n();
-  const accountHref = '/account/?returnTo=' + encodeURIComponent(window.location.pathname + window.location.hash);
+  const accountHref = '/vape-calculator/account/?returnTo=' + encodeURIComponent(window.location.pathname + window.location.hash);
   const choose = (id) => {
     setMenuOpen(false);
     navigate(id);
@@ -117,9 +117,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
         {NAV.map(({id, icon: Icon}) => <button key={id} type="button" className={"drawer-item " + (page === id ? "is-active" : "")} aria-current={page === id ? "page" : undefined} onClick={() => choose(id)}><Icon size={19}/><span>{t(id)}</span><ChevronRight size={16} className="drawer-chevron"/></button>)}
       </nav>
       <div className="drawer-bottom">
-        <a className="drawer-back" href="/"><ArrowLeft size={16}/>{t("backHub")}</a>
-        <a className="drawer-back" href={accountHref}><UserRound size={16}/>{user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</a>
-        <p>{t("savedLocally")} · {t("noAccount")}</p>
+        <a className="drawer-back drawer-projects-link" href="/"><ArrowLeft size={14}/>{lang==="sv"?"Alla projekt":"All projects"}</a>
       </div>
     </aside>
   </>;

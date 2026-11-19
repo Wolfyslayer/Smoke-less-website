@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { useSiteLocale } from '../SiteLocale'
 import './site-language-modal.css'
 
-export default function SiteLanguageModal({section,theme='dark'}:{section:'hub'|'smoke';theme?:'dark'|'light'}) {
+export default function SiteLanguageModal({section,theme='dark'}:{section:'hub'|'smoke'|'vape';theme?:'dark'|'light'}) {
   const {language,setLanguage,tr}=useSiteLocale()
   const [open,setOpen]=useState(false)
   const titleId=useId()
@@ -46,7 +46,7 @@ export default function SiteLanguageModal({section,theme='dark'}:{section:'hub'|
       <div className={'site-language-overlay site-language-'+section+(theme==='light'?' light':'')}
         onPointerDown={e=>{if(e.target===e.currentTarget)setOpen(false)}}>
         <div ref={panel} className="site-language-dialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
-          <div className="site-language-header"><div><span className="site-language-overline">WOLFYSLAYER / LANGUAGE</span><h2 id={titleId}>{tr('Välj språk','Choose language')}</h2></div>
+          <div className="site-language-header"><div><span className="site-language-overline">{section==='smoke'?'SMOKE LESS':section==='vape'?'VAPECALC':'WOLFYSLAYER'} / LANGUAGE</span><h2 id={titleId}>{tr('Välj språk','Choose language')}</h2></div>
             <button className="site-language-close" type="button" aria-label={tr('Stäng','Close')} onClick={()=>setOpen(false)}>✕</button></div>
           <p>{tr('Vilket språk vill du använda?','Which language would you like to use?')}</p>
           <div className="site-language-options">

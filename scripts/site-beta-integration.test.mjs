@@ -57,3 +57,33 @@ test('central account verification supersedes duplicated beta login and reset sc
   assert.ok(callback.includes('verifyOtp'))
   assert.ok(callback.includes('safeReturnTo('))
 })
+
+test('project drawers keep navigation local, remove numbering and put All projects in the footer',()=>{
+  const nav=read('src/SiteNavigation.tsx')
+  const smoke=nav.split('const smokeItems: NavItem[] = [')[1].split('const hubItems:')[0]
+  const vape=nav.split('const vapeItems:NavItem[] = [')[1].split('export function SiteNavigation')[0]
+  assert.ok(!smoke.includes("href:'/vape-calculator/'"))
+  assert.ok(!smoke.includes("labelSv:'Alla projekt'"))
+  assert.ok(smoke.includes("href:'/smoke-less/beta/'"))
+  assert.ok(vape.includes("href:'/vape-calculator/account/'"))
+  assert.ok(!vape.includes("href:'/smoke-less/'"))
+  assert.ok(!nav.includes('wolf-link-number'))
+  assert.ok(nav.includes('className="wolf-drawer-projects"'))
+  const vapeNav=read('apps/vape-calculator/src/components/Navigation.jsx')
+  assert.ok(vapeNav.includes('drawer-projects-link'))
+  assert.ok(!vapeNav.includes('<a className="drawer-back" href={accountHref}>'))
+})
+test('Vape Calculator account uses its own route while sharing Supabase auth',()=>{
+  const main=read('src/main.tsx')
+  const account=read('src/auth/AccountPage.tsx')
+  const bundle=read('scripts/bundle-multi-site.mjs')
+  assert.ok(main.includes("path === '/vape-calculator/account'"))
+  assert.ok(main.includes('<AccountPage section="vape" />'))
+  assert.ok(account.includes("const isVape=section==='vape'"))
+  assert.ok(account.includes("import { supabase } from './client'"))
+  assert.ok(bundle.includes("'vape-calculator/account/index.html'"))
+  for(const path of ['apps/vape-calculator/src/components/Navigation.jsx','apps/vape-calculator/src/App.jsx','apps/vape-calculator/src/pages/Recipes.jsx']){
+    assert.ok(read(path).includes('/vape-calculator/account/?returnTo='),'Old account route in '+path)
+  }
+  assert.ok(read('src/auth/AuthCallbackPage.tsx').includes('accountHome'))
+})

@@ -24,6 +24,7 @@ if (legacy) {
   const smokePage = path === '/smoke-less'
   const account = path === '/account'
   const smokeAccount = path === '/smoke-less/account'
+  const vapeAccount = path === '/vape-calculator/account'
   const betaPage = path === '/smoke-less/beta'
   const adminPage = path === '/smoke-less/admin'
   const signupCallback = path === '/confirmemail'
@@ -34,6 +35,7 @@ if (legacy) {
         <SiteAuthProvider>
           {smokePage ? <HashRouter><App /></HashRouter> :
             smokeAccount ? <AccountPage section="smoke" /> :
+            vapeAccount ? <AccountPage section="vape" /> :
             betaPage ? <BetaPortal/> :
             adminPage ? <BetaPortal adminOnly/> :
             account ? <AccountPage /> :
