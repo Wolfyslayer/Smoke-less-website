@@ -198,3 +198,17 @@ img,svg{max-width:100%}
  .hero{min-height:0;padding-block:30px}
  .content{padding-block:36px 55px}
 }
+
+/* Smoke Less site-wide light appearance, sharing the portal preferences. */
+:root[data-theme="light"]{--bg:#f2f8f6;--surface:#fff;--line:#bfd9ce;--accent:#007f5d;--muted:#48675d;color:#12342a;background:#f2f8f6;color-scheme:light}
+:root[data-theme="light"] body{background:radial-gradient(ellipse at 80% 0,#ddf2e7,transparent 55%),#f2f8f6;color:#12342a}
+:root[data-theme="light"] .brand{color:#006d50}
+:root[data-theme="light"] .hero h1 em{background:linear-gradient(100deg,#006c52,#04946f);color:transparent;background-clip:text}
+:root[data-theme="light"] .feature-card,:root[data-theme="light"] .panel{background:linear-gradient(145deg,#fff,#eff8f3);border-color:#c3dcd2}
+:root[data-theme="light"] .feature-card h3,:root[data-theme="light"] .panel h2,:root[data-theme="light"] .content h1,:root[data-theme="light"] .section h2,:root[data-theme="light"] .cta h2{color:#12342a}
+:root[data-theme="light"] .button.primary{background:#007f5d;color:#fff}
+:root[data-theme="light"] .button.outline{color:#12342a}
+:root[data-theme="light"] .cta{background:linear-gradient(100deg,#d7eee2,transparent)}
+:root[data-theme="light"] .download-status{color:#12342a}
+:root[data-theme="light"] .feature-card p,:root[data-theme="light"] .section p,:root[data-theme="light"] .content p{color:#48675d}
+:root[data-theme="light"] .site-header{border-color:#c3dcd2}

@@ -1,6 +1,6 @@
 # Smoke Less – React-webbplats
 
-Officiell webbplats för https://wolfyslayer.online.
+Officiell flerprojektswebbplats för https://wolfyslayer.online. Se [gemensam driftsdokumentation](docs/DEPLOY_COMPOSITION.md).
 
 ## Teknik
 React 19, TypeScript, Vite, Motion for React, React Router och CSS. Publiceras gratis via GitHub Pages.
@@ -13,10 +13,10 @@ npm run build
 ```
 
 ## Navigering
-HashRouter används för att GitHub Pages saknar SPA-rewrites. Länkarna är `/#/download`, `/#/support`, `/#/privacy` och `/#/changelog`. Vi kan senare välja förgenererade sidor för rena URL:er och bättre SEO.
+HashRouter används för att GitHub Pages saknar SPA-rewrites. Länkarna är `/smoke-less/#/download`, `/smoke-less/#/support`, `/smoke-less/#/privacy` och `/smoke-less/#/changelog`. Äldre `/#/`-länkar omdirigeras. Vi kan senare välja förgenererade sidor för rena URL:er och bättre SEO.
 
 ## Publicering
-GitHub Actions bygger React till `dist/` och publicerar enbart byggresultatet på main. PR:er bygger men publicerar inte. `public/CNAME` bevarar domänen. Ingen ändring av Namecheap-DNS behövs för migreringen.
+GitHub Actions bygger Smoke Less, portal och VapeCalc till `dist/` och publicerar enbart byggresultatet på main. PR:er bygger men publicerar inte. `public/CNAME` bevarar domänen. Ingen ändring av Namecheap-DNS behövs för migreringen.
 
 ## APK och integritet
 `public/updates/preview.json` kopieras till `/updates/preview.json`. `available: false` tills en signerad Preview APK verifierats. Integritetspolicyn är ett utkast; support och kontoradering behöver färdigställas före offentlig lansering.

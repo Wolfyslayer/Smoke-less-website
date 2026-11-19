@@ -23,3 +23,14 @@
 @media(max-width:850px){.responsive-site-header .desktop-nav{display:none}.menu-toggle{display:flex}}
 @media(max-width:540px){.responsive-site-header{flex-direction:row;align-items:center;flex-wrap:wrap}.responsive-site-header .brand{font-size:19px}.responsive-site-header .brand-mark{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.mobile-drawer,.mobile-nav-backdrop{transition:none}}
+
+/* Accessible color theme toggle and light mobile drawer. */
+.theme-toggle{width:45px;justify-content:center;font-size:19px}
+:root[data-theme="light"] .language-trigger,:root[data-theme="light"] .menu-toggle{background:#fff;color:#006d50;border-color:#b9d5ca}
+:root[data-theme="light"] .language-options{background:#fff;border-color:#b9d5ca;box-shadow:0 15px 40px #183b2c28}
+:root[data-theme="light"] .language-options button{color:#12342a}
+:root[data-theme="light"] .language-options button:hover,:root[data-theme="light"] .language-options button[aria-pressed="true"]{background:#e1f3e8}
+:root[data-theme="light"] .mobile-drawer{background:#f7faf7;color:#12342a;border-color:#c5ddd1;box-shadow:-20px 0 70px #12342122}
+:root[data-theme="light"] .drawer-links a{color:#466a5a}
+:root[data-theme="light"] .drawer-links a.active,:root[data-theme="light"] .drawer-links a:hover{background:#d5ecdf;color:#006d50}
+@media(max-width:380px){.responsive-site-header .brand{font-size:16px}.responsive-site-header .header-controls{gap:5px}.responsive-site-header .language-trigger{padding:8px}.responsive-site-header .theme-toggle{width:38px}.responsive-site-header .menu-toggle{width:40px}}
