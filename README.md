@@ -35,3 +35,7 @@ Endast merge till main publicerar automatiskt. Den här PR:en bygger/testar men 
 ## Supabase-webbkonton och molnrecept
 
 Se [docs/SUPABASE_WEBSITE_AUTH_RECIPES.md](docs/SUPABASE_WEBSITE_AUTH_RECIPES.md) för kod, enskild privat Storage-bucket med användarisolering, manuellt migrationssteg, e-postmallar, testplan och integritetskrav. Webbplatsens Supabase-konto är skilt från Android-appens Firebase-konto. Inget i denna PR aktiverar offentlig APK-nedladdning.
+
+## Smoke Less beta och skyddad admin
+
+Samma Supabase-webbkonto används på alla tre sektionerna. Smoke Less visar betastatus enbart på `/smoke-less/account/`; skyddad admin finns enbart på `/smoke-less/admin/` och betaprogrammet på `/smoke-less/beta/`. Tidigare `/admin/` och `/beta/` omdirigeras. Vape Calculator-behållna receptlänkar återupptas efter inloggning med säkert `returnTo`. Se [integrations- och säkerhetsguiden](docs/BETA_PORTAL_INTEGRATION.md) för Supabase-migreringar, manuell adminstart och testkrav. Ingen privat APK-nedladdning aktiveras av detta arbete.

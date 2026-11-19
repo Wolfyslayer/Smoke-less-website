@@ -39,7 +39,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
     {user?<div className="cloud-tools">
       <button type="button" className="btn btn-outline" onClick={()=>void reloadCloud()} disabled={busy}>{lang==="sv"?"↻ Uppdatera från molnet":"↻ Refresh from cloud"}</button>
       {guestCount>0&&<button type="button" className="btn btn-outline" onClick={()=>void importGuest()} disabled={busy}>{lang==="sv"?"Importera lokala gästrecept":"Import local guest recipes"} ({guestCount})</button>}
-    </div>:<p className="guest-sync-note">{lang==="sv"?"Recepten sparas bara i denna webbläsare.":"Recipes are saved only in this browser."} <a href="/account/">{lang==="sv"?"Logga in för privata molnrecept":"Sign in for private cloud recipes"} →</a></p>}
+    </div>:<p className="guest-sync-note">{lang==="sv"?"Recepten sparas bara i denna webbläsare.":"Recipes are saved only in this browser."} <a href={"/account/?returnTo="+encodeURIComponent("/vape-calculator/#/recipes")}>{lang==="sv"?"Logga in för privata molnrecept":"Sign in for private cloud recipes"} →</a></p>}
     {busy&&<p role="status" className="save-feedback">{lang==="sv"?"Synkroniserar recept…":"Syncing recipes…"}</p>}
     {message && <p role="status" className="save-feedback">{message}</p>}
     {!recipes.length ? <div className="empty-state"><FolderOpen size={48}/><h2>{t("empty")}</h2><p>{t("emptyDesc")}</p><button type="button" className="btn btn-primary" onClick={() => navigate("diy")}>{t("backToDIY")}</button></div> :
