@@ -45,7 +45,7 @@
 .wolf-account--vape .wolf-auth-link,.wolf-account--vape .wolf-auth-text-button{color:#fb923c}
 .wolf-account--vape .wolf-auth-card :focus-visible,.wolf-account--vape .wolf-auth-back:focus-visible{outline-color:#f97316}
 
-// Match VapeCalc's actual dark/light tokens and typography on its account route.
+/* Match VapeCalc's actual dark/light tokens and typography on its account route. */
 .wolf-account--vape{font-family:'DM Sans',system-ui,sans-serif;background:radial-gradient(ellipse 50% 28% at 95% 0%,#ed6a1220,transparent),#0d1016;color:#f4f4f6}
 .wolf-account--vape .wolf-auth-heading h1,.wolf-account--vape .wolf-auth-card h2{font-family:'Outfit',system-ui,sans-serif}
 .wolf-account--vape .wolf-auth-heading p,.wolf-account--vape .wolf-auth-note,.wolf-account--vape .wolf-auth-disclaimer{color:#a8afbe}
