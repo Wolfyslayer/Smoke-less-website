@@ -16,6 +16,11 @@ export default function AccountPage({section='hub'}:{section?:'hub'|'smoke'|'vap
   const {user,loading}=useSiteAuth()
   const isSmoke=section==='smoke'
   const isVape=section==='vape'
+  const [vapeTheme,setVapeTheme]=useState<'dark'|'light'>(()=>{
+    try{const stored=localStorage.getItem('vapecalc:theme');if(stored==='dark'||stored==='light')return stored}catch{}
+    return window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark'
+  })
+  const changeVapeTheme=()=>setVapeTheme(current=>{const next=current==='dark'?'light':'dark';try{localStorage.setItem('vapecalc:theme',next)}catch{}return next})
   const accountHome=isSmoke?'/smoke-less/account/':isVape?'/vape-calculator/account/':'/account/'
   const returnTo=safeReturnTo(new URLSearchParams(window.location.search).get('returnTo'))
   const backHref=returnTo ?? (isSmoke?'/smoke-less/':isVape?'/vape-calculator/':'/')
@@ -63,9 +68,9 @@ export default function AccountPage({section='hub'}:{section?:'hub'|'smoke'|'vap
     if(error){setFailed(true);setMessage(tr('Kunde inte logga ut. Försök igen.','Unable to sign out. Please try again.'))}
     else{setPassword('');setMessage(tr('Du har loggat ut.','You have signed out.'))}
   }
-  return <div className={isSmoke?"wolf-account wolf-account--smoke":isVape?"wolf-account wolf-account--vape":"wolf-account"}>
+  return <div className={isSmoke?"wolf-account wolf-account--smoke":isVape?"wolf-account wolf-account--vape":"wolf-account"} data-theme={isVape?vapeTheme:undefined}>
     <a className="wolf-auth-skip" href="#auth-main">{tr('Hoppa till innehållet','Skip to content')}</a>
-    <SiteNavigation section={section}/>
+    <SiteNavigation section={section} theme={isVape?vapeTheme:'dark'} onThemeChange={isVape?changeVapeTheme:undefined}/>
     <main id="auth-main" className="wolf-auth-wrap">
       <a className="wolf-auth-back" href={backHref}>{returnTo?tr('← Tillbaka till föregående sida','← Back to previous page'):isSmoke?tr('← Till Smoke Less','← Back to Smoke Less'):isVape?tr('← Till Vape Calculator','← Back to Vape Calculator'):tr('← Tillbaka till projekten','← Back to projects')}</a>
       <div className="wolf-auth-heading"><span className="wolf-auth-eyebrow">{isSmoke?'SMOKE LESS · ACCOUNT':isVape?'VAPECALC · ACCOUNT':'WOLFYSLAYER · ACCOUNT'}</span><h1>{isSmoke?tr('Ditt Smoke Less-konto','Your Smoke Less account'):isVape?tr('Ditt Vape Calculator-konto','Your Vape Calculator account'):tr('Ditt konto, på ditt sätt.','Your account, your way.')}</h1><p>{isSmoke?tr('Samma Wolfyslayer-konto används för alla webbplatser. Här ser du också din Smoke Less-betastatus.','Your Wolfyslayer account is shared across all websites. Your Smoke Less beta status appears here.'):isVape?tr('Logga in med ditt gemensamma konto och hantera dina privata recept i Vape Calculator.','Use your shared account to manage private recipes in Vape Calculator.'):tr('Logga in eller skapa ett konto för att spara dina Vape Calculator-recept privat i Supabase.','Sign in or create an account to save your Vape Calculator recipes privately in Supabase.')}</p></div>

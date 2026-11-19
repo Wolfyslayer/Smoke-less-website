@@ -44,3 +44,37 @@
 .wolf-account--vape .wolf-auth-form input,.wolf-account--vape .wolf-auth-identity{background:#131722;border-color:#303744}
 .wolf-account--vape .wolf-auth-link,.wolf-account--vape .wolf-auth-text-button{color:#fb923c}
 .wolf-account--vape .wolf-auth-card :focus-visible,.wolf-account--vape .wolf-auth-back:focus-visible{outline-color:#f97316}
+
+/* Match VapeCalc's actual dark/light tokens and typography on its account route. */
+.wolf-account--vape{font-family:'DM Sans',system-ui,sans-serif;background:radial-gradient(ellipse 50% 28% at 95% 0%,#ed6a1220,transparent),#0d1016;color:#f4f4f6}
+.wolf-account--vape .wolf-auth-heading h1,.wolf-account--vape .wolf-auth-card h2{font-family:'Outfit',system-ui,sans-serif}
+.wolf-account--vape .wolf-auth-heading p,.wolf-account--vape .wolf-auth-note,.wolf-account--vape .wolf-auth-disclaimer{color:#a8afbe}
+.wolf-account--vape .wolf-auth-card{background:#181d28;border-color:#303744}
+.wolf-account--vape .wolf-auth-identity{background:#131722;border-color:#303744}
+.wolf-account--vape .wolf-auth-status{color:#a5e7ca}
+.wolf-account--vape .wolf-auth-form input{color:#f4f4f6}
+.wolf-account--vape[data-theme=light]{background:radial-gradient(ellipse 55% 30% at 90% 0%,#fa7b2512,transparent),#f7f8fa;color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-auth-heading p,.wolf-account--vape[data-theme=light] .wolf-auth-note,.wolf-account--vape[data-theme=light] .wolf-auth-disclaimer{color:#555e6f}
+.wolf-account--vape[data-theme=light] .wolf-auth-card{background:#fff;border-color:#dde1e7;box-shadow:0 14px 28px #17233118}
+.wolf-account--vape[data-theme=light] .wolf-auth-card h2,.wolf-account--vape[data-theme=light] .wolf-auth-form label,.wolf-account--vape[data-theme=light] .wolf-auth-identity strong{color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-auth-card>p,.wolf-account--vape[data-theme=light] .wolf-auth-identity span,.wolf-account--vape[data-theme=light] .wolf-auth-form small{color:#555e6f}
+.wolf-account--vape[data-theme=light] .wolf-auth-identity,.wolf-account--vape[data-theme=light] .wolf-auth-form input,.wolf-account--vape[data-theme=light] .wolf-auth-tabs{background:#f3f4f7;border-color:#dde1e7}
+.wolf-account--vape[data-theme=light] .wolf-auth-form input{color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-auth-tabs button{color:#555e6f}
+.wolf-account--vape[data-theme=light] .wolf-auth-tabs button.selected{color:#fff;background:#d9530d}
+.wolf-account--vape[data-theme=light] .wolf-auth-submit.secondary{color:#b3430e;border-color:#b3430e}
+.wolf-account--vape[data-theme=light] .wolf-auth-text-button,.wolf-account--vape[data-theme=light] .wolf-auth-link,.wolf-account--vape[data-theme=light] .wolf-auth-back{color:#b3430e}
+.wolf-account--vape[data-theme=light] .wolf-auth-status{color:#18704e}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape{--wolf-accent:#d9530d;--wolf-line:#dde1e7;--wolf-muted:#677184;background:color-mix(in srgb,#f7f8fa 93%,transparent);border-color:#dde1e7;color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape .wolf-site-brand{color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape .wolf-site-accent{color:#d9530d}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape .wolf-icon-btn,.wolf-account--vape[data-theme=light] .wolf-nav-vape .wolf-account-nav{color:#171b26;background:#fff;border-color:#dde1e7}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape .wolf-icon-btn:hover,.wolf-account--vape[data-theme=light] .wolf-nav-vape .wolf-account-nav:hover{background:#f3f4f7;border-color:#d9530d}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer{--wolf-accent:#d9530d;background:#fff;color:#171b26;border-color:#dde1e7}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-top,.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-foot{border-color:#dde1e7}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link{color:#555e6f}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link:hover{background:#f3f4f7;color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link.active{background:#f973161b;border-color:#f973163b;color:#b3430e}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-language{color:#171b26}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .site-language-trigger,.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-icon-btn{background:#f3f4f7;color:#171b26;border-color:#dde1e7}
+.wolf-account--vape[data-theme=light] .wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-projects{color:#677184}

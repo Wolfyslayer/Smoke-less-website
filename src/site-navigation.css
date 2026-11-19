@@ -49,3 +49,24 @@
 .wolf-account-nav:hover{border-color:var(--wolf-accent)}
 .wolf-account-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex-shrink:0}
 @media(max-width:600px){.wolf-account-nav{min-width:39px;padding-inline:8px}.wolf-account-nav>span:last-child{display:none}}
+
+/* Vape Calculator account navigation mirrors the actual VapeCalc application.
+   Scoped to keep Smoke Less and Wolfyslayer hub palettes unchanged. */
+.wolf-nav-vape{--wolf-accent:#f97316;--wolf-line:#303744;--wolf-muted:#a8afbe;background:color-mix(in srgb,#0d1016 93%,transparent);border-color:#303744;color:#f4f4f6}
+.wolf-nav-vape .wolf-icon-btn,.wolf-nav-vape .wolf-account-nav{background:#181d28;color:#f4f4f6;border-color:#303744}
+.wolf-nav-vape .wolf-icon-btn:hover,.wolf-nav-vape .wolf-account-nav:hover{background:#202633;border-color:#f97316}
+.wolf-nav-vape .wolf-site-brand{font-family:'Outfit',system-ui,sans-serif;color:#f4f4f6;gap:13px}
+.wolf-nav-vape .wolf-site-brand strong{font-size:24px;letter-spacing:-.5px}
+.wolf-nav-vape .wolf-site-accent{color:#f97316}
+.wolf-nav-vape .wolf-site-mark{width:42px;height:42px;background:linear-gradient(140deg,#ff9e52,#ed6510);box-shadow:0 4px 24px #f9731636;border-radius:12px}
+.wolf-nav-vape .wolf-nav-inner{max-width:none;min-height:84px;padding-inline:clamp(20px,4vw,64px)}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer{--wolf-accent:#f97316;background:#181d28;color:#f4f4f6;border-color:#303744}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-top,.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-foot{border-color:#303744}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link{color:#a8afbe}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link:hover{background:#202633;color:#f4f4f6}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link.active{background:#f9731620;border-color:#f973163b;color:#fb923c}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-language{color:#f4f4f6}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .site-language-trigger{background:#202633;color:#f4f4f6;border-color:#303744}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-icon-btn{background:#202633;color:#f4f4f6;border-color:#303744}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-projects{color:#848d9f}
+@media(max-width:600px){.wolf-nav-vape .wolf-nav-inner{min-height:70px;padding-inline:16px}.wolf-nav-vape .wolf-site-mark{width:35px;height:35px}.wolf-nav-vape .wolf-site-brand strong{font-size:20px}.wolf-nav-vape .wolf-nav-actions{gap:7px}.wolf-nav-vape .wolf-icon-btn{min-width:39px;height:39px}.wolf-nav-vape .wolf-account-nav{min-height:39px;height:39px;padding:0 8px}}

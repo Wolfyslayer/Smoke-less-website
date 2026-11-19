@@ -20,3 +20,6 @@
 .site-language-dialog :focus-visible,.site-language-trigger:focus-visible{outline:3px solid var(--modal-accent,#f7a25e);outline-offset:3px}
 @media(max-width:600px){.site-language-trigger{min-width:62px;padding-inline:8px;gap:4px}.site-language-code{display:none}.site-language-dialog{padding:22px}}
 @media(prefers-reduced-motion:reduce){.site-language-overlay *{transition:none!important}}
+
+/* The language dialog lives in a portal and needs its own light VapeCalc palette. */
+.site-language-overlay.site-language-vape.light{--modal-bg:#fff;--modal-text:#171b26;--modal-sub:#555e6f;--modal-border:#dde1e7;--modal-accent:#d9530d;--modal-hover:#f3f4f7;background:#12162070}

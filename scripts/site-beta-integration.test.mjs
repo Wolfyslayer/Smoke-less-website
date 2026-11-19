@@ -109,3 +109,28 @@ test('language controls live in project drawers, with a readable profile icon in
   assert.ok(sharedCss.includes('.wolf-drawer-language .site-language-code{display:inline}'))
   assert.ok(vapeCss.includes('.drawer-language-row .vape-lang-trigger span:nth-child(2){display:inline}'))
 })
+
+test('Vape account inherits VapeCalc orange/nav palette and stored light/dark mode without affecting Smoke Less',()=>{
+  const nav=read('src/SiteNavigation.tsx')
+  const navCss=read('src/site-navigation.css')
+  const page=read('src/auth/AccountPage.tsx')
+  const css=read('src/auth/auth.css')
+  const language=read('src/components/site-language-modal.css')
+  const mainVape=read('apps/vape-calculator/src/styles.css')
+  assert.ok(nav.includes('<FlaskConical size={22} strokeWidth={2}/>'))
+  assert.ok(nav.includes('wolf-site-accent'))
+  assert.ok(nav.includes('section===\'vape\'&&onThemeChange'))
+  assert.ok(navCss.includes('.wolf-nav-vape .wolf-site-brand strong'))
+  assert.ok(navCss.includes('.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer'))
+  for(const token of ['#0d1016','#181d28','#303744','#f97316']) {
+    assert.ok(mainVape.includes(token),'VapeCalc missing reference palette '+token)
+    assert.ok(navCss.includes(token)||css.includes(token),'Account missing palette '+token)
+  }
+  assert.ok(page.includes("localStorage.getItem('vapecalc:theme')"))
+  assert.ok(page.includes("localStorage.setItem('vapecalc:theme',next)"))
+  assert.ok(page.includes("data-theme={isVape?vapeTheme:undefined}"))
+  assert.ok(page.includes("onThemeChange={isVape?changeVapeTheme:undefined}"))
+  assert.ok(css.includes('.wolf-account--vape[data-theme=light] .wolf-nav-vape'))
+  assert.ok(language.includes('.site-language-overlay.site-language-vape.light'))
+  assert.ok(nav.includes("href={section==='smoke'?'/smoke-less/account/'"))
+})
