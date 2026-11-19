@@ -1,0 +1,36 @@
+/* Account screen uses the Wolfyslayer hub palette and is independent from Smoke Less styles. */
+.wolf-account{min-height:100vh;background:#0d1118;color:#f5f7f7;font-family:'DM Sans',system-ui,sans-serif}
+.wolf-auth-skip{position:fixed;left:15px;top:-100px;background:#f39a4a;padding:12px;color:#111;z-index:300}
+.wolf-auth-skip:focus{top:12px}
+.wolf-auth-wrap{max-width:660px;margin:auto;padding:52px 20px 90px;min-height:80vh}
+.wolf-auth-back{display:inline-block;font-size:13px;color:#f2ab69;text-decoration:none;margin-bottom:40px}
+.wolf-auth-heading{text-align:center;margin-bottom:30px}
+.wolf-auth-eyebrow{font-size:11px;letter-spacing:2px;font-weight:800;color:#ef9a46}
+.wolf-auth-heading h1{font-size:clamp(32px,6vw,51px);line-height:1.15;letter-spacing:-1.8px;margin:16px 0}
+.wolf-auth-heading p{color:#abb7c4;line-height:1.7}
+.wolf-auth-card{background:#1a222d;border:1px solid #394350;border-radius:22px;padding:32px;box-shadow:0 20px 60px #0004}
+.wolf-auth-card h2{font-size:23px;margin:20px 0 9px;color:#f6f7f8}
+.wolf-auth-card>p{color:#c0cbd0;font-size:14px}
+.wolf-auth-tabs{display:flex;gap:6px;background:#111a22;padding:5px;border-radius:13px}
+.wolf-auth-tabs button{border:0;border-radius:10px;padding:12px;color:#a8b7c3;background:transparent;flex:1;min-height:44px;cursor:pointer;font-weight:750}
+.wolf-auth-tabs button.selected{background:#f39a4a;color:#21170e}
+.wolf-auth-form{display:flex;flex-direction:column;gap:9px;margin-top:24px}
+.wolf-auth-form label{font-size:13px;font-weight:750;color:#d6e2e0}
+.wolf-auth-form input{background:#101820;color:#f3f7f6;border:1px solid #4b5b62;border-radius:11px;padding:13px 15px;font-size:16px;min-height:48px;margin-bottom:11px;width:100%}
+.wolf-auth-form input:focus-visible{outline:3px solid #f39a4a}
+.wolf-auth-form small{font-size:11px;color:#aebcca}
+.wolf-auth-submit{background:#f39a4a;border:1px solid #f39a4a;color:#231306;border-radius:12px;min-height:51px;padding:13px 19px;cursor:pointer;font-weight:850;margin-top:10px}
+.wolf-auth-submit.secondary{background:transparent;color:#f6b57c}
+.wolf-auth-submit:disabled{opacity:.55;cursor:not-allowed}
+.wolf-auth-text-button{background:none;color:#ffbd82;border:0;cursor:pointer;padding:12px 0;text-decoration:underline}
+.wolf-auth-message{border:1px solid #5dbf8f;background:#5dbf8f16;border-radius:10px;padding:13px;color:#eafdf2!important;overflow-wrap:anywhere}
+.wolf-auth-message.error{border-color:#d7857c;background:#d7857c17;color:#ffe3de!important}
+.wolf-auth-status{display:inline-flex;gap:9px;align-items:center;color:#a5e7ca;font-size:13px}
+.wolf-auth-status span{width:9px;height:9px;border-radius:50%;background:#6adba9}
+.wolf-auth-identity{display:flex;gap:5px;flex-direction:column;background:#101820;padding:16px;border-radius:12px;border:1px solid #36434d;overflow-wrap:anywhere}
+.wolf-auth-identity span{font-size:12px;color:#aebcca}
+.wolf-auth-identity strong{color:#fff}
+.wolf-auth-note,.wolf-auth-disclaimer{font-size:13px;color:#aebcca;line-height:1.7;margin-top:21px}
+.wolf-auth-link{display:inline-flex;color:#ffc18d;text-decoration:none;font-weight:700;margin:16px 0}
+.wolf-auth-card :focus-visible,.wolf-auth-back:focus-visible{outline:3px solid #f39a4a;outline-offset:3px}
+@media(max-width:480px){.wolf-auth-card{padding:22px}.wolf-auth-wrap{padding:34px 16px 60px}}
