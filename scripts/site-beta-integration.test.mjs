@@ -87,3 +87,25 @@ test('Vape Calculator account uses its own route while sharing Supabase auth',()
   }
   assert.ok(read('src/auth/AuthCallbackPage.tsx').includes('accountHome'))
 })
+
+// Regression checks for the compact mobile header and language modal inside each drawer.
+test('language controls live in project drawers, with a readable profile icon in the header',()=>{
+  const nav=read('src/SiteNavigation.tsx')
+  const vape=read('apps/vape-calculator/src/components/Navigation.jsx')
+  const sharedHead=nav.split('<header className=')[1].split('</header>')[0]
+  const sharedDrawer=nav.split('<aside id="wolf-navigation-drawer"')[1]
+  const vapeHead=vape.split('<header className="site-topbar">')[1].split('</header>')[0]
+  const vapeDrawer=vape.split('<aside ref={menuRef}')[1]
+  assert.ok(!sharedHead.includes('<SiteLanguageModal'))
+  assert.ok(sharedDrawer.includes('<SiteLanguageModal section={section} theme={theme}/>'))
+  assert.ok(!vapeHead.includes('<LanguageSwitcher'))
+  assert.ok(vapeDrawer.includes('<LanguageSwitcher lang={lang} onChange={changeLang} theme={theme}/>'))
+  assert.ok(nav.includes('<UserRound size={22} strokeWidth={2} />'))
+  assert.ok(!nav.includes('♙'))
+  assert.ok(nav.includes("document.querySelector('.site-language-overlay')"))
+  assert.ok(vape.includes('document.querySelector(".vape-language-modal")'))
+  const sharedCss=read('src/site-navigation.css')
+  const vapeCss=read('apps/vape-calculator/src/styles.css')
+  assert.ok(sharedCss.includes('.wolf-drawer-language .site-language-code{display:inline}'))
+  assert.ok(vapeCss.includes('.drawer-language-row .vape-lang-trigger span:nth-child(2){display:inline}'))
+})

@@ -74,7 +74,7 @@ export default function AccountPage({section='hub'}:{section?:'hub'|'smoke'|'vap
         <span className="wolf-auth-status"><span aria-hidden="true"/> {tr('Inloggad','Signed in')}</span>
         <h2>{tr('Välkommen tillbaka','Welcome back')}</h2>
         <div className="wolf-auth-identity"><span>{tr('E-postadress','Email address')}</span><strong>{user.email??'—'}</strong></div>
-        <p className="wolf-auth-note">{tr('Recept som du sparar när du är inloggad tillhör ditt konto. Lokala gästrecept överförs endast om du själv väljer det.','Recipes saved while signed in belong to your account. Local guest recipes are only transferred if you choose to import them.')}</p>
+        <p className="wolf-auth-note">{isSmoke?tr('Här hanterar du ditt webbplatskonto och din betastatus för Smoke Less.','Manage your website account and Smoke Less beta status here.'):tr('Recept som du sparar när du är inloggad tillhör ditt konto. Lokala gästrecept överförs endast om du själv väljer det.','Recipes saved while signed in belong to your account. Local guest recipes are only transferred if you choose to import them.')}</p>
         {!isSmoke&&<a className="wolf-auth-link" href="/vape-calculator/#/recipes">{tr('Mina recept i Vape Calculator →','My Vape Calculator recipes →')}</a>}
         {returnTo&&<a className="wolf-auth-link" href={returnTo}>{tr('Fortsätt där jag var →','Continue where I left off →')}</a>}
         {isSmoke&&<BetaAccountStatus/>}

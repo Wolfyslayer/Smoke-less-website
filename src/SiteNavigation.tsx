@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSiteLocale } from './SiteLocale'
+import { UserRound } from 'lucide-react'
 import { useSiteAuth } from './auth/SiteAuthProvider'
 import SiteLanguageModal from './components/SiteLanguageModal'
 import './site-navigation.css'
@@ -41,7 +42,11 @@ export function SiteNavigation({section,onInternalNavigate,currentPath,theme='da
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     const handleKey = (event:KeyboardEvent) => {
-      if (event.key === 'Escape'){setOpen(false);return}
+      if (event.key === 'Escape'){
+        // A language dialog is a separate focus-trapped layer above the drawer.
+        if (document.querySelector('.site-language-overlay')) return
+        setOpen(false);return
+      }
       if (event.key !== 'Tab') return
       const focusables = drawerRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], select:not([disabled])')
       if (!focusables?.length) return
@@ -65,8 +70,7 @@ export function SiteNavigation({section,onInternalNavigate,currentPath,theme='da
           <a className="wolf-site-brand" href={section==='hub'?'/':section==='smoke'?'/smoke-less/':'/vape-calculator/'}><span className="wolf-site-mark" aria-hidden="true">{section==='smoke'?'◎':section==='vape'?'⌁':'W'}</span><span><strong>{section==='hub'?'WOLFYSLAYER':section==='smoke'?'Smoke Less':'VapeCalc'}</strong><small>{section==='smoke'?tr('Din resa, i din takt','Your journey, your pace'):section==='vape'?tr('Beräkna och spara recept','Calculate and save recipes'):tr('DIGITALA PROJEKT','DIGITAL PROJECTS')}</small></span></a>
         </div>
         <div className="wolf-nav-actions">
-          <a className="wolf-account-nav" href={section==='smoke'?'/smoke-less/account/':section==='vape'?'/vape-calculator/account/':'/account/'} aria-label={user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}><span aria-hidden="true">♙</span><span>{loading?'…':user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}</span></a>
-          <SiteLanguageModal section={section} theme={theme}/>
+          <a className="wolf-account-nav" href={section==='smoke'?'/smoke-less/account/':section==='vape'?'/vape-calculator/account/':'/account/'} aria-label={user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}><span className="wolf-account-nav-icon" aria-hidden="true"><UserRound size={22} strokeWidth={2} /></span><span>{loading?'…':user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}</span></a>
         </div>
       </div>
     </header>
@@ -80,7 +84,10 @@ export function SiteNavigation({section,onInternalNavigate,currentPath,theme='da
             : <a key={item.href} href={item.internal?'/smoke-less/#'+item.href:item.href} onClick={()=>setOpen(false)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></a>
         })}
       </nav>
-      <div className="wolf-drawer-foot"><a className="wolf-drawer-projects" href="/">{tr('Alla projekt','All projects')} <span aria-hidden="true">↗</span></a></div>
+      <div className="wolf-drawer-foot">
+        <div className="wolf-drawer-language"><span>{tr('Språk','Language')}</span><SiteLanguageModal section={section} theme={theme}/></div>
+        <a className="wolf-drawer-projects" href="/">{tr('Alla projekt','All projects')} <span aria-hidden="true">↗</span></a>
+      </div>
     </aside>
   </>
 }
