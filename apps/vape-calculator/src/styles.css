@@ -190,3 +190,7 @@
 .vape-language-panel :focus-visible,.vape-lang-trigger:focus-visible{outline:3px solid var(--dlg-accent,#ff933c);outline-offset:3px}
 @media(max-width:580px){.vape-account-link>span{display:none}.vape-account-link{width:43px;padding:0}.vape-lang-trigger{padding:0 8px}.vape-lang-trigger span:nth-child(2){display:none}.vape-language-panel{padding:21px}}
 @media(prefers-reduced-motion:reduce){.vape-language-modal *{transition:none!important}}
+
+/* The project hub is a small footer shortcut, not a main drawer destination. */
+.drawer-bottom .drawer-projects-link{font-size:11px;font-weight:600;color:var(--soft);gap:8px}
+.drawer-bottom .drawer-projects-link:hover{color:var(--accent)}

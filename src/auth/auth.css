@@ -34,3 +34,13 @@
 .wolf-auth-link{display:inline-flex;color:#ffc18d;text-decoration:none;font-weight:700;margin:16px 0}
 .wolf-auth-card :focus-visible,.wolf-auth-back:focus-visible{outline:3px solid #f39a4a;outline-offset:3px}
 @media(max-width:480px){.wolf-auth-card{padding:22px}.wolf-auth-wrap{padding:34px 16px 60px}}
+
+/* Vape Calculator account route, preserving the shared Supabase session. */
+.wolf-account--vape{background:#0d1016}
+.wolf-account--vape .wolf-auth-eyebrow,.wolf-account--vape .wolf-auth-back{color:#fb923c}
+.wolf-account--vape .wolf-auth-card{background:#181d28;border-color:#303744}
+.wolf-account--vape .wolf-auth-tabs{background:#131722}
+.wolf-account--vape .wolf-auth-tabs button.selected,.wolf-account--vape .wolf-auth-submit:not(.secondary){background:#f97316;border-color:#f97316;color:#fff}
+.wolf-account--vape .wolf-auth-form input,.wolf-account--vape .wolf-auth-identity{background:#131722;border-color:#303744}
+.wolf-account--vape .wolf-auth-link,.wolf-account--vape .wolf-auth-text-button{color:#fb923c}
+.wolf-account--vape .wolf-auth-card :focus-visible,.wolf-account--vape .wolf-auth-back:focus-visible{outline-color:#f97316}

@@ -24,6 +24,7 @@ await writeFile(resolve(dist, 'smoke-less', 'index.html'), smoke)
 for (const [route, title] of [
   ['account', 'Mitt konto – Wolfyslayer'],
   ['smoke-less/account', 'Mitt konto – Smoke Less'],
+  ['vape-calculator/account', 'Mitt konto – Vape Calculator'],
   ['smoke-less/beta', 'Betaprogram – Smoke Less'],
   ['smoke-less/admin', 'Administration – Smoke Less'],
   ['admin', 'Flyttad till Smoke Less-administration'],
@@ -45,7 +46,7 @@ await access(resolve(mirror, 'index.html'))
 execFileSync(process.execPath, [resolve(root, 'node_modules/vite/bin/vite.js'), 'build', '--config', resolve(mirror, 'vite.config.js')], {cwd:root,stdio:'inherit'})
 
 // A single Pages deployment publishes the hub, Smoke Less and Vape Calculator.
-for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json', 'account/index.html', 'smoke-less/account/index.html', 'smoke-less/beta/index.html', 'smoke-less/admin/index.html', 'admin/index.html', 'beta/index.html', 'resetpassword/index.html', 'confirmemail/index.html', 'recoverpassword/index.html']) {
+for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json', 'account/index.html', 'smoke-less/account/index.html', 'vape-calculator/account/index.html', 'smoke-less/beta/index.html', 'smoke-less/admin/index.html', 'admin/index.html', 'beta/index.html', 'resetpassword/index.html', 'confirmemail/index.html', 'recoverpassword/index.html']) {
   await access(resolve(dist,path))
 }
 console.log('PASS: three static sites + unchanged preview manifest bundled into one Pages deployment')

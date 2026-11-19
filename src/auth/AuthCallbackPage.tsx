@@ -12,6 +12,7 @@ export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}
   const [password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[busy,setBusy]=useState(false)
   const [message,setMessage]=useState('')
   const [resume]=useState(()=>{try{return safeReturnTo(sessionStorage.getItem('wolfyslayer:auth-return-to'))}catch{return null}})
+  const [accountHome]=useState(()=>{try{const path=sessionStorage.getItem('wolfyslayer:auth-account-home');return path==='/vape-calculator/account/'||path==='/smoke-less/account/'?path:'/account/'}catch{return '/account/'}})
   const verification=useRef<Promise<boolean>|null>(null)
   const [verified,setVerified]=useState(false)
   useEffect(()=>{document.title=tr('Verifiera konto – Wolfyslayer','Verify account – Wolfyslayer');document.documentElement.lang=language},[language,tr])
@@ -52,7 +53,7 @@ export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}
   return <div className="wolf-account">
     <SiteNavigation section="hub"/>
     <main id="auth-main" className="wolf-auth-wrap">
-      <a className="wolf-auth-back" href="/account/">{tr('← Till kontot','← Back to account')}</a>
+      <a className="wolf-auth-back" href={accountHome}>{tr('← Till kontot','← Back to account')}</a>
       <div className="wolf-auth-heading"><span className="wolf-auth-eyebrow">WOLFYSLAYER · SUPABASE</span><h1>{purpose==='recovery'?tr('Återställ lösenordet','Reset your password'):tr('Bekräfta din e-post','Confirm your email')}</h1></div>
       <section className="wolf-auth-card">
         {status==='checking'?<p role="status">{tr('Verifierar din engångslänk…','Verifying your one-time link…')}</p>:status==='failure'?<p role="alert">{tr('Länken är ogiltig eller har gått ut. Begär en ny från kontosidan.','The link is invalid or expired. Request a new one from the account page.')}</p>:purpose==='signup'?<p role="status">{tr('E-posten är verifierad. Du kan nu gå till ditt konto.','Email verified. You can now access your account.')}</p>:verified?<form className="wolf-auth-form" onSubmit={e=>void updatePassword(e)}>
@@ -63,7 +64,7 @@ export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}
           <button className="wolf-auth-submit" type="submit" disabled={busy}>{busy?tr('Sparar…','Saving…'):tr('Spara nytt lösenord','Save new password')}</button>
         </form>:null}
         {message&&<p role="status" className="wolf-auth-message">{message}</p>}
-        <a href={purpose==='signup'&&verified&&resume?resume:'/account/'} className="wolf-auth-link">{purpose==='signup'&&verified&&resume?tr('Fortsätt där du var →','Continue where you left off →'):tr('Till kontosidan →','Go to account →')}</a>
+        <a href={purpose==='signup'&&verified&&resume?resume:accountHome} className="wolf-auth-link">{purpose==='signup'&&verified&&resume?tr('Fortsätt där du var →','Continue where you left off →'):tr('Till kontosidan →','Go to account →')}</a>
       </section>
     </main>
   </div>
