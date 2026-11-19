@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { LanguageContext, makeTranslator } from "./i18n.js";
 import { Navigation } from "./components/Navigation.jsx";
 import Home from "./pages/Home.jsx";
@@ -8,6 +8,8 @@ import DIY, { emptyDraft } from "./pages/DIY.jsx";
 import Recipes from "./pages/Recipes.jsx";
 import Guide from "./pages/Guide.jsx";
 import { getRecipes, importRecipes, persistRecipes, sanitizeRecipe } from "./lib/recipes.js";
+import { supabase } from "./lib/supabaseClient.js";
+import { loadCloudRecipes, saveCloudRecipe, deleteCloudRecipe } from "./lib/cloudRecipes.js";
 
 const PAGE_IDS = ["home","strength","shots","diy","recipes","guide"];
 const readPage = () => {
@@ -26,7 +28,14 @@ export default function App() {
     return window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : "dark";
   });
   const [page, setPage] = useState(readPage);
-  const [recipes, setRecipes] = useState(getRecipes);
+  const [user,setUser] = useState(null);
+  const [checkingAuth,setCheckingAuth] = useState(true);
+  const [cloudReady,setCloudReady] = useState(false);
+  const [cloudError,setCloudError] = useState("");
+  const [syncBusy,setSyncBusy] = useState(false);
+  const [guestCount,setGuestCount] = useState(()=>getRecipes().length);
+  const userIdRef=useRef(null);
+  const [recipes, setRecipes] = useState([]);
   const [draft, setDraft] = useState(emptyDraft);
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState("");
@@ -43,6 +52,56 @@ export default function App() {
     document.title = (page === "home" ? "VapeCalc" : t(page) + " · VapeCalc");
   },[lang,page,t]);
 
+  useEffect(() => {
+    let active=true;
+    const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{
+      if(active){setUser(session?.user??null);setCheckingAuth(false);}
+    });
+    void supabase.auth.getUser().then(({data,error})=>{
+      if(active){setUser(error?null:data.user??null);setCheckingAuth(false);}
+    }).catch(()=>{if(active){setUser(null);setCheckingAuth(false);}});
+    return()=>{active=false;subscription.unsubscribe();};
+  },[]);
+  useEffect(()=>{
+    if(checkingAuth)return;
+    let active=true;
+    const userId=user?.id??null;
+    userIdRef.current=userId;
+    setRecipes(userId?[]:getRecipes());
+    setCloudError("");
+    setCloudReady(!userId);
+    setGuestCount(getRecipes().length);
+    if(userId){
+      void loadCloudRecipes(userId).then(data=>{
+        if(active){setRecipes(data);setCloudReady(true);}
+      }).catch(()=>{
+        if(active){setCloudError(lang==="sv"?"Kunde inte läsa dina privata molnrecept. Kontrollera Supabase-konfigurationen eller anslutningen.":"Could not load your private cloud recipes. Check Supabase configuration or connection.");setCloudReady(false);}
+      });
+    }
+    return()=>{active=false;};
+  },[user?.id,checkingAuth]);
+
+  const reloadCloud=async()=>{
+    const owner=user?.id;
+    if(!owner||syncBusy)return;
+    setSyncBusy(true);
+    try{
+      const data=await loadCloudRecipes(owner);
+      if(userIdRef.current===owner){setRecipes(data);setCloudReady(true);setCloudError("");}
+    }catch{
+      if(userIdRef.current===owner){setCloudReady(false);setCloudError(lang==="sv"?"Molnlagringen kunde inte nås.":"Cloud storage could not be reached.");}
+    }finally{setSyncBusy(false);}
+  };
+  const saveOne=async(record,next)=>{
+    const owner=user?.id??null;
+    if(owner){await saveCloudRecipe(owner,record);}
+    else{persistRecipes(next);}
+    if(owner===userIdRef.current){
+      setRecipes(next);
+      if(!owner)setGuestCount(getRecipes().length);
+    }
+  };
+  const errorMessage=()=>lang==="sv"?"Kunde inte spara i Supabase. Inga ändringar har bekräftats. Försök igen.":"Could not save to Supabase. No changes were confirmed. Please retry.";
   const changeLang = value => {
     if (!["sv","en"].includes(value)) return;
     setLang(value);try{localStorage.setItem("wolfyslayer:language",value);}catch{}
@@ -57,59 +116,108 @@ export default function App() {
     setPage(id); window.location.hash = id === "home" ? "#/" : "#/" + id;
     window.scrollTo({top:0,behavior:"instant"});
   };
-  const commitRecipes = next => {
-    persistRecipes(next);
-    setRecipes(next);
-  };
-  const onSave = value => {
-    try {
-      const item = sanitizeRecipe({id:"draft",data:value});
-      const previous = recipes.find(recipe => recipe.id === editing);
-      const record = previous ? {...item,id:previous.id,createdAt:previous.createdAt} : item;
-      const next = previous ? recipes.map(recipe => recipe.id === editing ? record : recipe) : [record,...recipes];
-      commitRecipes(next);
+  const onSave = async value => {
+    if(syncBusy||checkingAuth||!cloudReady)return;
+    setSyncBusy(true);setMessage("");
+    try{
+      const item=sanitizeRecipe({id:"draft",data:value});
+      const previous=recipes.find(recipe=>recipe.id===editing);
+      const record=previous?{...item,id:previous.id,createdAt:previous.createdAt}:item;
+      const next=previous?recipes.map(recipe=>recipe.id===editing?record:recipe):[record,...recipes];
+      if(next.length>200)throw Error("Recipe limit");
+      await saveOne(record,next);
       setEditing(null);setDraft(emptyDraft());setMessage("");
       navigate("recipes");
-    } catch {setMessage(t("saveError"));}
+    }catch{setMessage(errorMessage());}
+    finally{setSyncBusy(false);}
   };
-  const onEdit = recipe => {
-    setDraft({...recipe.data,flavors:recipe.data.flavors.map(f => ({...f}))});
+  const onEdit=recipe=>{
+    setDraft({...recipe.data,flavors:recipe.data.flavors.map(f=>({...f}))});
     setEditing(recipe.id);setMessage("");navigate("diy");
   };
-  const cancelEdit = () => {setDraft(emptyDraft());setEditing(null);setMessage("");};
-  const onDelete = id => {
-    try {commitRecipes(recipes.filter(recipe => recipe.id !== id));}
-    catch {setMessage(t("saveError"));}
+  const cancelEdit=()=>{setDraft(emptyDraft());setEditing(null);setMessage("");};
+  const onDelete=async id=>{
+    if(syncBusy||!cloudReady)return;
+    const owner=user?.id??null;
+    setSyncBusy(true);setCloudError("");
+    try{
+      const next=recipes.filter(recipe=>recipe.id!==id);
+      if(owner)await deleteCloudRecipe(owner,id);
+      else persistRecipes(next);
+      if(userIdRef.current===owner){setRecipes(next);if(!owner)setGuestCount(getRecipes().length);}
+    }catch{setCloudError(errorMessage());}
+    finally{setSyncBusy(false);}
   };
-  const onDuplicate = recipe => {
-    try {
-      const duplicated = sanitizeRecipe(recipe);
-      duplicated.data.name = (duplicated.data.name + (lang === "sv" ? " (kopia)" : " (copy)")).slice(0,120);
-      commitRecipes([duplicated,...recipes]);
-      setMessage("");
-    } catch {setMessage(t("saveError"));}
+  const onDuplicate=async recipe=>{
+    if(syncBusy||!cloudReady)return;
+    setSyncBusy(true);setCloudError("");
+    try{
+      const item=sanitizeRecipe(recipe);
+      item.data.name=(item.data.name+(lang==="sv"?" (kopia)":" (copy)")).slice(0,120);
+      const next=[item,...recipes];
+      if(next.length>200)throw Error("Recipe limit");
+      await saveOne(item,next);
+    }catch{setCloudError(errorMessage());}
+    finally{setSyncBusy(false);}
   };
-  const onImport = payload => {
-    const {next,count} = importRecipes(payload,recipes);
-    commitRecipes(next);
-    return count;
+  const onImport=async payload=>{
+    if(syncBusy||!cloudReady)throw Error("Storage not ready");
+    const owner=user?.id??null;
+    const {next,count}=importRecipes(payload,recipes);
+    setSyncBusy(true);setCloudError("");
+    try{
+      if(owner){
+        for(const item of next.slice(0,count))await saveCloudRecipe(owner,item);
+      }else persistRecipes(next);
+      if(owner===userIdRef.current){setRecipes(next);if(!owner)setGuestCount(getRecipes().length);}
+      return count;
+    }catch{
+      if(owner)await reloadAfterFailure(owner);
+      throw Error("Import failed");
+    }finally{setSyncBusy(false);}
+  };
+  const reloadAfterFailure=async owner=>{
+    try{
+      const updated=await loadCloudRecipes(owner);
+      if(userIdRef.current===owner)setRecipes(updated);
+    }catch{setCloudReady(false);setCloudError(errorMessage());}
+  };
+  const importGuest=async()=>{
+    const owner=user?.id;
+    if(!owner||syncBusy||!cloudReady)return;
+    const guest=getRecipes();
+    const existing=new Set(recipes.map(item=>JSON.stringify(item.data)));
+    const missing=guest.filter(item=>!existing.has(JSON.stringify(item.data)));
+    if(!missing.length)return;
+    if(recipes.length+missing.length>200){setCloudError(errorMessage());return;}
+    setSyncBusy(true);setCloudError("");
+    try{
+      const newItems=missing.map(item=>sanitizeRecipe({id:"draft",data:item.data}));
+      for(const item of newItems)await saveCloudRecipe(owner,item);
+      const updated=await loadCloudRecipes(owner);
+      if(userIdRef.current===owner){setRecipes(updated);setGuestCount(getRecipes().length);}
+    }catch{await reloadAfterFailure(owner);setCloudError(errorMessage());}
+    finally{setSyncBusy(false);}
   };
   return <LanguageContext.Provider value={language}>
     <div className="app-shell" data-theme={theme}>
       <a href="#main" className="skip-link">{lang === "sv" ? "Hoppa till innehållet" : "Skip to content"}</a>
-      <Navigation page={page} navigate={navigate} lang={lang} changeLang={changeLang} theme={theme} changeTheme={changeTheme}/>
+      <Navigation page={page} navigate={navigate} lang={lang} changeLang={changeLang} theme={theme} changeTheme={changeTheme} user={user} checkingAuth={checkingAuth}/>
       <main id="main" className="main-content" tabIndex={-1}>
+        {cloudError&&<div className="cloud-feedback error" role="alert">{cloudError}{user&&<button type="button" onClick={()=>void reloadCloud()}>{lang==="sv"?"Försök igen":"Retry"}</button>}</div>}
+        {checkingAuth&&<div className="cloud-feedback" role="status">{lang==="sv"?"Kontrollerar konto…":"Checking account…"}</div>}
+        {user&&!cloudReady&&!cloudError&&<div className="cloud-feedback" role="status">{lang==="sv"?"Hämtar privata recept från Supabase…":"Loading private recipes from Supabase…"}</div>}
         {page === "home" && <Home navigate={navigate} count={recipes.length}/>}
         {page === "strength" && <Strength/>}
         {page === "shots" && <Shots/>}
-        {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} message={message}/>}
-        {page === "recipes" && <Recipes recipes={recipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onImport={onImport}/>}
+        {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} message={message} busy={syncBusy||!cloudReady||checkingAuth}/>}
+        {page === "recipes" && <Recipes recipes={recipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
         {page === "guide" && <Guide/>}
       </main>
       <footer className="site-footer">
         <span>© {new Date().getFullYear()} · {t("footer")}</span>
         <span>{t("notMedical")}</span>
-        <a href="/">{t("backHub")}</a>
+        <a href="/">{t("backHub")}</a><a href="/account/">{user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</a>
       </footer>
     </div>
   </LanguageContext.Provider>;
