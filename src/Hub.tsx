@@ -10,7 +10,7 @@ export default function Hub(){
   const changeTheme=()=>setTheme(old=>{const next=old==='dark'?'light':'dark';try{localStorage.setItem('wolfyslayer:hub-theme',next)}catch{}return next})
   return <div className={'wolf-hub hub-theme-'+theme}>
     <a className="hub-skip" href="#hub-content">{tr('Hoppa till innehållet','Skip to content')}</a>
-    <SiteNavigation section="hub"/>
+    <SiteNavigation section="hub" theme={theme}/>
     <main id="hub-content" className="hub-main">
       <div className="hub-ambient" aria-hidden="true"/>
       <div className="hub-topline"><span className="hub-eyebrow"><i/> WOLFYSLAYER / DIGITAL</span><button className="hub-theme-button" type="button" onClick={changeTheme} aria-label={theme==='dark'?tr('Byt till ljust tema','Switch to light theme'):tr('Byt till mörkt tema','Switch to dark theme')}>{theme==='dark'?'☀':'☾'} <span>{theme==='dark'?tr('Ljust','Light'):tr('Mörkt','Dark')}</span></button></div>

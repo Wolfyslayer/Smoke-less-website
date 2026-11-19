@@ -19,12 +19,27 @@ const smoke = original
 await mkdir(resolve(dist, 'smoke-less'), {recursive:true})
 await writeFile(resolve(dist, 'smoke-less', 'index.html'), smoke)
 
+// Separate static entrypoints: GitHub Pages has no SPA rewrite. Auth links use
+// clean /account/, /confirmemail/, and /recoverpassword/ routes.
+for (const [route, title] of [
+  ['account', 'Mitt konto – Wolfyslayer'],
+  ['confirmemail', 'Bekräfta e-post – Wolfyslayer'],
+  ['recoverpassword', 'Återställ lösenord – Wolfyslayer'],
+]) {
+  const html = original
+    .replace('href="https://wolfyslayer.online/"', 'href="https://wolfyslayer.online/' + route + '/"')
+    .replace('content="index,follow"', 'content="noindex,nofollow"')
+    .replace('<title>Wolfyslayer – Projekt &amp; verktyg</title>', '<title>' + title + '</title>')
+  await mkdir(resolve(dist, route), {recursive:true})
+  await writeFile(resolve(dist, route, 'index.html'), html)
+}
+
 const mirror = resolve(root, 'apps/vape-calculator')
 await access(resolve(mirror, 'index.html'))
 execFileSync(process.execPath, [resolve(root, 'node_modules/vite/bin/vite.js'), 'build', '--config', resolve(mirror, 'vite.config.js')], {cwd:root,stdio:'inherit'})
 
 // A single Pages deployment publishes the hub, Smoke Less and Vape Calculator.
-for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json']) {
+for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json', 'account/index.html', 'confirmemail/index.html', 'recoverpassword/index.html']) {
   await access(resolve(dist,path))
 }
 console.log('PASS: three static sites + unchanged preview manifest bundled into one Pages deployment')
