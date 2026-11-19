@@ -1,0 +1,78 @@
+import { useEffect, useRef, useState } from 'react'
+import { useSiteLocale } from './SiteLocale'
+import './site-navigation.css'
+
+type NavItem = { labelSv:string; labelEn:string; href:string; internal?:boolean }
+const smokeItems: NavItem[] = [
+  {labelSv:'Hem',labelEn:'Home',href:'/',internal:true},
+  {labelSv:'Ladda ner',labelEn:'Download',href:'/download',internal:true},
+  {labelSv:'Support',labelEn:'Support',href:'/support',internal:true},
+  {labelSv:'Integritet',labelEn:'Privacy',href:'/privacy',internal:true},
+  {labelSv:'Versioner',labelEn:'Changelog',href:'/changelog',internal:true},
+  {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'},
+  {labelSv:'Alla projekt',labelEn:'All projects',href:'/'}
+]
+const hubItems:NavItem[] = [
+  {labelSv:'Startsida',labelEn:'Home',href:'/'},
+  {labelSv:'Smoke Less',labelEn:'Smoke Less',href:'/smoke-less/'},
+  {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'}
+]
+export function SiteNavigation({section,onInternalNavigate,currentPath}:{section:'smoke'|'hub';onInternalNavigate?:(path:string)=>void;currentPath?:string}){
+  const {language,setLanguage,tr} = useSiteLocale()
+  const [open,setOpen] = useState(false)
+  const drawerRef = useRef<HTMLElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const links = section === 'smoke' ? smokeItems : hubItems
+  useEffect(() => {
+    if (!open) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const handleKey = (event:KeyboardEvent) => {
+      if (event.key === 'Escape'){setOpen(false);return}
+      if (event.key !== 'Tab') return
+      const focusables = drawerRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], select:not([disabled])')
+      if (!focusables?.length) return
+      const first = focusables[0], last = focusables[focusables.length-1]
+      if (event.shiftKey && document.activeElement === first){event.preventDefault();last.focus()}
+      else if (!event.shiftKey && document.activeElement === last){event.preventDefault();first.focus()}
+    }
+    document.addEventListener('keydown',handleKey)
+    drawerRef.current?.querySelector<HTMLButtonElement>('.wolf-drawer-close')?.focus()
+    return () => {document.body.style.overflow = previousOverflow;document.removeEventListener('keydown',handleKey);triggerRef.current?.focus()}
+  },[open])
+  const choose = (item:NavItem) => {
+    setOpen(false)
+    if (item.internal && onInternalNavigate)onInternalNavigate(item.href)
+  }
+  return <>
+    <header className={'wolf-nav wolf-nav-'+section}>
+      <div className="wolf-nav-inner">
+        <div className="wolf-nav-start">
+          <button ref={triggerRef} className="wolf-icon-btn" type="button" aria-expanded={open} aria-controls="wolf-navigation-drawer" aria-label={tr('Öppna menyn','Open menu')} onClick={()=>setOpen(o=>!o)}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+          <a className="wolf-site-brand" href={section==='hub'?'/':'/smoke-less/'}><span className="wolf-site-mark" aria-hidden="true">{section==='smoke'?'◎':'W'}</span><span><strong>{section==='hub'?'WOLFYSLAYER':'Smoke Less'}</strong><small>{section==='smoke'?tr('Din resa, i din takt','Your journey, your pace'):tr('DIGITALA PROJEKT','DIGITAL PROJECTS')}</small></span></a>
+        </div>
+        <div className="wolf-nav-actions">
+          <label className="wolf-language" aria-label={tr('Välj språk','Choose language')}>
+            <span aria-hidden="true">{language==='sv'?'🇸🇪':'🇬🇧'}</span>
+            <select value={language} aria-label={tr('Välj språk','Choose language')} onChange={e=>setLanguage(e.target.value==='en'?'en':'sv')}>
+              <option value="sv">Svenska</option><option value="en">English</option>
+            </select>
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
+          </label>
+        </div>
+      </div>
+    </header>
+    <div className={'wolf-nav-shade'+(open?' open':'')} aria-hidden="true" onClick={()=>setOpen(false)}/>
+    <aside id="wolf-navigation-drawer" ref={drawerRef} className={'wolf-nav-drawer'+(open?' open':'')} aria-label={tr('Navigering','Navigation')} aria-hidden={!open} inert={!open}>
+      <div className="wolf-drawer-top"><span><b>{section==='hub'?'WOLFYSLAYER':'Smoke Less'}</b><small>{tr('Navigering','Navigation')}</small></span><button type="button" className="wolf-icon-btn wolf-drawer-close" aria-label={tr('Stäng menyn','Close menu')} onClick={()=>setOpen(false)}>✕</button></div>
+      <nav aria-label={tr('Huvudmeny','Main menu')} className="wolf-drawer-items">
+        {links.map((item,index)=>{
+          const active = section==='smoke' ? (item.internal && currentPath===item.href) : item.href==='/'
+          return item.internal ? <button type="button" key={index} onClick={()=>choose(item)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}><span className="wolf-link-number">{String(index+1).padStart(2,'0')}</span>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></button>
+            : <a key={index} href={item.href} onClick={()=>setOpen(false)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}><span className="wolf-link-number">{String(index+1).padStart(2,'0')}</span>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></a>
+        })}
+      </nav>
+      <div className="wolf-drawer-foot"><span>{tr('Ett hem för våra projekt.','One home for our projects.')}</span><a href="/">{tr('Till projektöversikten','Back to the project hub')} ↗</a></div>
+    </aside>
+  </>
+}

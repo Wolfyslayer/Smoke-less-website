@@ -1,40 +1,33 @@
-# Smoke Less – React-webbplats
+# Wolfyslayer – project hub and Smoke Less
 
-Officiell webbplats för https://wolfyslayer.online.
+Det här repot är den enda GitHub Pages-källan för https://wolfyslayer.online/.
 
-## Teknik
-React 19, TypeScript, Vite, Motion for React, React Router och CSS. Publiceras gratis via GitHub Pages.
+## Webbadresser
 
-## Lokal utveckling
-```sh
-npm install
-npm run dev
-npm run build
-```
+- https://wolfyslayer.online/ – gemensam projektöversikt (svenska / engelska; mörkt/ljust).
+- https://wolfyslayer.online/smoke-less/ – Smoke Less och tidigare Preview-flöde.
+- https://wolfyslayer.online/vape-calculator/ – Vape Calculator, nikotinkalkylatorer och DIY-recept.
 
-## Navigering
-HashRouter används för att GitHub Pages saknar SPA-rewrites. Länkarna är `/#/download`, `/#/support`, `/#/privacy` och `/#/changelog`. Vi kan senare välja förgenererade sidor för rena URL:er och bättre SEO.
+Alla tre publiceras i en GitHub Pages-artifact. Ingen ny subdomän, Cloudflare-worker eller DNS-ändring krävs.
 
-## Publicering
-GitHub Actions bygger React till `dist/` och publicerar enbart byggresultatet på main. PR:er bygger men publicerar inte. `public/CNAME` bevarar domänen. Ingen ändring av Namecheap-DNS behövs för migreringen.
+## Utveckling och CI
 
-## APK och integritet
-`public/updates/preview.json` kopieras till `/updates/preview.json`. `available: false` tills en signerad Preview APK verifierats. Integritetspolicyn är ett utkast; support och kontoradering behöver färdigställas före offentlig lansering.
+Node.js 22, React 19, TypeScript, Vite.
 
-## Kvar att göra
-- Lägg till låst package-lock.json och byt till npm ci.
-- Granska mobil/desktop, tangentbord och reduced motion.
-- Byt illustrerad telefon mot verifierade appskärmbilder.
-- SEO/prerendering och rena URL:er.
+    npm install
+    npm run dev
+    npm run verify
 
-## Verifierad koppling till appens APK-release
+Vite bygger nav / projektöversikt och Smoke Less. scripts/bundle-multi-site.mjs skapar dist/smoke-less/index.html och bygger apps/vape-calculator med egen Vite-config till dist/vape-calculator. Den befintliga Preview-signaturkontrollen är kvar och dist/updates/preview.json fortsätter att fungera i samma sökväg som tidigare.
 
-Appens fas 29 publicerar preview.json och website-preview.json tillsammans med APK och SHA-256-fil. Webbplatsens manuella flöde kräver ett redan publicerat Preview-prerelease-taggnamn preview-build-N, oberoende verifierad APK-SHA-256 och faktisk Android-versionCode N.
+## Projektkällor
 
-Synkskriptet läser det publicerade appmanifestet, kontrollerar paket/projekt/kanal/runtime/version/certifikatformat, matchande tagg/filnamn, GitHubs asset-digest och den nedladdade APK-filens SHA-256. Därefter måste website-preview.json överensstämma i samtliga fält. Först då skrivs public/updates/preview.json. Äldre eller lika versionCode ersätts inte. Hämtning har tids-/storleksgränser; saknad, felaktig eller ofullständig release avbryter före filskrivning.
+Smoke Less-webbplatsen och huvuddomänen byggs här. Vape Calculator har primär källkod i Wolfyslayer/vape-calculator och speglas i apps/vape-calculator/ i detta repo. När kalkylatorn utvecklas behöver spegeln synkroniseras. GitHub Pages kan inte publicera båda repona separat under samma domän utan en gemensam bygg- och publiceringspunkt.
 
-Detta startar inget appbygge och skickar inga tokens till appen. Inga manifest/länkar aktiveras av denna PR. Befintligt available:false behålls. Merge till main kan driftsätta webbplatskod via dess befintliga Pages-workflow och ska därför invänta uttryckligt beslut. Draft-PR:s CI bygger/testar utan deploy.
+## Navigation och språk
 
-Tester: npm test och npm run verify. Verklig publicerad APK, nedladdning/uppgradering på Android, färdig integritetspolicy och bevakad support-/raderingsväg är fortsatt lanseringsgrindar. Simon är bekräftad ansvarig och contact@wolfyslayer.online är bekräftad aktiv/bevakad. Avslutade supportärenden ska gallras efter 30 dagar. Full policy, faktisk gallringsrutin och säker kontoraderingsacceptans återstår. Den här ändringen påstår inte att kontoradering eller policy redan är slutgodkänd.
+Gemensam hamburger-meny och språk-dropdown Svenska / English på projektöversikten och Smoke Less. Stänger vid sidval, Escape och klick på överlägg. En egen matchande meny finns i Vape Calculator. Alla tre använder samma språknyckel wolfyslayer:language i localStorage. Kalkylatorn är tvåspråkig; återstående specialtexter i Smoke Less kräver kompletterande språkgranskning.
 
-Isolerade integrationstester kör det faktiska synkskriptet med simulerade GitHub-svar, verifierar APK-bytes och provar att manipulerad nedladdning inte skriver över det spärrade webbmanifestet. CI använder syntetiska bytes. För lokal verifiering kan SMOKELESS_TEST_APK sättas till en redan signerad/verifierad APK före npm run verify. Detta publicerar inget och är inte ett verkligt GitHub-/Android-nedladdningstest.
+## Varning om publicering
+
+Endast merge till main publicerar automatiskt. Den här PR:en bygger/testar men publicerar ingenting. Håll Preview-appens APK-nedladdning avstängd tills manifest och signerad APK verifierats. Integritetstext och kontoradering återstår före offentlig Smoke Less-release.
