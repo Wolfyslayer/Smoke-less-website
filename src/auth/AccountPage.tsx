@@ -4,18 +4,23 @@ import { SiteNavigation } from '../SiteNavigation'
 import { useSiteLocale } from '../SiteLocale'
 import { useSiteAuth } from './SiteAuthProvider'
 import { supabase } from './client'
+import { safeReturnTo } from './returnTo'
+import BetaAccountStatus from '../beta/BetaAccountStatus'
 import './auth.css'
 
 type Mode = 'login'|'signup'|'forgot'
 const strong = (s:string)=>s.length>=8&&/[a-z]/.test(s)&&/[A-Z]/.test(s)&&/\d/.test(s)&&/[^A-Za-z0-9]/.test(s)
 
-export default function AccountPage(){
+export default function AccountPage({section='hub'}:{section?:'hub'|'smoke'}){
   const {tr,language}=useSiteLocale()
   const {user,loading}=useSiteAuth()
+  const isSmoke=section==='smoke'
+  const returnTo=safeReturnTo(new URLSearchParams(window.location.search).get('returnTo'))
+  const backHref=returnTo ?? (isSmoke?'/smoke-less/':'/')
   const [mode,setMode]=useState<Mode>('login')
   const [email,setEmail]=useState(''),[password,setPassword]=useState('')
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[failed,setFailed]=useState(false)
-  useEffect(()=>{document.title=tr('Mitt konto – Wolfyslayer','My account – Wolfyslayer');document.documentElement.lang=language},[language,tr])
+  useEffect(()=>{document.title=isSmoke?tr('Mitt konto – Smoke Less','My account – Smoke Less'):tr('Mitt konto – Wolfyslayer','My account – Wolfyslayer');document.documentElement.lang=language},[language,tr,isSmoke])
   const pick=(value:Mode)=>{setMode(value);setPassword('');setMessage('');setFailed(false)}
   async function submit(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
@@ -30,14 +35,17 @@ export default function AccountPage(){
         if(error)throw error
         setMessage(tr('Om adressen finns registrerad får du ett mejl. Kontrollera även skräppost.','If the address is registered, you will receive an email. Check your spam folder too.'))
       }else if(mode==='signup'){
+        if(returnTo){try{sessionStorage.setItem('wolfyslayer:auth-return-to',returnTo)}catch{}}
         const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:window.location.origin+'/confirmemail/'}})
         if(error)throw error
         setPassword('')
+        if(data.session&&returnTo)window.location.assign(returnTo)
         setMessage(data.session?tr('Kontot har skapats.','Your account is ready.'):tr('Kontrollera e-posten och bekräfta ditt konto.','Check your email to confirm your account.'))
       }else{
-        const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password})
+        const {data,error}=await supabase.auth.signInWithPassword({email:email.trim(),password})
         if(error)throw error
         setPassword('')
+        if(data.user&&returnTo)window.location.assign(returnTo)
       }
     }catch{
       setFailed(true)
@@ -52,12 +60,12 @@ export default function AccountPage(){
     if(error){setFailed(true);setMessage(tr('Kunde inte logga ut. Försök igen.','Unable to sign out. Please try again.'))}
     else{setPassword('');setMessage(tr('Du har loggat ut.','You have signed out.'))}
   }
-  return <div className="wolf-account">
+  return <div className={isSmoke?"wolf-account wolf-account--smoke":"wolf-account"}>
     <a className="wolf-auth-skip" href="#auth-main">{tr('Hoppa till innehållet','Skip to content')}</a>
-    <SiteNavigation section="hub"/>
+    <SiteNavigation section={section}/>
     <main id="auth-main" className="wolf-auth-wrap">
-      <a className="wolf-auth-back" href="/">{tr('← Tillbaka till projekten','← Back to projects')}</a>
-      <div className="wolf-auth-heading"><span className="wolf-auth-eyebrow">WOLFYSLAYER · ACCOUNT</span><h1>{tr('Ditt konto, på ditt sätt.','Your account, your way.')}</h1><p>{tr('Logga in eller skapa ett konto för att spara dina Vape Calculator-recept privat i Supabase.','Sign in or create an account to save your Vape Calculator recipes privately in Supabase.')}</p></div>
+      <a className="wolf-auth-back" href={backHref}>{returnTo?tr('← Tillbaka till föregående sida','← Back to previous page'):isSmoke?tr('← Till Smoke Less','← Back to Smoke Less'):tr('← Tillbaka till projekten','← Back to projects')}</a>
+      <div className="wolf-auth-heading"><span className="wolf-auth-eyebrow">{isSmoke?'SMOKE LESS · ACCOUNT':'WOLFYSLAYER · ACCOUNT'}</span><h1>{isSmoke?tr('Ditt Smoke Less-konto','Your Smoke Less account'):tr('Ditt konto, på ditt sätt.','Your account, your way.')}</h1><p>{isSmoke?tr('Samma Wolfyslayer-konto används för alla webbplatser. Här ser du också din Smoke Less-betastatus.','Your Wolfyslayer account is shared across all websites. Your Smoke Less beta status appears here.'):tr('Logga in eller skapa ett konto för att spara dina Vape Calculator-recept privat i Supabase.','Sign in or create an account to save your Vape Calculator recipes privately in Supabase.')}</p></div>
       <section className="wolf-auth-card" aria-label={tr('Mitt konto','My account')}>
       {loading?<p role="status">{tr('Kontrollerar inloggning…','Checking your session…')}</p>:user?<>
         <span className="wolf-auth-status"><span aria-hidden="true"/> {tr('Inloggad','Signed in')}</span>
@@ -65,6 +73,8 @@ export default function AccountPage(){
         <div className="wolf-auth-identity"><span>{tr('E-postadress','Email address')}</span><strong>{user.email??'—'}</strong></div>
         <p className="wolf-auth-note">{tr('Recept som du sparar när du är inloggad tillhör ditt konto. Lokala gästrecept överförs endast om du själv väljer det.','Recipes saved while signed in belong to your account. Local guest recipes are only transferred if you choose to import them.')}</p>
         <a className="wolf-auth-link" href="/vape-calculator/#/recipes">{tr('Mina recept i Vape Calculator →','My Vape Calculator recipes →')}</a>
+        {returnTo&&<a className="wolf-auth-link" href={returnTo}>{tr('Fortsätt där jag var →','Continue where I left off →')}</a>}
+        {isSmoke&&<BetaAccountStatus/>}
         <button type="button" className="wolf-auth-submit secondary" disabled={busy} onClick={()=>void signOut()}>{busy?tr('Loggar ut…','Signing out…'):tr('Logga ut','Sign out')}</button>
       </>:<>
         <div className="wolf-auth-tabs" role="group" aria-label={tr('Kontoval','Account options')}>
@@ -87,7 +97,7 @@ export default function AccountPage(){
       </>}
       {message&&<p className={'wolf-auth-message'+(failed?' error':'')} role={failed?'alert':'status'}>{message}</p>}
       </section>
-      <p className="wolf-auth-disclaimer">{tr('Webbplatskontot är separat från Smoke Less-appens Firebase-konto. Inloggning ger inte automatiskt adminrättigheter eller tillgång till privata APK-filer.','Your website account is separate from the Smoke Less app’s Firebase account. Signing in does not automatically grant admin privileges or access to private APKs.')}</p>
+      <p className="wolf-auth-disclaimer">{tr('Ett gemensamt webbplatskonto fungerar för Wolfyslayer, Smoke Less och Vape Calculator. Android-appens Firebase-konto är fortfarande separat. Adminrättigheter och betaåtkomst kontrolleras separat i Supabase.','One shared website account works for Wolfyslayer, Smoke Less and Vape Calculator. The Android app Firebase account remains separate. Administrator and beta access are checked separately in Supabase.')}</p>
     </main>
   </div>
 }
