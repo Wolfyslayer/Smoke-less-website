@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import ResponsiveHeader from './components/ResponsiveHeader'
-import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 
 type Manifest = { available?: boolean; version?: string|null; versionCode?: number|null; runtimeVersion?: string|null; packageName?: string|null; downloadUrl?: string|null; sha256?: string|null; publishedAt?: string|null; releaseNotes?: string|null }
-const nav = [{to:'/',label:'Hem'},{to:'/download',label:'Ladda ner'},{to:'/support',label:'Support'}]
 const pageTitles: Record<string,string> = {'/':'Små steg. Stor förändring.','/download':'Ladda ner','/support':'Support','/privacy':'Integritet','/changelog':'Versionshistorik'}
 function Reveal({children,delay=0}:{children:React.ReactNode;delay?:number}){const reduced=useReducedMotion();return <motion.div initial={reduced?false:{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.16}} transition={{duration:reduced?0:.65,delay:reduced?0:delay,ease:[.2,.8,.2,1]}}>{children}</motion.div>}
 function ProgressPreview(){
