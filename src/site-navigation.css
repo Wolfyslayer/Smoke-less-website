@@ -1,0 +1,35 @@
+/* Shared navigation for hub and Smoke Less; intentionally isolated from the app's CSS. */
+.wolf-nav{--wolf-accent:#ef9a46;--wolf-panel:#12181c;--wolf-muted:#a4b5b4;--wolf-line:#2d4140;position:sticky;z-index:90;top:0;background:color-mix(in srgb,#0a1715 94%,transparent);border-bottom:1px solid var(--wolf-line);color:#f1f8f5;backdrop-filter:blur(14px)}
+.wolf-nav-smoke{--wolf-accent:#35edac}
+.wolf-nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1240px;min-height:78px;margin:auto;padding:12px 24px;gap:16px}
+.wolf-nav-start,.wolf-nav-actions,.wolf-site-brand{display:flex;align-items:center;gap:13px}
+.wolf-icon-btn{appearance:none;display:grid;place-items:center;flex-shrink:0;height:42px;min-width:42px;padding:0;border:1px solid var(--wolf-line);border-radius:12px;background:#19302c;color:#eef8f1;cursor:pointer;font:inherit;transition:border-color .2s,background .2s}
+.wolf-icon-btn:hover{border-color:var(--wolf-accent);background:#214137}
+.wolf-site-brand{text-decoration:none;color:#f3fbf7;font-weight:800;line-height:1.1}
+.wolf-site-brand strong{font-size:18px;letter-spacing:.1px}
+.wolf-site-brand small,.wolf-drawer-top small{display:block;margin-top:4px;font-size:10px;letter-spacing:1.2px;color:var(--wolf-muted)}
+.wolf-site-mark{display:grid;place-items:center;width:39px;height:39px;border-radius:12px;background:linear-gradient(140deg,#f99f44,#e36518);color:#fff;font-size:21px}
+.wolf-nav-smoke .wolf-site-mark{background:linear-gradient(140deg,#33edaf,#006c56);color:#022d25}
+.wolf-language{position:relative;display:flex;align-items:center;gap:8px;padding:0 12px;height:42px;min-width:148px;max-width:180px;border:1px solid var(--wolf-line);border-radius:12px;background:#19302c;color:#eef8f1;font-size:13px}
+.wolf-language:focus-within{outline:2px solid var(--wolf-accent);outline-offset:2px}
+.wolf-language select{background:transparent;color:inherit;border:0;outline:0;appearance:none;min-width:0;width:100%;cursor:pointer;font-size:13px;font-weight:700}
+.wolf-language select option{color:#10211c;background:#fff}
+.wolf-language svg{pointer-events:none;flex-shrink:0}
+.wolf-nav-shade{position:fixed;z-index:150;inset:0;background:#000b;opacity:0;pointer-events:none;transition:opacity .3s}
+.wolf-nav-shade.open{opacity:1;pointer-events:auto}
+.wolf-nav-drawer{position:fixed;inset:0 auto 0 0;z-index:160;width:min(345px,90vw);padding:24px 20px;background:#11201d;color:#f4fbf8;border-right:1px solid #315247;box-shadow:12px 0 70px #0006;display:flex;flex-direction:column;transform:translateX(-105%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.85,.2,1),visibility .32s}
+.wolf-nav-drawer.open{transform:translateX(0);visibility:visible}
+.wolf-drawer-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:25px;border-bottom:1px solid #314840}
+.wolf-drawer-top b{font-size:19px;letter-spacing:.2px}
+.wolf-drawer-items{display:flex;flex-direction:column;gap:7px;margin-top:23px}
+.wolf-drawer-link{appearance:none;width:100%;display:flex;align-items:center;gap:13px;min-height:50px;padding:11px 13px;border-radius:12px;border:1px solid transparent;background:transparent;color:#c5d6d0;text-align:left;text-decoration:none;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
+.wolf-drawer-link:hover{background:#1b3930;color:#fff}
+.wolf-drawer-link.active{background:#214536;border-color:#345a4c;color:#a7ffd4}
+.wolf-nav-hub~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link.active{color:#ffc18b}
+.wolf-link-number{font-size:10px;letter-spacing:1px;color:#7b9990;width:18px}
+.wolf-link-arrow{margin-left:auto;font-size:22px;color:#88aaa0}
+.wolf-drawer-foot{margin-top:auto;padding:20px 5px 8px;display:flex;flex-direction:column;gap:10px;font-size:12px;color:#a4b5b4;border-top:1px solid #314840}
+.wolf-drawer-foot a{color:#a8efcc;text-decoration:none}
+.wolf-nav :focus-visible,.wolf-nav-drawer :focus-visible{outline:3px solid var(--wolf-accent);outline-offset:3px}
+@media(max-width:500px){.wolf-nav-inner{min-height:68px;padding-inline:15px}.wolf-site-brand small{display:none}.wolf-site-brand strong{font-size:16px}.wolf-site-mark{width:34px;height:34px}.wolf-icon-btn,.wolf-language{height:39px}.wolf-icon-btn{min-width:39px}.wolf-language{min-width:126px;padding:0 8px;gap:5px}}
+@media(prefers-reduced-motion:reduce){.wolf-nav-shade,.wolf-nav-drawer,.wolf-icon-btn{transition:none!important}}

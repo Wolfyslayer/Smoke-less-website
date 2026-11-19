@@ -1,0 +1,44 @@
+/* Isolated styles for the project selector on wolfyslayer.online/ */
+.wolf-hub{--hub-bg:#0d1116;--hub-fg:#f5f5f5;--hub-muted:#a5aebc;--hub-card:#1a2029;--hub-line:#303640;--hub-top:#11171e;min-height:100vh;background:var(--hub-bg);color:var(--hub-fg);font-family:'DM Sans',system-ui,sans-serif}
+.wolf-hub.hub-theme-light{--hub-bg:#f5f6f8;--hub-fg:#151b24;--hub-muted:#536274;--hub-card:#fff;--hub-line:#dce2e8;--hub-top:#fff}
+.wolf-hub .wolf-nav{--wolf-line:#34433e;background:#101b1c}
+.wolf-hub .wolf-nav-inner{max-width:1240px}
+.hub-skip{position:fixed;top:-100px;left:20px;z-index:300;background:#f97316;color:#fff;padding:10px}
+.hub-skip:focus{top:12px}
+.hub-main{max-width:1240px;margin:auto;position:relative;padding:43px 26px 100px;isolation:isolate}
+.hub-ambient{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 55% 27% at 85% 4%,#f9731623,transparent),radial-gradient(ellipse 35% 22% at 7% 50%,#58caa916,transparent)}
+.hub-topline{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.hub-eyebrow{font-size:11px;font-weight:800;letter-spacing:2.4px;color:#e88a36;display:inline-flex;align-items:center;gap:12px}
+.hub-eyebrow i{width:7px;height:7px;background:#e88a36;border-radius:50%}
+.hub-theme-button{background:var(--hub-card);border:1px solid var(--hub-line);padding:10px 16px;border-radius:99px;color:var(--hub-fg);font:700 12px 'DM Sans',sans-serif;cursor:pointer}
+.hub-hero{text-align:center;max-width:840px;margin:76px auto 96px}
+.hub-pill{display:inline-block;padding:10px 15px;background:#f9731617;border:1px solid #f9731648;border-radius:99px;font-size:11px;color:#f29b56;font-weight:800;letter-spacing:1.6px}
+.hub-hero h1{font-family:'DM Sans',system-ui,sans-serif;font-weight:800;font-size:clamp(42px,6vw,78px);line-height:1.12;letter-spacing:-3px;margin:24px 0}
+.hub-hero h1 em{font-style:normal;background:linear-gradient(90deg,#fa9b4e,#f97316);color:transparent;background-clip:text}
+.hub-hero p{color:var(--hub-muted);font-size:16px;line-height:1.9;max-width:650px;margin:0 auto}
+.hub-explore{margin-top:30px;display:inline-flex;align-items:center;gap:18px;background:#f97316;border-radius:12px;padding:15px 24px;color:#fff;text-decoration:none;font-weight:800;font-size:13px}
+.hub-explore:hover{background:#ea6514}
+.hub-section-heading{text-align:left;margin-bottom:28px}
+.hub-section-heading h2{font-size:clamp(24px,3vw,34px);letter-spacing:-1px;margin:10px 0}
+.hub-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.hub-card{border-radius:22px;display:flex;flex-direction:column;min-height:335px;padding:30px;border:1px solid var(--hub-line);background:var(--hub-card);color:var(--hub-fg);text-decoration:none;position:relative;overflow:hidden;transition:transform .24s,border-color .24s,box-shadow .24s}
+.hub-card:before{content:'';position:absolute;right:-70px;top:-110px;width:250px;height:250px;border-radius:50%;pointer-events:none;opacity:.65}
+.hub-card.hub-smoke:before{background:radial-gradient(circle,#3ad8aa2b,transparent 70%)}
+.hub-card.hub-vape:before{background:radial-gradient(circle,#f973163b,transparent 70%)}
+.hub-card:hover{transform:translateY(-6px);box-shadow:0 22px 60px #0002}
+.hub-card.hub-smoke:hover{border-color:#33cf9b}.hub-card.hub-vape:hover{border-color:#f97316}
+.hub-card-top{display:flex;align-items:center;justify-content:space-between}
+.hub-card-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;font-size:31px;color:#50e3b4;background:#3ed5aa22}
+.hub-vape .hub-card-icon{color:#f97316;background:#f9731622}
+.hub-card-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--hub-muted)}
+.hub-card-copy{max-width:420px;margin:27px 0 20px}
+.hub-card h3{font-size:clamp(27px,3vw,34px);letter-spacing:-.7px;margin:0 0 12px}
+.hub-card p{font-size:14px;line-height:1.75;color:var(--hub-muted);margin:0}
+.hub-card-bottom{margin-top:auto;border-top:1px solid var(--hub-line);padding-top:20px;font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;color:#3fd7a8}
+.hub-vape .hub-card-bottom{color:#f97316}
+.hub-card-bottom span{font-size:21px}
+.hub-footer{border-top:1px solid var(--hub-line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding:24px max(26px,calc((100% - 1188px)/2));font-size:12px;color:var(--hub-muted)}
+.hub-footer a{color:var(--hub-muted);text-decoration:none}
+.wolf-hub a:focus-visible,.wolf-hub button:focus-visible{outline:3px solid #f97316;outline-offset:3px}
+@media(max-width:760px){.hub-card-grid{grid-template-columns:1fr}.hub-hero{margin:55px auto 65px}.hub-main{padding:30px 20px 70px}.hub-card{min-height:280px}.hub-hero h1{letter-spacing:-1.5px}.hub-hero p{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.hub-card{transition:none!important}}
