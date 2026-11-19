@@ -41,7 +41,7 @@ export function shotsNeeded({ volume, targetStrength, shotStrength, shotVolume, 
   const totalVolume = mode === "base" ? volume + nicotineVolume : volume;
   if (totalVolume > LIMITS.maxBatchVolume) return failure("Slutvolymen överskrider 10 000 ml. Välj en mindre sats.");
   const exactShots = nicotineVolume / shotVolume;
-  const bottlesToBuy = Math.ceil(exactShots - EPS);
+  const bottlesToBuy = Math.max(0, Math.ceil(exactShots - EPS));
   const fullBottlesVolume = bottlesToBuy * shotVolume;
   const strengthIfAllUsed = mode === "base"
     ? (volume + fullBottlesVolume > 0 ? fullBottlesVolume * shotStrength / (volume + fullBottlesVolume) : 0)
