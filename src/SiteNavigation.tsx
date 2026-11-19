@@ -13,7 +13,8 @@ const smokeItems: NavItem[] = [
   {labelSv:'Versioner',labelEn:'Changelog',href:'/changelog',internal:true},
   {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'},
   {labelSv:'Alla projekt',labelEn:'All projects',href:'/'},
-  {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'}
+  {labelSv:'Betaprogram',labelEn:'Beta programme',href:'/smoke-less/beta/'},
+  {labelSv:'Mitt konto',labelEn:'My account',href:'/smoke-less/account/'}
 ]
 const hubItems:NavItem[] = [
   {labelSv:'Startsida',labelEn:'Home',href:'/'},
@@ -57,7 +58,7 @@ export function SiteNavigation({section,onInternalNavigate,currentPath,theme='da
           <a className="wolf-site-brand" href={section==='hub'?'/':'/smoke-less/'}><span className="wolf-site-mark" aria-hidden="true">{section==='smoke'?'◎':'W'}</span><span><strong>{section==='hub'?'WOLFYSLAYER':'Smoke Less'}</strong><small>{section==='smoke'?tr('Din resa, i din takt','Your journey, your pace'):tr('DIGITALA PROJEKT','DIGITAL PROJECTS')}</small></span></a>
         </div>
         <div className="wolf-nav-actions">
-          <a className="wolf-account-nav" href="/account/" aria-label={user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}><span aria-hidden="true">♙</span><span>{loading?'…':user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}</span></a>
+          <a className="wolf-account-nav" href={section==='smoke'?'/smoke-less/account/':'/account/'} aria-label={user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}><span aria-hidden="true">♙</span><span>{loading?'…':user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}</span></a>
           <SiteLanguageModal section={section} theme={theme}/>
         </div>
       </div>
