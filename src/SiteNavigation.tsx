@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSiteLocale } from './SiteLocale'
+import { useSiteAuth } from './auth/SiteAuthProvider'
+import SiteLanguageModal from './components/SiteLanguageModal'
 import './site-navigation.css'
 
 type NavItem = { labelSv:string; labelEn:string; href:string; internal?:boolean }
@@ -10,15 +12,18 @@ const smokeItems: NavItem[] = [
   {labelSv:'Integritet',labelEn:'Privacy',href:'/privacy',internal:true},
   {labelSv:'Versioner',labelEn:'Changelog',href:'/changelog',internal:true},
   {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'},
-  {labelSv:'Alla projekt',labelEn:'All projects',href:'/'}
+  {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'},
+  {labelSv:'Alla projekt',labelEn:'All projects',href:'/'},
+  {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'}
 ]
 const hubItems:NavItem[] = [
   {labelSv:'Startsida',labelEn:'Home',href:'/'},
   {labelSv:'Smoke Less',labelEn:'Smoke Less',href:'/smoke-less/'},
   {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'}
 ]
-export function SiteNavigation({section,onInternalNavigate,currentPath}:{section:'smoke'|'hub';onInternalNavigate?:(path:string)=>void;currentPath?:string}){
-  const {language,setLanguage,tr} = useSiteLocale()
+export function SiteNavigation({section,onInternalNavigate,currentPath,theme='dark'}:{section:'smoke'|'hub';onInternalNavigate?:(path:string)=>void;currentPath?:string;theme?:'dark'|'light'}){
+  const {tr} = useSiteLocale()
+  const {user,loading}=useSiteAuth()
   const [open,setOpen] = useState(false)
   const drawerRef = useRef<HTMLElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -52,13 +57,8 @@ export function SiteNavigation({section,onInternalNavigate,currentPath}:{section
           <a className="wolf-site-brand" href={section==='hub'?'/':'/smoke-less/'}><span className="wolf-site-mark" aria-hidden="true">{section==='smoke'?'◎':'W'}</span><span><strong>{section==='hub'?'WOLFYSLAYER':'Smoke Less'}</strong><small>{section==='smoke'?tr('Din resa, i din takt','Your journey, your pace'):tr('DIGITALA PROJEKT','DIGITAL PROJECTS')}</small></span></a>
         </div>
         <div className="wolf-nav-actions">
-          <label className="wolf-language" aria-label={tr('Välj språk','Choose language')}>
-            <span aria-hidden="true">{language==='sv'?'🇸🇪':'🇬🇧'}</span>
-            <select value={language} aria-label={tr('Välj språk','Choose language')} onChange={e=>setLanguage(e.target.value==='en'?'en':'sv')}>
-              <option value="sv">Svenska</option><option value="en">English</option>
-            </select>
-            <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
-          </label>
+          <a className="wolf-account-nav" href="/account/" aria-label={user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}><span aria-hidden="true">♙</span><span>{loading?'…':user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}</span></a>
+          <SiteLanguageModal section={section} theme={theme}/>
         </div>
       </div>
     </header>

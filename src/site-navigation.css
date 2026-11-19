@@ -33,3 +33,7 @@
 .wolf-nav :focus-visible,.wolf-nav-drawer :focus-visible{outline:3px solid var(--wolf-accent);outline-offset:3px}
 @media(max-width:500px){.wolf-nav-inner{min-height:68px;padding-inline:15px}.wolf-site-brand small{display:none}.wolf-site-brand strong{font-size:16px}.wolf-site-mark{width:34px;height:34px}.wolf-icon-btn,.wolf-language{height:39px}.wolf-icon-btn{min-width:39px}.wolf-language{min-width:126px;padding:0 8px;gap:5px}}
 @media(prefers-reduced-motion:reduce){.wolf-nav-shade,.wolf-nav-drawer,.wolf-icon-btn{transition:none!important}}
+
+.wolf-account-nav{min-height:42px;display:flex;align-items:center;gap:7px;border:1px solid var(--wolf-line);border-radius:12px;background:#19302c;color:#eef8f1;text-decoration:none;padding:8px 12px;font-weight:750;font-size:13px;white-space:nowrap}
+.wolf-account-nav:hover{border-color:var(--wolf-accent)}.wolf-account-nav>span:first-child{font-size:20px}
+@media(max-width:600px){.wolf-account-nav{min-width:39px;padding-inline:8px}.wolf-account-nav>span:last-child{display:none}}
