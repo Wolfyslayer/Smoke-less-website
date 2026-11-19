@@ -60,8 +60,8 @@ test('central account verification supersedes duplicated beta login and reset sc
 
 test('project drawers keep navigation local, remove numbering and put All projects in the footer',()=>{
   const nav=read('src/SiteNavigation.tsx')
-  const smoke=nav.split('const smokeItems: NavItem[] = [')[1].split(']\\nconst hubItems:')[0]
-  const vape=nav.split('const vapeItems:NavItem[] = [')[1].split(']\\nexport function SiteNavigation')[0]
+  const smoke=nav.split('const smokeItems: NavItem[] = [')[1].split('const hubItems:')[0]
+  const vape=nav.split('const vapeItems:NavItem[] = [')[1].split('export function SiteNavigation')[0]
   assert.ok(!smoke.includes("href:'/vape-calculator/'"))
   assert.ok(!smoke.includes("labelSv:'Alla projekt'"))
   assert.ok(smoke.includes("href:'/smoke-less/beta/'"))
