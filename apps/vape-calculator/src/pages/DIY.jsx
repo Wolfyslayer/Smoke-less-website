@@ -16,7 +16,7 @@ export const recipeInputs = draft => ({
   flavors: draft.flavors.map(({name,percent,vgPercent}) => ({name,percent,vgPercent}))
 });
 
-export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, message }) {
+export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, message, busy = false }) {
   const { t } = useI18n();
   const change = key => value => setDraft(old => ({...old,[key]:value}));
   const editFlavor = (id,key,value) => setDraft(old => ({...old,flavors:old.flavors.map(f => f.id === id ? {...f,[key]:value}:f)}));
@@ -82,7 +82,7 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
               <div className="bottles-summary"><span>{t("buyBottles")}</span><strong>{format(r.bottlesToBuy,0)} st</strong></div>
               <Notice><CheckCircle2 size={16}/>{t("mixOkay")}</Notice>
             </>}
-          <button className="btn btn-primary save-button" type="button" disabled={!valid} onClick={() => onSave(draft)}><Save size={18}/>{t(editing ? "update" : "save")}</button>
+          <button className="btn btn-primary save-button" type="button" disabled={!valid || busy} onClick={() => onSave(draft)}><Save size={18}/>{t(editing ? "update" : "save")}</button>
           {message && <p role="status" className="save-feedback">{message}</p>}
         </Panel>
       </div>
