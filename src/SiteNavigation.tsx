@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSiteLocale } from './SiteLocale'
-import { UserRound } from 'lucide-react'
+import { FlaskConical, Moon, Sun, UserRound } from 'lucide-react'
 import { useSiteAuth } from './auth/SiteAuthProvider'
 import SiteLanguageModal from './components/SiteLanguageModal'
 import './site-navigation.css'
@@ -30,7 +30,7 @@ const vapeItems:NavItem[] = [
   {labelSv:'Guide',labelEn:'Guide',href:'/vape-calculator/#/guide'},
   {labelSv:'Mitt konto',labelEn:'My account',href:'/vape-calculator/account/'}
 ]
-export function SiteNavigation({section,onInternalNavigate,currentPath,theme='dark'}:{section:'smoke'|'hub'|'vape';onInternalNavigate?:(path:string)=>void;currentPath?:string;theme?:'dark'|'light'}){
+export function SiteNavigation({section,onInternalNavigate,currentPath,theme='dark',onThemeChange}:{section:'smoke'|'hub'|'vape';onInternalNavigate?:(path:string)=>void;currentPath?:string;theme?:'dark'|'light';onThemeChange?:()=>void}){
   const {tr} = useSiteLocale()
   const {user,loading}=useSiteAuth()
   const [open,setOpen] = useState(false)
@@ -67,10 +67,11 @@ export function SiteNavigation({section,onInternalNavigate,currentPath,theme='da
       <div className="wolf-nav-inner">
         <div className="wolf-nav-start">
           <button ref={triggerRef} className="wolf-icon-btn" type="button" aria-expanded={open} aria-controls="wolf-navigation-drawer" aria-label={tr('Öppna menyn','Open menu')} onClick={()=>setOpen(o=>!o)}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-          <a className="wolf-site-brand" href={section==='hub'?'/':section==='smoke'?'/smoke-less/':'/vape-calculator/'}><span className="wolf-site-mark" aria-hidden="true">{section==='smoke'?'◎':section==='vape'?'⌁':'W'}</span><span><strong>{section==='hub'?'WOLFYSLAYER':section==='smoke'?'Smoke Less':'VapeCalc'}</strong><small>{section==='smoke'?tr('Din resa, i din takt','Your journey, your pace'):section==='vape'?tr('Beräkna och spara recept','Calculate and save recipes'):tr('DIGITALA PROJEKT','DIGITAL PROJECTS')}</small></span></a>
+          <a className="wolf-site-brand" href={section==='hub'?'/':section==='smoke'?'/smoke-less/':'/vape-calculator/'}><span className="wolf-site-mark" aria-hidden="true">{section==='smoke'?'◎':section==='vape'?<FlaskConical size={22} strokeWidth={2}/>: 'W'}</span><span><strong>{section==='vape'?<>Vape<span className="wolf-site-accent">Calc</span></>:section==='hub'?'WOLFYSLAYER':'Smoke Less'}</strong><small>{section==='smoke'?tr('Din resa, i din takt','Your journey, your pace'):section==='vape'?tr('Beräkna och spara recept','Calculate and save recipes'):tr('DIGITALA PROJEKT','DIGITAL PROJECTS')}</small></span></a>
         </div>
         <div className="wolf-nav-actions">
           <a className="wolf-account-nav" href={section==='smoke'?'/smoke-less/account/':section==='vape'?'/vape-calculator/account/':'/account/'} aria-label={user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}><span className="wolf-account-nav-icon" aria-hidden="true"><UserRound size={22} strokeWidth={2} /></span><span>{loading?'…':user?tr('Mitt konto','My account'):tr('Logga in','Sign in')}</span></a>
+          {section==='vape'&&onThemeChange&&<button type="button" className="wolf-icon-btn wolf-nav-theme-toggle" onClick={onThemeChange} aria-label={theme==='dark'?tr('Byt till ljust tema','Switch to light theme'):tr('Byt till mörkt tema','Switch to dark theme')} title={theme==='dark'?tr('Ljust tema','Light theme'):tr('Mörkt tema','Dark theme')}>{theme==='dark'?<Sun size={21}/>:<Moon size={21}/>}</button>}
         </div>
       </div>
     </header>
