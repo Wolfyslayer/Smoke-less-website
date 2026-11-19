@@ -69,8 +69,8 @@ export function SiteNavigation({section,onInternalNavigate,currentPath,theme='da
       <nav aria-label={tr('Huvudmeny','Main menu')} className="wolf-drawer-items">
         {links.map((item,index)=>{
           const active = section==='smoke' ? (item.internal && currentPath===item.href) : item.href==='/'
-          return item.internal ? <button type="button" key={index} onClick={()=>choose(item)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}><span className="wolf-link-number">{String(index+1).padStart(2,'0')}</span>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></button>
-            : <a key={index} href={item.href} onClick={()=>setOpen(false)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}><span className="wolf-link-number">{String(index+1).padStart(2,'0')}</span>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></a>
+          return item.internal && onInternalNavigate ? <button type="button" key={index} onClick={()=>choose(item)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}><span className="wolf-link-number">{String(index+1).padStart(2,'0')}</span>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></button>
+            : <a key={index} href={item.internal?'/smoke-less/#'+item.href:item.href} onClick={()=>setOpen(false)} aria-current={active?'page':undefined} className={'wolf-drawer-link'+(active?' active':'')}><span className="wolf-link-number">{String(index+1).padStart(2,'0')}</span>{tr(item.labelSv,item.labelEn)}<span className="wolf-link-arrow">›</span></a>
         })}
       </nav>
       <div className="wolf-drawer-foot"><span>{tr('Ett hem för våra projekt.','One home for our projects.')}</span><a href="/">{tr('Till projektöversikten','Back to the project hub')} ↗</a></div>
