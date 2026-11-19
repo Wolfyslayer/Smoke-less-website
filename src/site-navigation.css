@@ -50,8 +50,8 @@
 .wolf-account-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex-shrink:0}
 @media(max-width:600px){.wolf-account-nav{min-width:39px;padding-inline:8px}.wolf-account-nav>span:last-child{display:none}}
 
-// Vape Calculator account navigation mirrors the actual VapeCalc application.
-// Keep these scoped: Smoke Less and the Wolfyslayer hub retain their own palettes.
+/* Vape Calculator account navigation mirrors the actual VapeCalc application.
+   Scoped to keep Smoke Less and Wolfyslayer hub palettes unchanged. */
 .wolf-nav-vape{--wolf-accent:#f97316;--wolf-line:#303744;--wolf-muted:#a8afbe;background:color-mix(in srgb,#0d1016 93%,transparent);border-color:#303744;color:#f4f4f6}
 .wolf-nav-vape .wolf-icon-btn,.wolf-nav-vape .wolf-account-nav{background:#181d28;color:#f4f4f6;border-color:#303744}
 .wolf-nav-vape .wolf-icon-btn:hover,.wolf-nav-vape .wolf-account-nav:hover{background:#202633;border-color:#f97316}
