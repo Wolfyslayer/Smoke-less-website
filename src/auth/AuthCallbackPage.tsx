@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { SiteNavigation } from '../SiteNavigation'
 import { useSiteLocale } from '../SiteLocale'
 import { supabase } from './client'
+import { safeReturnTo } from './returnTo'
 import './auth.css'
 
 export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}){
@@ -10,6 +11,7 @@ export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}
   const [status,setStatus]=useState<'checking'|'success'|'failure'>('checking')
   const [password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[busy,setBusy]=useState(false)
   const [message,setMessage]=useState('')
+  const [resume]=useState(()=>{try{return safeReturnTo(sessionStorage.getItem('wolfyslayer:auth-return-to'))}catch{return null}})
   const verification=useRef<Promise<boolean>|null>(null)
   const [verified,setVerified]=useState(false)
   useEffect(()=>{document.title=tr('Verifiera konto – Wolfyslayer','Verify account – Wolfyslayer');document.documentElement.lang=language},[language,tr])
@@ -61,7 +63,7 @@ export default function AuthCallbackPage({purpose}:{purpose:'signup'|'recovery'}
           <button className="wolf-auth-submit" type="submit" disabled={busy}>{busy?tr('Sparar…','Saving…'):tr('Spara nytt lösenord','Save new password')}</button>
         </form>:null}
         {message&&<p role="status" className="wolf-auth-message">{message}</p>}
-        <a href="/account/" className="wolf-auth-link">{tr('Till kontosidan →','Go to account →')}</a>
+        <a href={purpose==='signup'&&verified&&resume?resume:'/account/'} className="wolf-auth-link">{purpose==='signup'&&verified&&resume?tr('Fortsätt där du var →','Continue where you left off →'):tr('Till kontosidan →','Go to account →')}</a>
       </section>
     </main>
   </div>
