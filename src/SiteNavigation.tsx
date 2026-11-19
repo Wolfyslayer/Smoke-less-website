@@ -12,14 +12,14 @@ const smokeItems: NavItem[] = [
   {labelSv:'Integritet',labelEn:'Privacy',href:'/privacy',internal:true},
   {labelSv:'Versioner',labelEn:'Changelog',href:'/changelog',internal:true},
   {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'},
-  {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'},
   {labelSv:'Alla projekt',labelEn:'All projects',href:'/'},
   {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'}
 ]
 const hubItems:NavItem[] = [
   {labelSv:'Startsida',labelEn:'Home',href:'/'},
   {labelSv:'Smoke Less',labelEn:'Smoke Less',href:'/smoke-less/'},
-  {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'}
+  {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'},
+  {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'}
 ]
 export function SiteNavigation({section,onInternalNavigate,currentPath,theme='dark'}:{section:'smoke'|'hub';onInternalNavigate?:(path:string)=>void;currentPath?:string;theme?:'dark'|'light'}){
   const {tr} = useSiteLocale()

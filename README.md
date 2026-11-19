@@ -31,3 +31,7 @@ Gemensam hamburger-meny och språk-dropdown Svenska / English på projektöversi
 ## Varning om publicering
 
 Endast merge till main publicerar automatiskt. Den här PR:en bygger/testar men publicerar ingenting. Håll Preview-appens APK-nedladdning avstängd tills manifest och signerad APK verifierats. Integritetstext och kontoradering återstår före offentlig Smoke Less-release.
+
+## Supabase-webbkonton och molnrecept
+
+Se [docs/SUPABASE_WEBSITE_AUTH_RECIPES.md](docs/SUPABASE_WEBSITE_AUTH_RECIPES.md) för kod, enskild privat Storage-bucket med användarisolering, manuellt migrationssteg, e-postmallar, testplan och integritetskrav. Webbplatsens Supabase-konto är skilt från Android-appens Firebase-konto. Inget i denna PR aktiverar offentlig APK-nedladdning.
