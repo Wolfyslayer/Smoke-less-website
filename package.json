@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/build-vape.mjs",
     "preview": "vite preview",
     "check:release": "node scripts/check-release-readiness.mjs",
-    "test": "node --test scripts/preview-release-contract.test.mjs scripts/sync-preview-release.integration.test.mjs",
+    "test": "node --test scripts/preview-release-contract.test.mjs scripts/sync-preview-release.integration.test.mjs && npm --prefix apps/vape test",
     "verify": "npm test && npm run build && npm run check:release"
   },
   "dependencies": {
