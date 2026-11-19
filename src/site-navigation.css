@@ -21,6 +21,7 @@
 .wolf-nav-shade.open{opacity:1;pointer-events:auto}
 .wolf-nav-drawer{position:fixed;inset:0 auto 0 0;z-index:160;width:min(345px,90vw);padding:24px 20px;background:#11201d;color:#f4fbf8;border-right:1px solid #315247;box-shadow:12px 0 70px #0006;display:flex;flex-direction:column;transform:translateX(-105%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.85,.2,1),visibility .32s}
 .wolf-nav-drawer.open{transform:translateX(0);visibility:visible}
+.wolf-nav-drawer{overflow-y:auto;overscroll-behavior:contain}
 .wolf-drawer-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:25px;border-bottom:1px solid #314840}
 .wolf-drawer-top b{font-size:19px;letter-spacing:.2px}
 .wolf-drawer-items{display:flex;flex-direction:column;gap:7px;margin-top:23px}
@@ -30,6 +31,12 @@
 .wolf-nav-hub~.wolf-nav-shade+.wolf-nav-drawer .wolf-drawer-link.active{color:#ffc18b}
 .wolf-link-arrow{margin-left:auto;font-size:22px;color:#88aaa0}
 .wolf-drawer-foot{margin-top:auto;padding:18px 10px 5px;border-top:1px solid #314840}
+.wolf-drawer-language{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;color:#c5d6d0;font-weight:700;font-size:14px}
+.wolf-drawer-language .site-language-trigger{height:43px;min-width:104px;padding:8px 12px;gap:9px;border-color:#315247}
+.wolf-drawer-language .site-language-code{display:inline}
+.wolf-drawer-language .site-language-trigger:hover{border-color:#35edac}
+.wolf-nav-hub~.wolf-nav-shade+.wolf-nav-drawer .site-language-trigger:hover{border-color:#ef9a46}
+.wolf-nav-vape~.wolf-nav-shade+.wolf-nav-drawer .site-language-trigger:hover{border-color:#f97316}
 .wolf-drawer-projects{display:inline-flex;align-items:center;gap:7px;color:#a4b5b4;text-decoration:none;font-size:12px;font-weight:600}
 .wolf-drawer-projects:hover{color:#f1fbf6}
 .wolf-drawer-projects span{font-size:14px}
@@ -39,5 +46,6 @@
 @media(prefers-reduced-motion:reduce){.wolf-nav-shade,.wolf-nav-drawer,.wolf-icon-btn{transition:none!important}}
 
 .wolf-account-nav{min-height:42px;display:flex;align-items:center;gap:7px;border:1px solid var(--wolf-line);border-radius:12px;background:#19302c;color:#eef8f1;text-decoration:none;padding:8px 12px;font-weight:750;font-size:13px;white-space:nowrap}
-.wolf-account-nav:hover{border-color:var(--wolf-accent)}.wolf-account-nav>span:first-child{font-size:20px}
+.wolf-account-nav:hover{border-color:var(--wolf-accent)}
+.wolf-account-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex-shrink:0}
 @media(max-width:600px){.wolf-account-nav{min-width:39px;padding-inline:8px}.wolf-account-nav>span:last-child{display:none}}

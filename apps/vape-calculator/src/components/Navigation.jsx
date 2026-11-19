@@ -76,7 +76,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKeyDown = event => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape" && !document.querySelector(".vape-language-modal")) setMenuOpen(false);
       if (event.key !== "Tab") return;
       const nodes = menuRef.current?.querySelectorAll('a[href],button:not([disabled]),select:not([disabled])') || [];
       if (!nodes.length) return;
@@ -103,7 +103,6 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
       </div>
       <div className="topbar-controls">
         <a className="vape-account-link" href={accountHref} aria-label={user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}><UserRound size={18}/><span>{checkingAuth?"…":user?(lang==="sv"?"Mitt konto":"My account"):(lang==="sv"?"Logga in":"Sign in")}</span></a>
-        <LanguageSwitcher lang={lang} onChange={changeLang} theme={theme} />
         <button type="button" className="icon-button" onClick={changeTheme} aria-label={t("theme") + ": " + t(theme === "dark" ? "light" : "dark")} title={t(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun size={20}/> : <Moon size={20}/>}</button>
       </div>
     </header>
@@ -117,6 +116,7 @@ export function Navigation({ page, navigate, lang, changeLang, theme, changeThem
         {NAV.map(({id, icon: Icon}) => <button key={id} type="button" className={"drawer-item " + (page === id ? "is-active" : "")} aria-current={page === id ? "page" : undefined} onClick={() => choose(id)}><Icon size={19}/><span>{t(id)}</span><ChevronRight size={16} className="drawer-chevron"/></button>)}
       </nav>
       <div className="drawer-bottom">
+        <div className="drawer-language-row"><span>{lang==="sv"?"Språk":"Language"}</span><LanguageSwitcher lang={lang} onChange={changeLang} theme={theme}/></div>
         <a className="drawer-back drawer-projects-link" href="/"><ArrowLeft size={14}/>{lang==="sv"?"Alla projekt":"All projects"}</a>
       </div>
     </aside>
