@@ -7,7 +7,7 @@ export function useSiteMode() {
   const [mode, setMode] = useState<SiteMode>('closed')
   useEffect(() => {
     let active = true
-    void supabase.from('beta_public_mode').select('mode').single().then(({data,error}) => {
+    void Promise.resolve(supabase.from('beta_public_mode').select('mode').single()).then(({data,error}) => {
       if (!active) return
       if (error) {setMode('closed'); return}
       setMode(data?.mode === 'beta' || data?.mode === 'release' ? data.mode : 'closed')
