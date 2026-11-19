@@ -27,7 +27,7 @@ assert(appSource.includes('pageTitles[location.pathname]'), 'Missing route-speci
 assert(appSource.includes('main.focus({preventScroll:true})'), 'Missing keyboard focus on route navigation')
 const navSource = read('src/components/ResponsiveHeader.tsx')
 assert(navSource.includes('aria-label={labels.nav}') && navSource.includes("nav: 'Huvudmeny'"), 'Missing accessible navigation landmark and Swedish label')
-assert(appSource.includes('aria-label="Välj appskärm"'), 'Missing preview control label')
+assert(appSource.includes("t('Välj appskärm','Choose app screen')"), 'Missing translated preview control label')
 assert(appSource.includes('Denna sida är ännu inte en fullständig integritetspolicy.'), 'Missing explicit privacy launch caveat')
 assert(manifest.packageName === 'com.smokeless.app.preview', 'Unexpected Preview package name')
 
