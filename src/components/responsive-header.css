@@ -1,0 +1,25 @@
+.responsive-site-header{position:relative;z-index:60}
+.responsive-site-header .desktop-nav{display:flex;gap:20px;align-items:center}
+.header-controls{display:flex;gap:10px;align-items:center;margin-left:auto}
+.language-dropdown{position:relative}
+.language-trigger,.menu-toggle{border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:12px;min-height:44px;padding:8px 13px;display:flex;align-items:center;gap:9px;cursor:pointer;font:inherit;font-weight:750}
+.language-chevron{font-size:18px}
+.language-options{position:absolute;right:0;top:calc(100% + 8px);width:176px;background:#152d27;border:1px solid var(--line);box-shadow:0 18px 50px #0009;border-radius:14px;padding:6px;z-index:90}
+.language-options button{display:block;width:100%;text-align:left;background:transparent;color:#eaf7ef;border:0;border-radius:9px;padding:12px;font:inherit;cursor:pointer}
+.language-options button:hover,.language-options button[aria-pressed="true"]{background:#2b4d3f}
+.menu-toggle{display:none;width:44px;justify-content:center}
+.hamburger-lines{display:flex;flex-direction:column;gap:5px}
+.hamburger-lines i{display:block;width:20px;height:2px;border-radius:2px;background:currentColor}
+.mobile-nav-backdrop{position:fixed;inset:0;background:#0009;opacity:0;pointer-events:none;transition:opacity .3s;z-index:70}
+.mobile-nav-backdrop.visible{opacity:1;pointer-events:auto}
+.mobile-drawer{position:fixed;right:0;top:0;bottom:0;width:min(340px,86vw);background:#10241e;color:#eaf7ef;border-left:1px solid var(--line);z-index:80;transform:translateX(105%);visibility:hidden;transition:transform .32s ease,visibility .32s;padding:25px;box-shadow:-20px 0 70px #0008;display:flex;flex-direction:column}
+.mobile-drawer.open{transform:translateX(0);visibility:visible}
+.drawer-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px;font-size:20px}
+.drawer-heading button{background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+.drawer-links{display:flex;flex-direction:column;gap:8px}
+.drawer-links a{display:block;text-decoration:none;color:#b9cfc4;padding:15px;border-radius:12px;font-weight:700}
+.drawer-links a.active,.drawer-links a:hover{background:#284d3d;color:var(--accent)}
+.drawer-caption{margin-top:auto;color:var(--muted);font-size:12px}
+@media(max-width:850px){.responsive-site-header .desktop-nav{display:none}.menu-toggle{display:flex}}
+@media(max-width:540px){.responsive-site-header{flex-direction:row;align-items:center;flex-wrap:wrap}.responsive-site-header .brand{font-size:19px}.responsive-site-header .brand-mark{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.mobile-drawer,.mobile-nav-backdrop{transition:none}}
