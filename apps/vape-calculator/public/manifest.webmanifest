@@ -1,0 +1,25 @@
+{
+  "name": "VapeCalc – DIY & e-juice calculator",
+  "short_name": "VapeCalc",
+  "description": "Nikotin, shots och DIY-recept med offlineberäkningar.",
+  "id": "/vape-calculator/",
+  "start_url": "/vape-calculator/",
+  "scope": "/vape-calculator/",
+  "display": "standalone",
+  "background_color": "#0d1016",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "/vape-calculator/icons/vapecalc-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/vape-calculator/icons/vapecalc-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
