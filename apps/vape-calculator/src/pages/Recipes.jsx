@@ -8,7 +8,7 @@ import { Notice, PageHeader, Panel, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
 import RecipeCard from "../components/RecipeCard.jsx";
 
-export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplicate, onToggleFavorite, onScale, onImport, importGuest, user, guestCount, busy = false, reloadCloud }) {
+export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplicate, onToggleFavorite, onScale, theme, onImport, importGuest, user, guestCount, busy = false, reloadCloud }) {
   const { t, lang } = useI18n();
   const [message, setMessage] = useState("");
   const fileRef = useRef(null);
@@ -104,7 +104,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
           </div>
         </article>;
       })}</div>}
-    {shareRecipe&&<RecipeCard recipe={shareRecipe} onClose={()=>setShareRecipe(null)}/>}
+    {shareRecipe&&<RecipeCard recipe={shareRecipe} theme={theme} onClose={()=>setShareRecipe(null)}/>}
     <Notice>{user?(lang==="sv"?"Recepten sparas i en privat bucket under ditt konto. Lokala gästrecept förs inte över utan ditt val.":"Recipes are saved in a private bucket under your account. Local guest recipes are not transferred without your consent."):t("localNote")} {t("importNote")}</Notice>
   </>;
 }

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
+import {Script} from "node:vm";
 test("VapeCalc PWA is scoped and icon-backed",()=>{
  const manifest=JSON.parse(readFileSync("apps/vape-calculator/public/manifest.webmanifest","utf8"));
  const html=readFileSync("apps/vape-calculator/index.html","utf8");
@@ -13,9 +14,12 @@ test("VapeCalc PWA is scoped and icon-backed",()=>{
 });
 test("offline worker never caches Supabase, users or other projects",()=>{
  const sw=readFileSync("apps/vape-calculator/public/sw.js","utf8");
+ assert.doesNotThrow(()=>new Script(sw), "Offline JavaScript must parse before merge");
  assert.ok(sw.includes("url.origin!==self.location.origin"));
  assert.ok(sw.includes('url.pathname.startsWith(ROOT+"account/")'));
  assert.ok(sw.includes("offline-assets.json"));
  assert.ok(!sw.includes("supabase.co"));
- assert.ok(!sw.includes("caches.match(event.request)")||sw.includes("staticAsset"));
+ assert.ok(sw.includes('url.pathname.startsWith(ROOT+"account/")'));
+ assert.ok(sw.includes('if(!shell&&!isPublicAsset(url.pathname))return;'));
+ assert.ok(sw.includes('isBundle(path)'));
 });

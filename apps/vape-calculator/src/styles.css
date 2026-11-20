@@ -257,3 +257,7 @@
   .recipe-card-info,.recipe-card-lines li{color:#333!important}
   .recipe-card-actions,.recipe-share-text,.recipe-card-close{display:none!important}
 }
+
+/* Print/share modal is portaled to body and must not depend on .app-shell variables. */
+.recipe-print-overlay{--surface:#181d28;--text:#f4f4f6;--muted:#a8afbe;--border:#303744;--bg-alt:#131722;--accent:#f97316}
+.recipe-print-overlay[data-theme=light]{--surface:#fff;--text:#171b26;--muted:#555e6f;--border:#dde1e7;--bg-alt:#f3f4f7;--accent:#d9530d;background:#12162070}

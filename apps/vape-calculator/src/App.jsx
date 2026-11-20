@@ -252,7 +252,7 @@ export default function App() {
         {page === "strength" && <Strength/>}
         {page === "shots" && <Shots/>}
         {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} clearDraft={clearDraft} message={message} busy={syncBusy||!cloudReady||checkingAuth||loadedDraftOwner!==draftOwner||recipeOwner!==(user?.id??null)}/>}
-        {page === "recipes" && <Recipes recipes={displayedRecipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onToggleFavorite={toggleFavorite} onScale={onScale} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
+        {page === "recipes" && <Recipes recipes={displayedRecipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onToggleFavorite={toggleFavorite} onScale={onScale} theme={theme} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
         {page === "guide" && <Guide/>}
       </main>
       <footer className="site-footer">

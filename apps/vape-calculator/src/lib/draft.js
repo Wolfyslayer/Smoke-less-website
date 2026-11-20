@@ -4,7 +4,11 @@ const PREFIX="vapecalc:draft:v1:";
 const KEY_PATTERN=/^(guest|[a-f0-9-]{36})$/i;
 const keyFor=owner=>{if(!KEY_PATTERN.test(owner))throw Error("Invalid draft owner");return PREFIX+owner;};
 export function isMeaningfulDraft(data,editing){
-  return !!editing||!!data.name?.trim()||!!data.notes?.trim()||data.flavors?.some(f=>f.name?.trim());
+  if(editing||data.name?.trim()||data.notes?.trim()||data.flavors?.some(f=>f.name?.trim()))return true;
+  const defaults={totalVolume:60,targetStrength:3,shotStrength:20,shotVolume:10,shotVgPercent:50,targetVgPercent:70};
+  if(Object.entries(defaults).some(([key,defaultValue])=>data[key]!==defaultValue))return true;
+  if(data.flavors?.length!==1||data.flavors[0]?.percent!==10||data.flavors[0]?.vgPercent!==0)return true;
+  return Object.values(data.costs??{}).some(price=>price!==0)||data.flavors?.some(f=>(f.pricePerMl??0)!==0);
 }
 export function loadRecipeDraft(owner){
   try{

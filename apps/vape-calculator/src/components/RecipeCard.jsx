@@ -17,7 +17,7 @@ export function recipeCardText(recipe,lang="sv"){
  if(d.notes?.trim())lines.push((lang==="en"?"Notes: ":"Anteckningar: ")+d.notes.trim());
  return lines.join("\n");
 }
-export default function RecipeCard({recipe,onClose}){
+export default function RecipeCard({recipe,onClose,theme="dark"}){
  const {t,lang}=useI18n();
  const titleId=useId();const panel=useRef(null),closeButton=useRef(null);
  const [message,setMessage]=useState(""),[fallback,setFallback]=useState(false);
@@ -46,7 +46,7 @@ export default function RecipeCard({recipe,onClose}){
  const lines=calc.ok&&calc.feasible?[
   ["VG",calc.vgVolume],["PG",calc.pgVolume],[t("nicShotLiquid"),calc.nicotineVolume],
   ...calc.flavorItems.map(f=>[f.name,f.volume])]:[];
- return createPortal(<div className="recipe-print-overlay" onPointerDown={e=>{if(e.target===e.currentTarget)onClose();}}>
+ return createPortal(<div className="recipe-print-overlay" data-theme={theme} onPointerDown={e=>{if(e.target===e.currentTarget)onClose();}}>
   <div className="recipe-card-dialog" ref={panel} role="dialog" aria-modal="true" aria-labelledby={titleId}>
    <div className="recipe-card-heading"><div><span className="eyebrow">VAPECALC · {t("recipeCard")}</span><h2 id={titleId}>{data.name}</h2></div><button ref={closeButton} type="button" className="icon-button recipe-card-close" aria-label={t("cancel")} onClick={onClose}><X size={19}/></button></div>
    <p className="recipe-card-info">{fmt(data.totalVolume)} ml · {fmt(data.targetStrength)} mg/ml · VG {fmt(data.targetVgPercent)} %</p>

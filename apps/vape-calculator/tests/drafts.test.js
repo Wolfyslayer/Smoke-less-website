@@ -8,7 +8,8 @@ test("drafts remain on device and isolated per account",()=>{
  saveRecipeDraft(owner,{data,editing:null});assert.equal(loadRecipeDraft(owner).data.name,"Berry");assert.equal(loadRecipeDraft(other),null);assert.equal(loadRecipeDraft("guest"),null);clearRecipeDraft(owner);assert.equal(loadRecipeDraft(owner),null);
 });
 test("empty drafts are discarded; malformed storage is ignored",()=>{
- assert.equal(isMeaningfulDraft({...data,name:"",notes:"",flavors:[]},null),false);
- saveRecipeDraft(owner,{data:{...data,name:"",notes:"",flavors:[]},editing:null});assert.equal(loadRecipeDraft(owner),null);
+ assert.equal(isMeaningfulDraft({...data,name:"",notes:"",flavors:[{id:"one",name:"",percent:10,vgPercent:0}]},null),false);
+ assert.equal(isMeaningfulDraft({...data,name:"",notes:"",flavors:[{id:"one",name:"",percent:10,vgPercent:0}],totalVolume:100},null),true);
+ saveRecipeDraft(owner,{data:{...data,name:"",notes:"",flavors:[{id:"one",name:"",percent:10,vgPercent:0}],totalVolume:60},editing:null});assert.equal(loadRecipeDraft(owner),null);
  store.set("vapecalc:draft:v1:"+owner,"invalid json");assert.equal(loadRecipeDraft(owner),null);
 });
