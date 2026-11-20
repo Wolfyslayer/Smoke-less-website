@@ -228,3 +228,10 @@
 .recipe-scale-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px;color:var(--muted);margin:15px 0}
 .recipe-scale-error{color:var(--accent);font-size:12px}
 .recipe-scale .btn{width:100%;margin:8px 0}
+
+/* Phase 4: cost estimator; no vendor or currency API required. */
+.cost-editor>summary{color:var(--accent);font-size:16px;font-weight:800;cursor:pointer;margin-bottom:10px}
+.cost-editor>p{font-size:12px;color:var(--muted);margin-bottom:17px}
+.recipe-cost-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-top:1px solid var(--border);padding:16px 0;color:var(--text);font-size:14px}
+.recipe-cost-result span,.saved-cost{font-size:12px;color:var(--muted)}
+.saved-cost strong{color:var(--accent)}

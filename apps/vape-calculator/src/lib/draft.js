@@ -17,6 +17,9 @@ export function loadRecipeDraft(owner){
     if(d.flavors.some(f=>!f||typeof f.id!=="string"||typeof f.name!=="string"||f.name.length>100))return null;
     for(const field of ["totalVolume","targetStrength","shotStrength","shotVolume","shotVgPercent","targetVgPercent"]){if(typeof d[field]!=="number"||!Number.isFinite(d[field]))return null;}
     if(d.flavors.some(f=>typeof f.percent!=="number"||!Number.isFinite(f.percent)||typeof f.vgPercent!=="number"||!Number.isFinite(f.vgPercent)))return null;
+    const validPrice=value=>typeof value==="number"&&Number.isFinite(value)&&value>=0&&value<=100000;
+    if(d.costs!==undefined&&(!d.costs||typeof d.costs!=="object"||["vg","pg","shot"].some(k=>d.costs[k]!==undefined&&!validPrice(d.costs[k]))))return null;
+    if(d.flavors.some(f=>f.pricePerMl!==undefined&&!validPrice(f.pricePerMl)))return null;
     return {data:d,editing:typeof payload.editing==="string"&&payload.editing.length<=100?payload.editing:null};
   }catch{return null;}
 }

@@ -11,7 +11,8 @@ const normalFlavor = f => ({
   id: crypto.randomUUID(),
   name: String(f.name).trim().slice(0,100),
   percent: f.percent,
-  vgPercent: f.vgPercent
+  vgPercent: f.vgPercent,
+  ...(f.pricePerMl!==undefined?{pricePerMl:f.pricePerMl}:{})
 });
 export function isRecipe(item) {
   if (!item || typeof item !== "object" || !item.data || typeof item.data !== "object")return false;
@@ -21,6 +22,9 @@ export function isRecipe(item) {
       d.flavors.some(f => !f || typeof f.name !== "string" || !f.name.trim() || f.name.length > 100 ||
         typeof f.percent !== "number" || typeof f.vgPercent !== "number")) return false;
   if (item.favorite !== undefined && typeof item.favorite !== "boolean") return false;
+  const validPrice=v=>typeof v==="number"&&Number.isFinite(v)&&v>=0&&v<=100000;
+  if (d.costs!==undefined && (!d.costs||typeof d.costs!=="object"||["vg","pg","shot"].some(k=>d.costs[k]!==undefined&&!validPrice(d.costs[k]))))return false;
+  if(d.flavors.some(f=>f.pricePerMl!==undefined&&!validPrice(f.pricePerMl)))return false;
   const r = calculateDIY(d);
   return r.ok && r.feasible;
 }
@@ -36,6 +40,7 @@ export function sanitizeRecipe(input) {
       name:d.name.trim().slice(0,120),notes:d.notes.slice(0,2000),
       totalVolume:d.totalVolume,targetStrength:d.targetStrength,shotStrength:d.shotStrength,shotVolume:d.shotVolume,
       shotVgPercent:d.shotVgPercent,targetVgPercent:d.targetVgPercent,
+      ...(d.costs?{costs:{vg:d.costs.vg??0,pg:d.costs.pg??0,shot:d.costs.shot??0}}:{}),
       flavors:d.flavors.map(normalFlavor)
     }
   };

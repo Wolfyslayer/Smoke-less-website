@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { Copy, Download, FileJson, FolderOpen, Heart, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import { calculateDIY } from "../lib/calculations.js";
 import { scaleRecipeData } from "../lib/recipeScale.js";
+import { calculateRecipeCost } from "../lib/recipeCosts.js";
 import { recipeInputs } from "./DIY.jsx";
 import { Notice, PageHeader, Panel, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
@@ -74,12 +75,14 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
       !visible.length?<div className="empty-state"><Search size={36}/><h2>{t("noResults")}</h2><button type="button" className="btn btn-outline" onClick={()=>{setSearch("");setNicotineFilter("all");setVgFilter("all");setOnlyFavorites(false)}}>{t("clearFilters")}</button></div>:
       <div className="recipe-grid">{visible.map(recipe => {
         const calc=calculateDIY(recipeInputs(recipe.data));
+        const cost=calculateRecipeCost(recipe.data);
         const targetVolume=scaleVolumes[recipe.id]??recipe.data.totalVolume;
         const scaled=calculateDIY({...recipeInputs(recipe.data),totalVolume:targetVolume});
         return <article key={recipe.id} className="saved-card">
           <div className="saved-card-top"><span className="saved-card-icon"><FileJson size={21}/></span><span className="saved-date">{new Date(recipe.updatedAt || recipe.createdAt).toLocaleDateString(lang === "sv" ? "sv-SE" : "en-GB")}</span></div>
           <h2>{recipe.data.name}</h2><p className="saved-notes">{recipe.data.notes || (recipe.data.flavors.length ? recipe.data.flavors.map(f=>f.name).join(", ") : "—")}</p>
           <div className="saved-stats"><span><b>{format(recipe.data.totalVolume)}</b> ml</span><span><b>{format(recipe.data.targetStrength)}</b> mg/ml</span><span><b>{format(recipe.data.targetVgPercent)}</b> % VG</span></div>
+          {cost.ok&&cost.hasPrices&&<p className="saved-cost">{t("estimatedCost")}: <strong>{format(cost.totalCost)} {t("currency")}</strong> · {format(cost.costPerMl,3)} {t("currencyPerMl")}</p>}
           {calc.ok && calc.feasible && <p className="saved-flavors">{t("nicShotLiquid")}: {format(calc.nicotineVolume)} ml · {t("flavorTotal")}: {format(calc.flavorVolume)} ml</p>}
           <details className="recipe-scale"><summary>{t("scaleRecipe")}</summary>
             <div className="recipe-scale-presets">{[30,60,100,120].map(volume=><button type="button" className="pill-button" key={volume} onClick={()=>setScaleVolumes(old=>({...old,[recipe.id]:volume}))}>{volume} ml</button>)}</div>
