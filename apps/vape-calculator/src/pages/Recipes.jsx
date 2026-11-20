@@ -1,11 +1,12 @@
 import React, { useMemo, useRef, useState } from "react";
-import { Copy, Download, FileJson, FolderOpen, Heart, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
+import { Copy, Download, FileJson, FolderOpen, Heart, Pencil, Plus, Printer, Search, Trash2, Upload } from "lucide-react";
 import { calculateDIY } from "../lib/calculations.js";
 import { scaleRecipeData } from "../lib/recipeScale.js";
 import { calculateRecipeCost } from "../lib/recipeCosts.js";
 import { recipeInputs } from "./DIY.jsx";
 import { Notice, PageHeader, Panel, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
+import RecipeCard from "../components/RecipeCard.jsx";
 
 export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplicate, onToggleFavorite, onScale, onImport, importGuest, user, guestCount, busy = false, reloadCloud }) {
   const { t, lang } = useI18n();
@@ -16,6 +17,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
   const [vgFilter,setVgFilter]=useState("all");
   const [onlyFavorites,setOnlyFavorites]=useState(false);
   const [sort,setSort]=useState("recent");
+  const [shareRecipe,setShareRecipe]=useState(null);
   const [scaleVolumes,setScaleVolumes]=useState({});
   const visible=useMemo(()=>recipes.filter(recipe=>{
     const d=recipe.data;
@@ -94,6 +96,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
             <button className="btn btn-outline" type="button" disabled={busy||!scaled.ok||!scaled.feasible} onClick={()=>void onScale(recipe,targetVolume)}>{t("saveScaledCopy")}</button>
           </details>
           <div className="saved-actions">
+            <button type="button" className="mini-action" onClick={()=>setShareRecipe(recipe)}><Printer size={16}/>{t("recipeCard")}</button>
             <button type="button" className={"mini-action favorite-action"+(recipe.favorite?" is-favorite":"")} aria-pressed={recipe.favorite===true} aria-label={recipe.favorite?t("removeFavorite"):t("addFavorite")} title={recipe.favorite?t("removeFavorite"):t("addFavorite")} onClick={()=>void onToggleFavorite(recipe)} disabled={busy}><Heart size={16} fill={recipe.favorite?"currentColor":"none"}/>{recipe.favorite?t("favorite"):t("addFavorite")}</button>
             <button type="button" className="mini-action" onClick={() => onEdit(recipe)} disabled={busy}><Pencil size={16}/>{t("edit")}</button>
             <button type="button" className="mini-action" onClick={() => void onDuplicate(recipe)} disabled={busy}><Copy size={16}/>{t("copy")}</button>
@@ -101,6 +104,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
           </div>
         </article>;
       })}</div>}
+    {shareRecipe&&<RecipeCard recipe={shareRecipe} onClose={()=>setShareRecipe(null)}/>}
     <Notice>{user?(lang==="sv"?"Recepten sparas i en privat bucket under ditt konto. Lokala gästrecept förs inte över utan ditt val.":"Recipes are saved in a private bucket under your account. Local guest recipes are not transferred without your consent."):t("localNote")} {t("importNote")}</Notice>
   </>;
 }

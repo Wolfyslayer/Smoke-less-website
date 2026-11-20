@@ -235,3 +235,25 @@
 .recipe-cost-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-top:1px solid var(--border);padding:16px 0;color:var(--text);font-size:14px}
 .recipe-cost-result span,.saved-cost{font-size:12px;color:var(--muted)}
 .saved-cost strong{color:var(--accent)}
+
+/* Phase 5: accessible share/print recipe cards (no third-party sharing service). */
+.recipe-print-overlay{position:fixed;inset:0;z-index:4200;background:#060912cc;display:flex;align-items:center;justify-content:center;overflow:auto;padding:18px}
+.recipe-card-dialog{background:var(--surface);color:var(--text);width:min(100%,560px);max-height:calc(100dvh - 36px);overflow:auto;border:1px solid var(--border);border-radius:22px;padding:26px;box-shadow:0 32px 110px #000a}
+.recipe-card-dialog h2{font-size:26px;line-height:1.2;font-family:'Outfit',sans-serif;margin:0 0 8px}
+.recipe-card-dialog h3{font-size:16px;margin:20px 0 10px}
+.recipe-card-info{font-size:13px;color:var(--muted);margin:4px 0 16px}
+.recipe-card-heading{display:flex;align-items:start;justify-content:space-between;gap:10px}
+.recipe-card-lines{padding:0;list-style:none;margin:0;display:grid;gap:9px}
+.recipe-card-lines li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border);padding:8px 0;font-size:13px}
+.recipe-card-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.recipe-card-actions .btn{flex:1;min-width:130px}
+.recipe-share-text{width:100%;min-height:80px;background:var(--bg-alt);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:12px}
+@media print{
+  @page{margin:16mm}
+  body *{visibility:hidden!important}
+  .recipe-print-overlay,.recipe-print-overlay *{visibility:visible!important}
+  .recipe-print-overlay{position:absolute!important;inset:0!important;display:block!important;overflow:visible!important;padding:0!important;background:#fff!important}
+  .recipe-card-dialog{max-height:none!important;overflow:visible!important;box-shadow:none!important;border:0!important;width:100%!important;color:#000!important;background:#fff!important}
+  .recipe-card-info,.recipe-card-lines li{color:#333!important}
+  .recipe-card-actions,.recipe-share-text,.recipe-card-close{display:none!important}
+}
