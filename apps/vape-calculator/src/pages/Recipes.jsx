@@ -26,7 +26,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
     } catch {setMessage(t("importError"));}
   };
   return <>
-    <PageHeader eyebrow={t("rEyebrow")} title={t("rTitle")} description={t("rDesc")}/>
+    <PageHeader eyebrow={t("rEyebrow")} title={t("rTitle")} description={t(user?"rDescCloud":"rDesc")}/>
     <Panel className="recipe-toolbar">
       <div><strong>{t("recipeCount",{count:recipes.length})}</strong><p>{user?(lang==="sv"?"🔒 Privata recept i Supabase Storage":"🔒 Private recipes in Supabase Storage"):t("savedLocally")}</p></div>
       <div className="toolbar-actions">

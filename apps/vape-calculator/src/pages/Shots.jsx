@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { ArrowRightLeft, FlaskConical } from "lucide-react";
 import { shotsNeeded } from "../lib/calculations.js";
+import { translateCalcError } from "../lib/translateErrors.js";
 import { Field, Formula, Metric, Notice, PageHeader, Panel, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
 
 export default function Shots() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [mode, setMode] = useState("base");
   const [values, setValues] = useState({ volume: 50, targetStrength: 3, shotStrength: 20, shotVolume: 10 });
   const change = field => value => setValues(old => ({ ...old, [field]: value }));
@@ -39,7 +40,7 @@ export default function Shots() {
               <Metric label={t("baseLeft")} value={format(r.baseVolume)} unit="ml"/>
               <Metric label={t("shotRemaining")} value={format(r.leftoverShotVolume)} unit="ml"/>
             </div>
-          </> : <Notice type="error">{t("errorGeneric")} {r.error}</Notice>}
+          </> : <Notice type="error">{translateCalcError(r.error,lang)}</Notice>}
         </Panel>
         {r.ok && r.leftoverShotVolume > 0.001 && <Notice type="warning">
           <strong>{t("onlyUse", {amount: format(r.nicotineVolume)})}</strong>{" "}

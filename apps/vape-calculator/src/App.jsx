@@ -211,7 +211,7 @@ export default function App() {
         {cloudError&&<div className="cloud-feedback error" role="alert">{cloudError}{user&&<button type="button" onClick={()=>void reloadCloud()}>{lang==="sv"?"Försök igen":"Retry"}</button>}</div>}
         {checkingAuth&&<div className="cloud-feedback" role="status">{lang==="sv"?"Kontrollerar konto…":"Checking account…"}</div>}
         {user&&!cloudReady&&!cloudError&&<div className="cloud-feedback" role="status">{lang==="sv"?"Hämtar privata recept från Supabase…":"Loading private recipes from Supabase…"}</div>}
-        {page === "home" && <Home navigate={navigate} count={displayedRecipes.length}/>}
+        {page === "home" && <Home navigate={navigate} count={displayedRecipes.length} user={user}/>}
         {page === "strength" && <Strength/>}
         {page === "shots" && <Shots/>}
         {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} message={message} busy={syncBusy||!cloudReady||checkingAuth||recipeOwner!==(user?.id??null)}/>}

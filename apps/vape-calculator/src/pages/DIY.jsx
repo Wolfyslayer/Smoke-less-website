@@ -1,6 +1,7 @@
 import React from "react";
 import { CheckCircle2, Plus, Save, Trash2, X } from "lucide-react";
 import { calculateDIY, LIMITS } from "../lib/calculations.js";
+import { translateCalcError } from "../lib/translateErrors.js";
 import { Field, Metric, Notice, PageHeader, Panel, ProgressBar, TextField, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
 
@@ -17,7 +18,7 @@ export const recipeInputs = draft => ({
 });
 
 export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, message, busy = false }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const change = key => value => setDraft(old => ({...old,[key]:value}));
   const editFlavor = (id,key,value) => setDraft(old => ({...old,flavors:old.flavors.map(f => f.id === id ? {...f,[key]:value}:f)}));
   const addFlavor = () => setDraft(old => ({...old,flavors:[...old.flavors,{id:crypto.randomUUID(),name:"",percent:5,vgPercent:0}]}));
@@ -68,7 +69,7 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
           <span className="eyebrow">{t("resultRecipe")}</span>
           <div className="hero-number">{format(draft.totalVolume)} <span>ml</span></div>
           <p className="result-caption">{t("targetStrength")}: {format(draft.targetStrength)} mg/ml · VG {format(draft.targetVgPercent)} %</p>
-          {!r.ok ? <Notice type="error">{r.error}</Notice> : !r.feasible ?
+          {!r.ok ? <Notice type="error">{translateCalcError(r.error,lang)}</Notice> : !r.feasible ?
             <Notice type="warning"><strong>{t("impossible")}</strong> {t("closest",{percent:format(r.closestVgPercent)})}</Notice> :
             <>
               <div className="metrics-grid result-measures">
