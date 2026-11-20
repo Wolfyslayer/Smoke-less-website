@@ -3,7 +3,7 @@ import { AlertTriangle, Info } from "lucide-react";
 
 export const format = (value, digits = 2) =>
   typeof value === "number" && Number.isFinite(value)
-    ? new Intl.NumberFormat("sv-SE", { maximumFractionDigits: digits }).format(value)
+    ? new Intl.NumberFormat(typeof document !== "undefined" && document.documentElement.lang==="en" ? "en-GB" : "sv-SE", { maximumFractionDigits: digits }).format(value)
     : "–";
 
 export function Field({ label, value, onChange, unit, hint, min = 0, max = 10000, step = "any", placeholder, disabled = false }) {

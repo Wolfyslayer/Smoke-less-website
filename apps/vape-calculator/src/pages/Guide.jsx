@@ -17,6 +17,7 @@ export default function Guide() {
       <p>{t("safety")}</p><p>{t("law")}</p>
       <a className="source-link" href="https://www.folkhalsomyndigheten.se/regler-och-tillsyn/tobak-och-nikotinprodukter-regler-for-tillverkning-handel-och-hantering/elektroniska-cigaretter-och-pafyllningsbehallare-sa-foljer-du-reglerna/tillverkning-och-import-av-e-cigaretter-och-pafyllningsbehallare/" target="_blank" rel="noopener noreferrer">{t("source")} <ExternalLink size={15}/></a>
     </Panel>
+    <Panel title={t("offlineTitle")}><p>{t("offlineDesc")}</p></Panel>
     <Notice>{t("notMedical")}</Notice>
   </>;
 }

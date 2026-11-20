@@ -1,13 +1,16 @@
 import React from "react";
 import { CheckCircle2, Plus, Save, Trash2, X } from "lucide-react";
 import { calculateDIY, LIMITS } from "../lib/calculations.js";
+import { translateCalcError } from "../lib/translateErrors.js";
+import { calculateRecipeCost } from "../lib/recipeCosts.js";
 import { Field, Metric, Notice, PageHeader, Panel, ProgressBar, TextField, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
 
 export const emptyDraft = () => ({
   name: "", notes: "", totalVolume: 60, targetStrength: 3,
+  costs:{vg:0,pg:0,shot:0},
   shotStrength: 20, shotVolume: 10, shotVgPercent: 50, targetVgPercent: 70,
-  flavors: [{id:crypto.randomUUID(),name:"",percent:10,vgPercent:0}]
+  flavors: [{id:crypto.randomUUID(),name:"",percent:10,vgPercent:0,pricePerMl:0}]
 });
 export const recipeInputs = draft => ({
   totalVolume: draft.totalVolume, targetStrength: draft.targetStrength,
@@ -16,13 +19,15 @@ export const recipeInputs = draft => ({
   flavors: draft.flavors.map(({name,percent,vgPercent}) => ({name,percent,vgPercent}))
 });
 
-export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, message, busy = false }) {
-  const { t } = useI18n();
+export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, clearDraft, message, busy = false }) {
+  const { t, lang } = useI18n();
   const change = key => value => setDraft(old => ({...old,[key]:value}));
   const editFlavor = (id,key,value) => setDraft(old => ({...old,flavors:old.flavors.map(f => f.id === id ? {...f,[key]:value}:f)}));
-  const addFlavor = () => setDraft(old => ({...old,flavors:[...old.flavors,{id:crypto.randomUUID(),name:"",percent:5,vgPercent:0}]}));
+  const addFlavor = () => setDraft(old => ({...old,flavors:[...old.flavors,{id:crypto.randomUUID(),name:"",percent:5,vgPercent:0,pricePerMl:0}]}));
+  const changeCost=key=>value=>setDraft(old=>({...old,costs:{...old.costs,[key]:value}}));
   const removeFlavor = id => setDraft(old => ({...old,flavors:old.flavors.filter(f => f.id !== id)}));
   const r = calculateDIY(recipeInputs(draft));
+  const costs=calculateRecipeCost(draft);
   const valid = r.ok && r.feasible && draft.name.trim().length > 0 && draft.name.length <= 120 && draft.notes.length <= 2000 &&
     draft.flavors.every(f => f.name.trim().length > 0 && f.name.length <= 100);
   const items = r.ok && r.feasible ? [
@@ -33,6 +38,7 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
   ] : [];
   return <>
     <PageHeader eyebrow={t("dEyebrow")} title={t("dTitle")} description={t("dDesc")}/>
+    <div className="draft-status"><span>{t("draftStoredLocal")}</span><button type="button" className="mini-action" onClick={clearDraft}>{t("clearDraft")}</button></div>
     {editing && <div className="editing-bar"><span>{t("editMode")}</span><button className="btn btn-ghost" type="button" onClick={cancelEdit}><X size={16}/>{t("cancelEdit")}</button></div>}
     <div className="workspace-grid">
       <div className="editor-column">
@@ -57,10 +63,16 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
                 <TextField label={t("flavorName")} value={f.name} onChange={v => editFlavor(f.id,"name",v)} placeholder={t("flavorExample")} maxLength={100}/>
                 <Field label={t("flavorPct")} value={f.percent} onChange={v => editFlavor(f.id,"percent",v)} max={100} unit="%"/>
                 <Field label={t("flavorVg")} value={f.vgPercent} onChange={v => editFlavor(f.id,"vgPercent",v)} max={100} unit="%"/>
+                <Field label={t("pricePerMl")} value={f.pricePerMl??0} onChange={v => editFlavor(f.id,"pricePerMl",v)} min={0} max={100000} unit={t("currencyPerMl")}/>
               </div>
             </div>)}</div> : <p className="empty-tiny">{t("noFlavors")}</p>}
           <button className="btn btn-outline add-flavor" type="button" disabled={draft.flavors.length >= LIMITS.maxFlavors} onClick={addFlavor}><Plus size={18}/>{t("addFlavor")}</button>
         </Panel>
+        <details className="panel cost-editor"><summary>{t("costEditor")}</summary><p>{t("costHint")}</p><div className="fields-grid">
+          <Field label={t("vgPrice")} value={draft.costs?.vg??0} onChange={changeCost("vg")} min={0} max={100000} unit={t("currencyPerMl")}/>
+          <Field label={t("pgPrice")} value={draft.costs?.pg??0} onChange={changeCost("pg")} min={0} max={100000} unit={t("currencyPerMl")}/>
+          <Field label={t("shotPrice")} value={draft.costs?.shot??0} onChange={changeCost("shot")} min={0} max={100000} unit={t("currencyPerMl")}/>
+        </div></details>
         <Panel title={t("notes")}><textarea className="notes-input" value={draft.notes} maxLength={2000} onChange={e => change("notes")(e.target.value)} placeholder={t("notesExample")} rows={3}/></Panel>
       </div>
       <div className="result-column">
@@ -68,7 +80,7 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
           <span className="eyebrow">{t("resultRecipe")}</span>
           <div className="hero-number">{format(draft.totalVolume)} <span>ml</span></div>
           <p className="result-caption">{t("targetStrength")}: {format(draft.targetStrength)} mg/ml · VG {format(draft.targetVgPercent)} %</p>
-          {!r.ok ? <Notice type="error">{r.error}</Notice> : !r.feasible ?
+          {!r.ok ? <Notice type="error">{translateCalcError(r.error,lang)}</Notice> : !r.feasible ?
             <Notice type="warning"><strong>{t("impossible")}</strong> {t("closest",{percent:format(r.closestVgPercent)})}</Notice> :
             <>
               <div className="metrics-grid result-measures">
@@ -80,6 +92,7 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
               <div className="result-divider"/>
               <h3>{t("ingredients")}</h3><ProgressBar items={items}/>
               <div className="bottles-summary"><span>{t("buyBottles")}</span><strong>{format(r.bottlesToBuy,0)} st</strong></div>
+              {costs.ok&&costs.hasPrices&&<div className="recipe-cost-result"><strong>{t("estimatedCost")}: {format(costs.totalCost)} {t("currency")}</strong><span>{format(costs.costPerMl,3)} {t("currencyPerMl")}</span></div>}
               <Notice><CheckCircle2 size={16}/>{t("mixOkay")}</Notice>
             </>}
           <button className="btn btn-primary save-button" type="button" disabled={!valid || busy} onClick={() => onSave(draft)}><Save size={18}/>{t(editing ? "update" : "save")}</button>

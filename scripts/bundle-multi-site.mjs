@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, access } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, readdir, access } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
@@ -45,8 +45,15 @@ const mirror = resolve(root, 'apps/vape-calculator')
 await access(resolve(mirror, 'index.html'))
 execFileSync(process.execPath, [resolve(root, 'node_modules/vite/bin/vite.js'), 'build', '--config', resolve(mirror, 'vite.config.js')], {cwd:root,stdio:'inherit'})
 
+// Precache only the immutable Vape Calculator assets. Never precache account pages,
+// Supabase URLs, private recipes, or any other site under this domain.
+const vapeDist=resolve(dist,'vape-calculator')
+const assetNames=await readdir(resolve(vapeDist,'assets'))
+const offlineAssets=assetNames.filter(name=>/\\.(?:js|css)$/.test(name)).map(name=>'/vape-calculator/assets/'+name)
+await writeFile(resolve(vapeDist,'offline-assets.json'),JSON.stringify(offlineAssets))
+
 // A single Pages deployment publishes the hub, Smoke Less and Vape Calculator.
-for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json', 'account/index.html', 'smoke-less/account/index.html', 'vape-calculator/account/index.html', 'smoke-less/beta/index.html', 'smoke-less/admin/index.html', 'admin/index.html', 'beta/index.html', 'resetpassword/index.html', 'confirmemail/index.html', 'recoverpassword/index.html']) {
+for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'vape-calculator/manifest.webmanifest', 'vape-calculator/sw.js', 'vape-calculator/offline-assets.json', 'vape-calculator/icons/vapecalc-192.png', 'vape-calculator/icons/vapecalc-512.png', 'updates/preview.json', 'account/index.html', 'smoke-less/account/index.html', 'vape-calculator/account/index.html', 'smoke-less/beta/index.html', 'smoke-less/admin/index.html', 'admin/index.html', 'beta/index.html', 'resetpassword/index.html', 'confirmemail/index.html', 'recoverpassword/index.html']) {
   await access(resolve(dist,path))
 }
 console.log('PASS: three static sites + unchanged preview manifest bundled into one Pages deployment')

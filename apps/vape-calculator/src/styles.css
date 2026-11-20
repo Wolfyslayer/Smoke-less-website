@@ -39,6 +39,8 @@
 .field-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
 .field-box input{width:100%;min-width:0;border:0;outline:none;background:transparent;font-weight:700;font-size:15px}
 .field-box input::-webkit-inner-spin-button{opacity:.5}
+.field-box input{min-width:0;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.field-box{min-height:49px}.field-box input{font-size:16px}.toolbar-actions .btn{min-height:44px}}
 .field-unit{color:var(--soft);font-size:12px;font-weight:700;flex-shrink:0}
 .field-hint{font-size:11px;color:var(--soft);line-height:1.5}
 .preset-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:27px;font-size:12px;color:var(--muted)}
@@ -200,3 +202,62 @@
 .drawer-language-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:19px;color:var(--text);font-size:14px;font-weight:700}
 .drawer-language-row .vape-lang-trigger{min-width:104px;height:43px;gap:9px}
 .drawer-language-row .vape-lang-trigger span:nth-child(2){display:inline}
+
+/* Phase 2: searchable, filterable private recipe library. */
+.recipe-filter-panel{display:grid;grid-template-columns:minmax(190px,1.7fr) repeat(3,minmax(110px,.8fr));gap:12px;align-items:end;margin:20px 0 10px}
+.recipe-filter-panel>label:not(.recipe-favorite-toggle){display:flex;flex-direction:column;gap:6px;min-width:0;color:var(--muted);font-size:12px;font-weight:750}
+.recipe-filter-panel input[type=search],.recipe-filter-panel select{width:100%;min-height:44px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:11px;padding:8px 11px;min-width:0;font-size:14px}
+.recipe-filter-panel .recipe-search{position:relative}
+.recipe-search>svg{position:absolute;bottom:13px;left:12px;color:var(--soft)}
+.recipe-filter-panel .recipe-search input{padding-left:37px}
+.recipe-favorite-toggle{display:flex;align-items:center;gap:7px;white-space:nowrap;color:var(--muted);font-size:13px;font-weight:700}
+.recipe-favorite-toggle input{accent-color:var(--accent);height:17px;width:17px}
+.recipe-result-count{margin:8px 0 20px;color:var(--soft);font-size:12px}
+.favorite-action.is-favorite{color:var(--accent)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:900px){.recipe-filter-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.recipe-filter-panel .recipe-search{grid-column:1/-1}}
+@media(max-width:450px){.recipe-filter-panel{gap:10px}.recipe-filter-panel input[type=search],.recipe-filter-panel select{font-size:16px}.saved-actions .mini-action{min-height:44px}}
+
+/* Phase 3: recipe scale preview and isolated on-device draft autosave. */
+.draft-status{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--accent-dim);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:20px;color:var(--muted);font-size:12px}
+.recipe-scale{margin-top:15px;padding:12px 0;border-top:1px solid var(--border)}
+.recipe-scale summary{cursor:pointer;font-size:13px;font-weight:800;color:var(--accent);padding:10px 0}
+.recipe-scale-presets{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.recipe-scale>label{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.recipe-scale input{min-height:44px;width:115px;padding:8px 11px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--text);font-size:16px}
+.recipe-scale-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px;color:var(--muted);margin:15px 0}
+.recipe-scale-error{color:var(--accent);font-size:12px}
+.recipe-scale .btn{width:100%;margin:8px 0}
+
+/* Phase 4: cost estimator; no vendor or currency API required. */
+.cost-editor>summary{color:var(--accent);font-size:16px;font-weight:800;cursor:pointer;margin-bottom:10px}
+.cost-editor>p{font-size:12px;color:var(--muted);margin-bottom:17px}
+.recipe-cost-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;border-top:1px solid var(--border);padding:16px 0;color:var(--text);font-size:14px}
+.recipe-cost-result span,.saved-cost{font-size:12px;color:var(--muted)}
+.saved-cost strong{color:var(--accent)}
+
+/* Phase 5: accessible share/print recipe cards (no third-party sharing service). */
+.recipe-print-overlay{position:fixed;inset:0;z-index:4200;background:#060912cc;display:flex;align-items:center;justify-content:center;overflow:auto;padding:18px}
+.recipe-card-dialog{background:var(--surface);color:var(--text);width:min(100%,560px);max-height:calc(100dvh - 36px);overflow:auto;border:1px solid var(--border);border-radius:22px;padding:26px;box-shadow:0 32px 110px #000a}
+.recipe-card-dialog h2{font-size:26px;line-height:1.2;font-family:'Outfit',sans-serif;margin:0 0 8px}
+.recipe-card-dialog h3{font-size:16px;margin:20px 0 10px}
+.recipe-card-info{font-size:13px;color:var(--muted);margin:4px 0 16px}
+.recipe-card-heading{display:flex;align-items:start;justify-content:space-between;gap:10px}
+.recipe-card-lines{padding:0;list-style:none;margin:0;display:grid;gap:9px}
+.recipe-card-lines li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border);padding:8px 0;font-size:13px}
+.recipe-card-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.recipe-card-actions .btn{flex:1;min-width:130px}
+.recipe-share-text{width:100%;min-height:80px;background:var(--bg-alt);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:12px}
+@media print{
+  @page{margin:16mm}
+  body *{visibility:hidden!important}
+  .recipe-print-overlay,.recipe-print-overlay *{visibility:visible!important}
+  .recipe-print-overlay{position:absolute!important;inset:0!important;display:block!important;overflow:visible!important;padding:0!important;background:#fff!important}
+  .recipe-card-dialog{max-height:none!important;overflow:visible!important;box-shadow:none!important;border:0!important;width:100%!important;color:#000!important;background:#fff!important}
+  .recipe-card-info,.recipe-card-lines li{color:#333!important}
+  .recipe-card-actions,.recipe-share-text,.recipe-card-close{display:none!important}
+}
+
+/* Print/share modal is portaled to body and must not depend on .app-shell variables. */
+.recipe-print-overlay{--surface:#181d28;--text:#f4f4f6;--muted:#a8afbe;--border:#303744;--bg-alt:#131722;--accent:#f97316}
+.recipe-print-overlay[data-theme=light]{--surface:#fff;--text:#171b26;--muted:#555e6f;--border:#dde1e7;--bg-alt:#f3f4f7;--accent:#d9530d;background:#12162070}

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Droplets, FlaskConical } from "lucide-react";
 import { strengthFromShots } from "../lib/calculations.js";
+import { translateCalcError } from "../lib/translateErrors.js";
 import { Field, Formula, Metric, Notice, PageHeader, Panel, ProgressBar, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
 
 export default function Strength() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [values, setValues] = useState({ baseVolume: 50, shotVolume: 10, shotStrength: 20, shotCount: 1 });
   const change = field => value => setValues(old => ({ ...old, [field]: value }));
   const r = strengthFromShots(values);
@@ -35,7 +36,7 @@ export default function Strength() {
               <Metric label={t("totalVolume")} value={format(r.totalVolume)} unit="ml" />
               <Metric label={t("nicTotal")} value={format(r.nicotineMg)} unit="mg" />
             </div>
-          </> : <Notice type="error">{t("errorGeneric")} {r.error}</Notice>}
+          </> : <Notice type="error">{translateCalcError(r.error,lang)}</Notice>}
         </Panel>
         {r.ok && <Panel title={t("contents")}>
           <ProgressBar items={[

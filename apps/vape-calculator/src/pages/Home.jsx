@@ -1,13 +1,13 @@
 import React from "react";
 import { ArrowRight, BookOpenText, FlaskConical, Layers3, Save, ShieldCheck, TestTube2, Zap } from "lucide-react";
 import { useI18n } from "../i18n.js";
-export default function Home({ navigate, count }) {
+export default function Home({ navigate, count, user }) {
   const { t } = useI18n();
   const cards = [
     { id:"strength", icon:FlaskConical, index:"01", text:t("strengthInfo") },
     { id:"shots", icon:TestTube2, index:"02", text:t("shotsInfo") },
     { id:"diy", icon:Layers3, index:"03", text:t("diyInfo") },
-    { id:"recipes", icon:Save, index:"04", text:t("recipesInfo") }
+    { id:"recipes", icon:Save, index:"04", text:t(user?"recipesInfoCloud":"recipesInfo") }
   ];
   return <>
     <div className="home-hero">
@@ -38,6 +38,6 @@ export default function Home({ navigate, count }) {
         <h3>{t(id)}</h3><p>{text}</p><span className="tool-link">{t("open")}<ArrowRight size={17}/></span>
       </button>)}
     </div>
-    <div className="info-strip"><span><BookOpenText size={20}/>{t("savedLocally")}: {count}</span><button type="button" onClick={() => navigate("guide")}>{t("guide")} <ArrowRight size={16}/></button></div>
+    <div className="info-strip"><span><BookOpenText size={20}/>{t("recipeCount",{count})}</span><button type="button" onClick={() => navigate("guide")}>{t("guide")} <ArrowRight size={16}/></button></div>
   </>;
 }
