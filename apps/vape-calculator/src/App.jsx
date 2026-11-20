@@ -233,7 +233,7 @@ export default function App() {
     if(recipes.length+missing.length>200){setCloudError(errorMessage());return;}
     setSyncBusy(true);setCloudError("");
     try{
-      const newItems=missing.map(item=>sanitizeRecipe({id:"draft",data:item.data}));
+      const newItems=missing.map(item=>sanitizeRecipe({id:"draft",data:item.data,favorite:item.favorite===true}));
       for(const item of newItems)await saveCloudRecipe(owner,item);
       const updated=await loadCloudRecipes(owner);
       if(userIdRef.current===owner){setRecipes(updated);setRecipeOwner(owner);setGuestCount(getRecipes().length);}
