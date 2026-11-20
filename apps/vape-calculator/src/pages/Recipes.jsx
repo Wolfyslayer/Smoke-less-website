@@ -1,11 +1,12 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Copy, Download, FileJson, FolderOpen, Heart, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import { calculateDIY } from "../lib/calculations.js";
+import { scaleRecipeData } from "../lib/recipeScale.js";
 import { recipeInputs } from "./DIY.jsx";
 import { Notice, PageHeader, Panel, format } from "../components/UI.jsx";
 import { useI18n } from "../i18n.js";
 
-export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplicate, onToggleFavorite, onImport, importGuest, user, guestCount, busy = false, reloadCloud }) {
+export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplicate, onToggleFavorite, onScale, onImport, importGuest, user, guestCount, busy = false, reloadCloud }) {
   const { t, lang } = useI18n();
   const [message, setMessage] = useState("");
   const fileRef = useRef(null);
@@ -14,6 +15,7 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
   const [vgFilter,setVgFilter]=useState("all");
   const [onlyFavorites,setOnlyFavorites]=useState(false);
   const [sort,setSort]=useState("recent");
+  const [scaleVolumes,setScaleVolumes]=useState({});
   const visible=useMemo(()=>recipes.filter(recipe=>{
     const d=recipe.data;
     const needle=search.trim().toLocaleLowerCase();
@@ -72,11 +74,22 @@ export default function Recipes({ recipes, navigate, onEdit, onDelete, onDuplica
       !visible.length?<div className="empty-state"><Search size={36}/><h2>{t("noResults")}</h2><button type="button" className="btn btn-outline" onClick={()=>{setSearch("");setNicotineFilter("all");setVgFilter("all");setOnlyFavorites(false)}}>{t("clearFilters")}</button></div>:
       <div className="recipe-grid">{visible.map(recipe => {
         const calc=calculateDIY(recipeInputs(recipe.data));
+        const targetVolume=scaleVolumes[recipe.id]??recipe.data.totalVolume;
+        const scaled=calculateDIY({...recipeInputs(recipe.data),totalVolume:targetVolume});
         return <article key={recipe.id} className="saved-card">
           <div className="saved-card-top"><span className="saved-card-icon"><FileJson size={21}/></span><span className="saved-date">{new Date(recipe.updatedAt || recipe.createdAt).toLocaleDateString(lang === "sv" ? "sv-SE" : "en-GB")}</span></div>
           <h2>{recipe.data.name}</h2><p className="saved-notes">{recipe.data.notes || (recipe.data.flavors.length ? recipe.data.flavors.map(f=>f.name).join(", ") : "—")}</p>
           <div className="saved-stats"><span><b>{format(recipe.data.totalVolume)}</b> ml</span><span><b>{format(recipe.data.targetStrength)}</b> mg/ml</span><span><b>{format(recipe.data.targetVgPercent)}</b> % VG</span></div>
           {calc.ok && calc.feasible && <p className="saved-flavors">{t("nicShotLiquid")}: {format(calc.nicotineVolume)} ml · {t("flavorTotal")}: {format(calc.flavorVolume)} ml</p>}
+          <details className="recipe-scale"><summary>{t("scaleRecipe")}</summary>
+            <div className="recipe-scale-presets">{[30,60,100,120].map(volume=><button type="button" className="pill-button" key={volume} onClick={()=>setScaleVolumes(old=>({...old,[recipe.id]:volume}))}>{volume} ml</button>)}</div>
+            <label>{t("scaleVolume")}<input type="number" inputMode="decimal" min="1" max="10000" step="any" value={targetVolume} onChange={e=>setScaleVolumes(old=>({...old,[recipe.id]:e.target.value===""?"":Number(e.target.value)}))}/> ml</label>
+            {scaled.ok&&scaled.feasible?<div className="recipe-scale-preview">
+              <span>{t("pureVG")}: {format(scaled.vgVolume)} ml</span><span>{t("purePG")}: {format(scaled.pgVolume)} ml</span><span>{t("nicShotLiquid")}: {format(scaled.nicotineVolume)} ml</span>
+              {scaled.flavorItems.map((f,i)=><span key={i}>{f.name}: {format(f.volume)} ml</span>)}
+            </div>:<p role="alert" className="recipe-scale-error">{t("scaleImpossible")}</p>}
+            <button className="btn btn-outline" type="button" disabled={busy||!scaled.ok||!scaled.feasible} onClick={()=>void onScale(recipe,targetVolume)}>{t("saveScaledCopy")}</button>
+          </details>
           <div className="saved-actions">
             <button type="button" className={"mini-action favorite-action"+(recipe.favorite?" is-favorite":"")} aria-pressed={recipe.favorite===true} aria-label={recipe.favorite?t("removeFavorite"):t("addFavorite")} title={recipe.favorite?t("removeFavorite"):t("addFavorite")} onClick={()=>void onToggleFavorite(recipe)} disabled={busy}><Heart size={16} fill={recipe.favorite?"currentColor":"none"}/>{recipe.favorite?t("favorite"):t("addFavorite")}</button>
             <button type="button" className="mini-action" onClick={() => onEdit(recipe)} disabled={busy}><Pencil size={16}/>{t("edit")}</button>

@@ -17,7 +17,7 @@ export const recipeInputs = draft => ({
   flavors: draft.flavors.map(({name,percent,vgPercent}) => ({name,percent,vgPercent}))
 });
 
-export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, message, busy = false }) {
+export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, clearDraft, message, busy = false }) {
   const { t, lang } = useI18n();
   const change = key => value => setDraft(old => ({...old,[key]:value}));
   const editFlavor = (id,key,value) => setDraft(old => ({...old,flavors:old.flavors.map(f => f.id === id ? {...f,[key]:value}:f)}));
@@ -34,6 +34,7 @@ export default function DIY({ draft, setDraft, editing, onSave, cancelEdit, mess
   ] : [];
   return <>
     <PageHeader eyebrow={t("dEyebrow")} title={t("dTitle")} description={t("dDesc")}/>
+    <div className="draft-status"><span>{t("draftStoredLocal")}</span><button type="button" className="mini-action" onClick={clearDraft}>{t("clearDraft")}</button></div>
     {editing && <div className="editing-bar"><span>{t("editMode")}</span><button className="btn btn-ghost" type="button" onClick={cancelEdit}><X size={16}/>{t("cancelEdit")}</button></div>}
     <div className="workspace-grid">
       <div className="editor-column">
