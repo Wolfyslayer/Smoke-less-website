@@ -202,3 +202,18 @@
 .drawer-language-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:19px;color:var(--text);font-size:14px;font-weight:700}
 .drawer-language-row .vape-lang-trigger{min-width:104px;height:43px;gap:9px}
 .drawer-language-row .vape-lang-trigger span:nth-child(2){display:inline}
+
+/* Phase 2: searchable, filterable private recipe library. */
+.recipe-filter-panel{display:grid;grid-template-columns:minmax(190px,1.7fr) repeat(3,minmax(110px,.8fr));gap:12px;align-items:end;margin:20px 0 10px}
+.recipe-filter-panel>label:not(.recipe-favorite-toggle){display:flex;flex-direction:column;gap:6px;min-width:0;color:var(--muted);font-size:12px;font-weight:750}
+.recipe-filter-panel input[type=search],.recipe-filter-panel select{width:100%;min-height:44px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:11px;padding:8px 11px;min-width:0;font-size:14px}
+.recipe-filter-panel .recipe-search{position:relative}
+.recipe-search>svg{position:absolute;bottom:13px;left:12px;color:var(--soft)}
+.recipe-filter-panel .recipe-search input{padding-left:37px}
+.recipe-favorite-toggle{display:flex;align-items:center;gap:7px;white-space:nowrap;color:var(--muted);font-size:13px;font-weight:700}
+.recipe-favorite-toggle input{accent-color:var(--accent);height:17px;width:17px}
+.recipe-result-count{margin:8px 0 20px;color:var(--soft);font-size:12px}
+.favorite-action.is-favorite{color:var(--accent)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:900px){.recipe-filter-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.recipe-filter-panel .recipe-search{grid-column:1/-1}}
+@media(max-width:450px){.recipe-filter-panel{gap:10px}.recipe-filter-panel input[type=search],.recipe-filter-panel select{font-size:16px}.saved-actions .mini-action{min-height:44px}}

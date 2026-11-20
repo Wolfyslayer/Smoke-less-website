@@ -20,6 +20,7 @@ export function isRecipe(item) {
       typeof d.notes !== "string" || d.notes.length > 2000 || !Array.isArray(d.flavors) || d.flavors.length > 20 ||
       d.flavors.some(f => !f || typeof f.name !== "string" || !f.name.trim() || f.name.length > 100 ||
         typeof f.percent !== "number" || typeof f.vgPercent !== "number")) return false;
+  if (item.favorite !== undefined && typeof item.favorite !== "boolean") return false;
   const r = calculateDIY(d);
   return r.ok && r.feasible;
 }
@@ -28,6 +29,7 @@ export function sanitizeRecipe(input) {
   const d=input.data;
   return {
     id:crypto.randomUUID(),
+    favorite:input.favorite===true,
     createdAt:new Date().toISOString(),
     updatedAt:new Date().toISOString(),
     data:{

@@ -126,7 +126,7 @@ export default function App() {
     try{
       const item=sanitizeRecipe({id:"draft",data:value});
       const previous=recipes.find(recipe=>recipe.id===editing);
-      const record=previous?{...item,id:previous.id,createdAt:previous.createdAt}:item;
+      const record=previous?{...item,id:previous.id,createdAt:previous.createdAt,favorite:previous.favorite===true}:item;
       const next=previous?recipes.map(recipe=>recipe.id===editing?record:recipe):[record,...recipes];
       if(next.length>200)throw Error("Recipe limit");
       await saveOne(record,next);
@@ -149,6 +149,15 @@ export default function App() {
       if(owner)await deleteCloudRecipe(owner,id);
       else persistRecipes(next);
       if(userIdRef.current===owner){setRecipes(next);setRecipeOwner(owner);if(!owner)setGuestCount(getRecipes().length);}
+    }catch{setCloudError(errorMessage());}
+    finally{setSyncBusy(false);}
+  };
+  const toggleFavorite=async recipe=>{
+    if(syncBusy||checkingAuth||!cloudReady||recipeOwner!==(user?.id??null))return;
+    setSyncBusy(true);setCloudError("");
+    try{
+      const record={...recipe,favorite:recipe.favorite!==true};
+      await saveOne(record,recipes.map(r=>r.id===recipe.id?record:r));
     }catch{setCloudError(errorMessage());}
     finally{setSyncBusy(false);}
   };
@@ -215,7 +224,7 @@ export default function App() {
         {page === "strength" && <Strength/>}
         {page === "shots" && <Shots/>}
         {page === "diy" && <DIY draft={draft} setDraft={setDraft} editing={editing} onSave={onSave} cancelEdit={cancelEdit} message={message} busy={syncBusy||!cloudReady||checkingAuth||recipeOwner!==(user?.id??null)}/>}
-        {page === "recipes" && <Recipes recipes={displayedRecipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
+        {page === "recipes" && <Recipes recipes={displayedRecipes} navigate={navigate} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} onToggleFavorite={toggleFavorite} onImport={onImport} importGuest={importGuest} user={user} guestCount={guestCount} busy={syncBusy||!cloudReady||checkingAuth} reloadCloud={reloadCloud}/>}
         {page === "guide" && <Guide/>}
       </main>
       <footer className="site-footer">
