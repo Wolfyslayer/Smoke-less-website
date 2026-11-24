@@ -14,10 +14,11 @@ try {
     'clone', '--depth', '1', '--branch', 'main',
     'https://github.com/Wolfyslayer/ShadowSlayers-Bot.git', work,
   ], {stdio: 'inherit', env: {...process.env, GIT_TERMINAL_PROMPT: '0'}});
-  execFileSync(npm, ['ci', '--no-audit', '--no-fund'], {cwd: work, stdio: 'inherit'});
+  execFileSync(npm, ['ci', '--no-audit', '--no-fund'], {cwd: work, stdio: 'inherit', shell: process.platform === 'win32'});
   execFileSync(npm, ['run', 'build:dashboard'], {
     cwd: work,
     stdio: 'inherit',
+    shell: process.platform === 'win32',
     env: {
       ...process.env,
       VITE_BASE_PATH: '/shadow-slayers/dashboard/',
