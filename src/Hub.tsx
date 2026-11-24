@@ -33,6 +33,11 @@ export default function Hub(){
             <div className="hub-card-copy"><h3>Vape Calculator</h3><p>{tr('Räkna på nikotinstyrka, planera shots och skapa egna DIY-recept med tydliga PG/VG-beräkningar.','Calculate nicotine strength, plan shots and create your own DIY recipes with clear PG/VG calculations.')}</p></div>
             <span className="hub-card-bottom">{tr('Öppna kalkylatorn','Open calculator')} <span>↗</span></span>
           </a>
+          <a className="hub-card hub-shadow" href="/shadow-slayers/">
+            <div className="hub-card-top"><span className="hub-card-icon" aria-hidden="true">✧</span><span className="hub-card-label">{tr('DISCORD-BOT','DISCORD BOT')}</span></div>
+            <div className="hub-card-copy"><h3>ShadowSlayers</h3><p>{tr('En fantasyinspirerad Discord-bot för moderation, roller, support och communityhantering. Under utveckling.','A fantasy-inspired Discord bot for moderation, roles, support and community management. In development.')}</p></div>
+            <span className="hub-card-bottom">{tr('Upptäck ShadowSlayers','Explore ShadowSlayers')} <span>↗</span></span>
+          </a>
         </div>
       </section>
     </main>
