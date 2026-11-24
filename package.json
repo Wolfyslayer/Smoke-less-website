@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/bundle-multi-site.mjs",
+    "build": "node scripts/build-shadow-slayers-dashboard.mjs && tsc -b && vite build && node scripts/bundle-multi-site.mjs",
     "preview": "vite preview",
     "check:release": "node scripts/check-release-readiness.mjs",
     "test": "node --test scripts/preview-release-contract.test.mjs scripts/sync-preview-release.integration.test.mjs scripts/site-auth-contract.test.mjs scripts/site-beta-integration.test.mjs && node --test apps/vape-calculator/tests/*.test.js",
