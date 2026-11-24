@@ -17,6 +17,33 @@ header{position:sticky;top:0;z-index:5;background:#090812eF;border-bottom:1px so
 @media(max-width:520px){.wrap{padding-left:18px;padding-right:18px}.hero h1{font-size:42px}.hero p{font-size:14px}.grid{grid-template-columns:1fr}.card{min-height:0}.content{padding-top:60px!important;padding-bottom:60px!important}.cta{padding:28px 18px}.brand strong{font-size:13px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
+/* Required structural rules from the shared site navigation.
+   The standalone public page does not load the React application's stylesheet. */
+.wolf-nav{position:sticky;top:0;z-index:90;border-bottom:1px solid #382b50;backdrop-filter:blur(14px)}
+.wolf-nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1240px;min-height:78px;margin:auto;padding:12px 24px;gap:16px}
+.wolf-nav-start,.wolf-nav-actions,.wolf-site-brand{display:flex;align-items:center;gap:13px}
+.wolf-icon-btn{appearance:none;display:grid;place-items:center;flex-shrink:0;height:42px;min-width:42px;padding:0;border:1px solid #382b50;border-radius:12px;background:#1b1630;color:#f7f4ff;cursor:pointer;font:inherit;transition:border-color .2s,background .2s}
+.wolf-site-brand{text-decoration:none;color:#f7f4ff;font-weight:800;line-height:1.1}
+.wolf-site-brand strong{font-size:18px;letter-spacing:.1px}
+.wolf-site-brand small{display:block;margin-top:4px;font-size:10px;letter-spacing:1.2px;color:#aaa0bd}
+.wolf-site-mark{display:grid;place-items:center;width:39px;height:39px;border-radius:12px;font-size:21px}
+.wolf-nav-shade{position:fixed;z-index:150;inset:0;background:#000b;opacity:0;pointer-events:none;transition:opacity .3s}
+.wolf-nav-shade.open{opacity:1;pointer-events:auto}
+.wolf-nav-drawer{position:fixed;inset:0 auto 0 0;z-index:160;width:min(345px,90vw);padding:24px 20px;background:#151124;color:#f7f4ff;border-right:1px solid #382b50;box-shadow:12px 0 70px #0006;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;transform:translateX(-105%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.85,.2,1),visibility .32s}
+.wolf-nav-drawer.open{transform:translateX(0);visibility:visible}
+.wolf-drawer-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:25px;border-bottom:1px solid #382b50}
+.wolf-drawer-top b{font-size:19px;letter-spacing:.2px}
+.wolf-drawer-top small{display:block;margin-top:4px;font-size:10px;letter-spacing:1.2px;color:#aaa0bd}
+.wolf-drawer-items{display:flex;flex-direction:column;gap:7px;margin-top:23px}
+.wolf-drawer-link{appearance:none;width:100%;display:flex;align-items:center;gap:13px;min-height:50px;padding:11px 13px;border-radius:12px;border:1px solid transparent;background:transparent;color:#c5c2d6;text-align:left;text-decoration:none;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
+.wolf-link-arrow{margin-left:auto;font-size:22px}
+.wolf-drawer-foot{margin-top:auto;padding:18px 10px 5px;border-top:1px solid #382b50}
+.wolf-drawer-language{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;color:#c5c2d6;font-weight:700;font-size:14px}
+.wolf-drawer-projects{display:inline-flex;align-items:center;gap:7px;color:#aaa0bd;text-decoration:none;font-size:12px;font-weight:600}
+.wolf-account-nav{min-height:42px;display:flex;align-items:center;gap:7px;border:1px solid #382b50;border-radius:12px;background:#1b1630;color:#f7f4ff;text-decoration:none;padding:8px 12px;font-weight:750;font-size:13px;white-space:nowrap}
+.wolf-account-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex-shrink:0}
+@media(max-width:600px){.wolf-nav-inner{min-height:68px;padding-inline:15px}.wolf-site-brand small{display:none}.wolf-site-brand strong{font-size:16px}.wolf-site-mark{width:34px;height:34px}.wolf-icon-btn{height:39px;min-width:39px}.wolf-account-nav{min-height:39px;padding-inline:8px}.wolf-account-nav>span:last-child{display:none}}
+
 /* Shared Wolfyslayer navigation pattern, adapted for the standalone ShadowSlayers page. */
 .wolf-nav-shadow{--wolf-accent:#a978ff;--wolf-line:#382b50;--wolf-muted:#aaa0bd;background:color-mix(in srgb,#090812 94%,transparent);color:#f7f4ff}
 .wolf-nav-shadow .wolf-nav-inner{max-width:1240px;min-height:78px}
