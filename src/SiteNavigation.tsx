@@ -19,6 +19,7 @@ const hubItems:NavItem[] = [
   {labelSv:'Startsida',labelEn:'Home',href:'/'},
   {labelSv:'Smoke Less',labelEn:'Smoke Less',href:'/smoke-less/'},
   {labelSv:'Vape Calculator',labelEn:'Vape Calculator',href:'/vape-calculator/'},
+  {labelSv:'ShadowSlayers',labelEn:'ShadowSlayers',href:'/shadow-slayers/'},
   {labelSv:'Mitt konto',labelEn:'My account',href:'/account/'}
 ]
 const vapeItems:NavItem[] = [

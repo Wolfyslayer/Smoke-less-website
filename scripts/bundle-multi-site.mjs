@@ -46,7 +46,7 @@ await access(resolve(mirror, 'index.html'))
 execFileSync(process.execPath, [resolve(root, 'node_modules/vite/bin/vite.js'), 'build', '--config', resolve(mirror, 'vite.config.js')], {cwd:root,stdio:'inherit'})
 
 // A single Pages deployment publishes the hub, Smoke Less and Vape Calculator.
-for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json', 'account/index.html', 'smoke-less/account/index.html', 'vape-calculator/account/index.html', 'smoke-less/beta/index.html', 'smoke-less/admin/index.html', 'admin/index.html', 'beta/index.html', 'resetpassword/index.html', 'confirmemail/index.html', 'recoverpassword/index.html']) {
+for (const path of ['index.html', 'smoke-less/index.html', 'vape-calculator/index.html', 'updates/preview.json', 'account/index.html', 'smoke-less/account/index.html', 'vape-calculator/account/index.html', 'smoke-less/beta/index.html', 'smoke-less/admin/index.html', 'admin/index.html', 'beta/index.html', 'resetpassword/index.html', 'confirmemail/index.html', 'recoverpassword/index.html', 'shadow-slayers/index.html', 'shadow-slayers/dashboard/index.html']) {
   await access(resolve(dist,path))
 }
-console.log('PASS: three static sites + unchanged preview manifest bundled into one Pages deployment')
+console.log('PASS: Wolfyslayer hub, Smoke Less, Vape Calculator and ShadowSlayers dashboard bundled into one Pages deployment')

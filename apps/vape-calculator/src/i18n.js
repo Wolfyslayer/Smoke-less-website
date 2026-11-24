@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-export const LanguageContext = createContext({ lang: "sv", t: (key) => key });
+export const LanguageContext = createContext({ lang: "en", t: (key) => key });
 export const useI18n = () => useContext(LanguageContext);
 
 const sv = {
