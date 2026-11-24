@@ -42,3 +42,9 @@
 .wolf-hub a:focus-visible,.wolf-hub button:focus-visible{outline:3px solid #f97316;outline-offset:3px}
 @media(max-width:760px){.hub-card-grid{grid-template-columns:1fr}.hub-hero{margin:55px auto 65px}.hub-main{padding:30px 20px 70px}.hub-card{min-height:280px}.hub-hero h1{letter-spacing:-1.5px}.hub-hero p{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.hub-card{transition:none!important}}
+
+/* ShadowSlayers project card */
+.hub-card.hub-shadow:before{background:radial-gradient(circle,#8b35f54a,transparent 70%)}
+.hub-card.hub-shadow:hover{border-color:#8b35f5;box-shadow:0 22px 60px #8b35f522}
+.hub-shadow .hub-card-icon{color:#b78aff;background:#8b35f52b}
+.hub-shadow .hub-card-bottom{color:#b78aff}
