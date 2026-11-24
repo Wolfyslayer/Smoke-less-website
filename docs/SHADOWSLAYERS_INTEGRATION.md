@@ -25,7 +25,7 @@ The public website and ShadowSlayers dashboard share `localStorage['wolfyslayer:
 
 ## Remaining launch configuration
 
-- The GitHub Actions secret `SHADOWSLAYERS_REPO_TOKEN` must be configured in the website repository. Never commit the token or print it in build logs.
-- The Discord bot installation URL is not configured in the repository. Do not invent an application ID or permission bitfield. Add the verified Discord application ID and reviewed minimum bot permissions before enabling the public Install Bot CTA.
+- The GitHub Actions secret `SHADOWSLAYERS_REPO_TOKEN` is configured in the website repository. Keep it scoped to `ShadowSlayers-Bot` with `Contents: Read-only`; never commit the token or print it in build logs.
+- The public Install Bot CTA uses the verified Discord application URL: `https://discord.com/oauth2/authorize?client_id=1574014471930781696`. Keep the Discord Developer Portal's installation scopes and permissions aligned with the bot's actual requirements.
 - Terms of Service and Privacy Policy pages must be completed with the operator's confirmed legal identity, contact details, hosting/processor details, and reviewed retention/deletion statements before adding public legal links or submitting URLs in Discord Developer Portal.
-- Confirm the Cloudflare Pages production build uses `npm run build`; the dashboard integration runs as part of that command.
+- GitHub Pages is the website hosting and deployment target. Cloudflare Pages is not required for the website or dashboard deployment.
