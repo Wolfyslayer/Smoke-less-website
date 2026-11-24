@@ -35,7 +35,7 @@ export default function Hub(){
           </a>
           <a className="hub-card hub-shadow" href="/shadow-slayers/">
             <div className="hub-card-top"><span className="hub-card-icon" aria-hidden="true">✧</span><span className="hub-card-label">{tr('DISCORD-BOT','DISCORD BOT')}</span></div>
-            <div className="hub-card-copy"><h3>ShadowSlayers</h3><p>{tr('En fantasyinspirerad Discord-bot för moderation, roller, support och communityhantering. Under utveckling.','A fantasy-inspired Discord bot for moderation, roles, support and community management. In development.')}</p></div>
+            <div className="hub-card-copy"><h3>ShadowSlayers</h3><p>{tr('En fristående Discord-bot för moderation, roller, support och communityhantering. Under utveckling.','An independent Discord bot for moderation, roles, support and community management. In development.')}</p></div>
             <span className="hub-card-bottom">{tr('Upptäck ShadowSlayers','Explore ShadowSlayers')} <span>↗</span></span>
           </a>
         </div>
