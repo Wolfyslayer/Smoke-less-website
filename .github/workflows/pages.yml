@@ -21,6 +21,8 @@ jobs:
       - run: npm install --no-audit --no-fund
       # Build and validate the output before it can be uploaded to GitHub Pages.
       - run: npm run verify
+        env:
+          SHADOWSLAYERS_REPO_TOKEN: ${{ secrets.SHADOWSLAYERS_REPO_TOKEN }}
       - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
