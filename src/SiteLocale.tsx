@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 
 export type SiteLanguage = 'sv' | 'en'
@@ -7,8 +7,9 @@ const Context = createContext<SiteLanguageContext>({language:'sv',setLanguage:()
 
 export function SiteLocaleProvider({children}:{children:ReactNode}){
   const [language,setState] = useState<SiteLanguage>(() => {
-    try {return window.localStorage.getItem('wolfyslayer:language') === 'en' ? 'en' : 'sv'} catch {return 'sv'}
+    try {return window.localStorage.getItem('wolfyslayer:language') === 'sv' ? 'sv' : 'en'} catch {return 'sv'}
   })
+  useEffect(() => { document.documentElement.lang = language }, [language])
   const setLanguage = (next:SiteLanguage) => {
     setState(next)
     try {window.localStorage.setItem('wolfyslayer:language',next)} catch {}
