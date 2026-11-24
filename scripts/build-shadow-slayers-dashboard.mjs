@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {cpSync, mkdtempSync, mkdirSync, rmSync} from 'node:fs';
+import {cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -27,6 +27,11 @@ try {
   rmSync(output, {recursive: true, force: true});
   mkdirSync(path.dirname(output), {recursive: true});
   cpSync(path.join(work, 'dist'), output, {recursive: true});
+  const dashboardHtml = path.join(output, 'index.html');
+  const html = readFileSync(dashboardHtml, 'utf8');
+  if (!html.includes('name=\"robots\"')) {
+    writeFileSync(dashboardHtml, html.replace('</head>', '  <meta name=\"robots\" content=\"noindex,nofollow\" />\\n  </head>'));
+  }
   console.log('PASS: ShadowSlayers dashboard built for /shadow-slayers/dashboard/');
 } finally {
   rmSync(work, {recursive: true, force: true});
