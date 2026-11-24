@@ -21,7 +21,7 @@ const readSetting = (name, fallback) => {
 };
 
 export default function App() {
-  const [lang, setLang] = useState(() => ["sv","en"].includes(readSetting("wolfyslayer:language","sv")) ? readSetting("wolfyslayer:language","sv") : "sv");
+  const [lang, setLang] = useState(() => ["sv","en"].includes(readSetting("wolfyslayer:language","en")) ? readSetting("wolfyslayer:language","en") : "en");
   const [theme, setTheme] = useState(() => {
     const stored = readSetting("vapecalc:theme","");
     if (stored === "light" || stored === "dark") return stored;
