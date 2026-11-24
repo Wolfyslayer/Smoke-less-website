@@ -7,7 +7,7 @@
 - Trusted API origin: `https://shadowslayers-api-vloo4dmzfa-ez.a.run.app`
 - Discord OAuth callback: `https://shadowslayers-api-vloo4dmzfa-ez.a.run.app/auth/callback`
 
-The dashboard is built from the public `Wolfyslayer/ShadowSlayers-Bot` repository during the website build. `scripts/build-shadow-slayers-dashboard.mjs` checks out the bot repository's `main` branch, installs its lockfile dependencies, builds Vite with `VITE_BASE_PATH=/shadow-slayers/dashboard/` and the production API origin, then copies the result into the website's `public/shadow-slayers/dashboard/` directory. Vite copies that directory into the Pages output.
+The dashboard is built from `Wolfyslayer/ShadowSlayers-Bot` during the website build. The website repository's GitHub Actions workflow passes the `SHADOWSLAYERS_REPO_TOKEN` Actions secret to the build; the token must be a fine-grained token scoped only to `ShadowSlayers-Bot` with `Contents: Read-only`. `scripts/build-shadow-slayers-dashboard.mjs` checks out the bot repository's `main` branch, installs its lockfile dependencies, builds Vite with `VITE_BASE_PATH=/shadow-slayers/dashboard/` and the production API origin, then copies the result into the website's `public/shadow-slayers/dashboard/` directory. Vite copies that directory into the Pages output.
 
 This keeps the dashboard source of truth in the bot repository; do not edit generated dashboard files in the website repository. Every website build uses the latest bot `main`, so a bot dashboard change can affect the next website build. Pin the bot checkout to a reviewed commit if reproducible releases are required.
 
@@ -25,6 +25,7 @@ The public website and ShadowSlayers dashboard share `localStorage['wolfyslayer:
 
 ## Remaining launch configuration
 
+- The GitHub Actions secret `SHADOWSLAYERS_REPO_TOKEN` must be configured in the website repository. Never commit the token or print it in build logs.
 - The Discord bot installation URL is not configured in the repository. Do not invent an application ID or permission bitfield. Add the verified Discord application ID and reviewed minimum bot permissions before enabling the public Install Bot CTA.
 - Terms of Service and Privacy Policy pages must be completed with the operator's confirmed legal identity, contact details, hosting/processor details, and reviewed retention/deletion statements before adding public legal links or submitting URLs in Discord Developer Portal.
 - Confirm the Cloudflare Pages production build uses `npm run build`; the dashboard integration runs as part of that command.
