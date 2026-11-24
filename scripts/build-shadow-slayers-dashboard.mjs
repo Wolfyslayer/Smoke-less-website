@@ -30,7 +30,7 @@ try {
   const dashboardHtml = path.join(output, 'index.html');
   const html = readFileSync(dashboardHtml, 'utf8');
   if (!html.includes('name=\"robots\"')) {
-    writeFileSync(dashboardHtml, html.replace('</head>', '  <meta name=\"robots\" content=\"noindex,nofollow\" />\\n  </head>'));
+    writeFileSync(dashboardHtml, html.replace('</head>', '  <meta name=\"robots\" content=\"noindex,nofollow\" />\n  </head>'));
   }
   console.log('PASS: ShadowSlayers dashboard built for /shadow-slayers/dashboard/');
 } finally {
