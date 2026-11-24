@@ -15,7 +15,7 @@ const robots = read('dist/robots.txt')
 const sitemap = read('dist/sitemap.xml')
 const manifest = JSON.parse(read('dist/updates/preview.json'))
 
-assert(hubHtml.includes('lang="sv"'), 'Missing Swedish document language')
+assert(hubHtml.includes('lang="en"'), 'Missing English default document language')
 assert(hubHtml.includes('rel="canonical" href="https://wolfyslayer.online/"'), 'Missing hub canonical URL')
 assert(smokeHtml.includes('rel="canonical" href="https://wolfyslayer.online/smoke-less/"'), 'Missing Smoke Less canonical URL')
 assert(vapeHtml.includes('vape-calculator/assets/'), 'Calculator assets must use /vape-calculator/ base')
